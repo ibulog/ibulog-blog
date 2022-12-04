@@ -1,0 +1,201 @@
+---
+layout: "../layouts/BlogPost.astro"
+title: "auひかりで発生する「通信が突然切れる問題」を、DHCPサーバーを立てて解決する"
+description: "auひかりで発生する「通信が突然切れる問題」を、DHCPサーバーを立てて解決する手順を説明します。"
+pubDate: "2022/8/18"
+tags: ["Linux", "Infrastracture"]
+---
+
+こんにちは。
+
+リモートワークが普及してから、自宅のネット回線整備は社会人の嗜みになりましたが、
+
+我が家のauひかり回線はどーも調子が悪いことが多い...
+
+いろいろ調べると解決策がありそうだったので、解決したお話です。
+
+## auひかり、回線がプツプツ切れる
+
+我が家のネット回線は「BIGLOBE光 auひかり」コースです。
+
+回線自体はauひかりのG-fastを使って、プロバイダはBIGLOBEになるやつ。
+
+VDSL回線でも下り最大600Mbpsくらい出せるすごいやつです。
+
+ただ、速度が速いのはいいんですが、契約当初から「回線がプツプツ切れる」問題に悩まされていました。
+
+突然、1分ほど通信ができなくなってしまうんです。
+
+どーしたもんかと調べていたら、なんとなく原因がわかってきました。
+
+## ホームゲートウェイのDHCPサーバーがお粗末
+
+auひかりから貸与されている我が家のホームゲートウェイは「BL1000HW」です。
+
+どうやら、こいつのDHCPサーバーがお粗末で、IPアドレスのリースに失敗している模様。
+
+[auひかりで二重ルーターにしたら断続的に切断される現象が改善された話。 | かなぽんの備忘録Vol.2](https://www.kanapon.me/archives/539)
+
+巷では二重ルーターにするのが一般的な解決策のようですが、DHCPサーバーさえ外部に立ててやれば解決するはず。
+
+というわけで立ててみることにしました。
+
+## DHCPサーバー構築手順
+
+### 環境
+
+- Ubuntu 22.04
+- Kea
+
+DHCPサーバーを動作させるサーバーのIPアドレスは固定しておいてください。
+
+昔、DHCPサーバーを立てたときはISC DHCP Serverを使った記憶がありましたが、今はKeaが流行りっぽい。
+
+動作速度も速いらしいので、今回はKeaを使います。
+
+### 手順
+
+#### HGWのDHCPサーバー機能をオフ
+
+まずは諸悪の根源であるBL1000HWのDHCPサーバー機能をオフにしてください。
+
+「IPアドレスとDHCPサーバ設定」からオフにできます。
+
+ここからは、DHCPサーバーを動かすUbuntuで作業していきます。
+
+#### Keaセットアップ
+
+まずは、KeaとDBに使用するMariaDBをインストールします。
+
+```shell
+sudo apt install kea mariadb-server kea-admin
+```
+ 
+MariaDBの初期設定を済ませておきます。
+
+```shell
+sudo mysql_secure_installation
+```
+
+MariaDBにログインして、Kea用のユーザーを作成します。
+
+```sql
+grant all on *.* to kea@localhost identified by 'password';
+```
+
+Kea用のデータベースを作成。
+
+```sql
+CREATE DATABASE kea_db;
+```
+
+データベースを初期化します。
+
+```shell
+kea-admin db-init mysql -h localhost -u kea -p password -n kea_db
+```
+
+以上でMariaDBのセットアップは完了。
+
+`/etc/kea/keactrl.conf`を編集して、DHCPv6をオフにする設定にしておきます。
+
+```
+dhcp6=no
+```
+
+続いて、　`/etc/kea/kea-dhcp4.conf`を作成します。
+
+NICのインターフェース名やDBのパスワード、DHCPでリースするIPアドレスの範囲など、適宜環境に合わせて修正してください。
+ 
+```
+{
+    "Dhcp4": {
+        "interfaces-config": {
+            "interfaces": [ "enp2s0" ]
+        },
+        "control-socket": {
+            "socket-type": "unix",
+            "socket-name": "/tmp/kea4-ctrl-socket"
+        },
+        "lease-database": {
+             "type": "mysql",
+             "name": "kea_db",
+             "user": "kea",
+             "password": "password",
+             "host": "localhost",
+             "port": 3306
+        },
+         "hosts-database": {
+             "type": "mysql",
+             "name": "kea_db",
+             "user": "kea",
+             "password": "password",
+             "host": "localhost",
+             "port": 3306
+         },
+        "renew-timer": 900,
+        "rebind-timer": 1800,
+        "valid-lifetime": 3600,
+        "option-data": [
+            {
+                "name": "domain-name-servers",
+                "data": "1.1.1.1, 8.8.8.8"
+            }
+        ],
+        "subnet4": [
+            {
+                "subnet": "192.168.0.0/24",
+
+
+                "pools": [ { "pool": "192.168.0.10 - 192.168.0.100" } ],
+
+
+                "option-data": [
+                    {
+                        "name": "routers",
+                        "data": "192.168.0.1"
+                    }
+                ]
+            }
+        ],
+        "loggers": [
+        {
+            "name": "kea-dhcp4",
+            "output_options": [
+                {
+                    "output": "/var/log/kea/kea-dhcp4.log"
+                }
+            ],
+            "severity": "INFO",
+
+
+            "debuglevel": 0
+        }
+      ]
+    }
+}
+```
+
+あとはDHCPサーバーを起動すればOK。
+
+```shell
+keactrl start
+```
+
+きちんとIPアドレスがリースされていれば作業完了です。
+
+しばらく様子をみましたが、断線は無事解消されていました。
+
+## まとめ
+
+DHCPサーバーを外付けしたことで、プチプチ断線がまったく起こらなくなりました。
+
+やっぱりHGWが悪さしていたんですねぇ...
+
+昔、このHGWを市販のルーターで置き換えようとしましたが、MACアドレスを偽装するだけでは認証をクリアできず、挫折したのを思い出しました。
+
+今はなにか回避策があるのかな...
+
+あと、ISC DHCP Serverに比べて、Keaの設定は少し大変かなぁ、とも思いました。
+
+何はともあれ、困りごとが解決してめでたしめでたし。

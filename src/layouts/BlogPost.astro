@@ -1,0 +1,99 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+export interface Props {
+	content: {
+		title: string;
+		description: string;
+		pubDate?: string;
+		updatedDate?: string;
+		heroImage?: string;
+		tags?: array;
+	};
+}
+
+const {
+	content: { title, description, pubDate, updatedDate, heroImage, tags },
+} = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+		<style>
+			.title {
+				font-size: 2em;
+				margin: 0.25em 0 0;
+			}
+			hr {
+				border-top: 1px solid #ddd;
+				margin: 1rem 0;
+			}
+			.metaData div {
+        font-family: 'Quicksand';
+				font-size: 0.75em;
+				margin-right: 1em;
+				display: inline;
+      		}
+			.metaData time {
+				flex: 0 0 130px;
+				color: #595959;
+			}
+			.metaData span {
+				margin-right: 0.25em;
+				padding: 0 0.5em 0 0.5em;
+				border: 1px solid #CCCCCC;
+				border-radius: 15px;
+				color: #595959;
+			}
+      .back a {
+        color: black;
+        text-decoration: none;
+      }
+		</style>
+	</head>
+
+	<body>
+		<Header />
+		<main>
+			<article>
+				{heroImage && <img width={720} height={360} src={heroImage} alt="" />}
+				<h1 class="title">{title}</h1>
+				<div class="metaData">
+                  <div>
+                    <i class="fa-regular fa-calendar"></i>
+                    <time datetime={pubDate}>
+                      {new Date(pubDate).toLocaleDateString('en-us', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </time>
+                  </div>
+                  <div>
+                    <i class="fa-solid fa-tag"></i>
+                    {tags.map((tag) => (
+                      <span>{tag}</span>
+                    ))}
+                  </div>
+                </div>
+				{
+					updatedDate && (
+						<div>
+							Last updated on <time>{updatedDate}</time>
+						</div>
+					)
+				}
+				<hr />
+				<slot />
+			</article>
+			<div class="back">
+				<i class="fa-solid fa-arrow-rotate-left"></i>
+				<a href="/">一覧に戻る</a>
+      </div>
+		</main>
+		<Footer />
+	</body>
+</html>
