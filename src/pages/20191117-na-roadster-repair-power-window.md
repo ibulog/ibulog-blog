@@ -49,31 +49,31 @@ tags: ["Roadster"]
 
 まずは内装を外します。色んな所にネジがありますが、ほぼ見えるところにあります。
 
-![](/20191117-na-roadster-repair-power-windonw/image01.jpg)
+![](/20191117-na-roadster-repair-power-window/image01.jpg)
 
 ドアの取っ手部分と写真の部分にネジが隠れていました。
 
-![](/20191117-na-roadster-repair-power-windonw/image02.jpg)
+![](/20191117-na-roadster-repair-power-window/image02.jpg)
 
 内装を外したらビニールのスクリーンが出てくるので、外していきます。ブチルゴムがどうしても残ってしまいますが気にしない。気になる場合はブチルクリーナーなどを使うといいと思います。
 
-![](/20191117-na-roadster-repair-power-windonw/image03.jpg)
+![](/20191117-na-roadster-repair-power-window/image03.jpg)
 
 あとはボルト、ナット類を全て外せばアクセスできます。ドアの下部分にもナットあり、窓とパワーウィンドウの固定部は窓をいい位置に移動させるとネジにアクセスできます。
 
-![](/20191117-na-roadster-repair-power-windonw/image04.jpg)
+![](/20191117-na-roadster-repair-power-window/image04.jpg)
 
 窓を外せました。ここまで来るとレギュレーターやモーターも簡単に外せます。
 
-![](/20191117-na-roadster-repair-power-windonw/image05.jpg)
+![](/20191117-na-roadster-repair-power-window/image05.jpg)
 
 寒いので外したレギュレーターとモーターを持って室内に移動。
 
-![](/20191117-na-roadster-repair-power-windonw/image06.jpg)
+![](/20191117-na-roadster-repair-power-window/image06.jpg)
 
 生キャラメル状態の古いグリスをきれいに拭き取って、ワイヤーを組み付けていきます。
 
-![](/20191117-na-roadster-repair-power-windonw/image07.jpg)
+![](/20191117-na-roadster-repair-power-window/image07.jpg)
 
 ### 組み付け時メモ
 
@@ -81,7 +81,7 @@ tags: ["Roadster"]
 
 写真に写っている黒い土台のようなパーツが２つありますが、これが固着して全く外れません。
 
-![](/20191117-na-roadster-repair-power-windonw/image08.jpg)
+![](/20191117-na-roadster-repair-power-window/image08.jpg)
 
 ペンチ必須だと思います。
 
@@ -91,7 +91,7 @@ tags: ["Roadster"]
 
 写真のように結束バンドでバネを収縮させておかないと、絶対にワイヤーを巻きつけることができません。
 
-![](/20191117-na-roadster-repair-power-windonw/image09.jpg)
+![](/20191117-na-roadster-repair-power-window/image09.jpg)
 
 #### 組み付け向き
 
@@ -103,11 +103,11 @@ tags: ["Roadster"]
 
 せっかくなので窓の樹脂類も交換。ここには樹脂のパーツがあるはずなのですが、経年劣化で完全に消滅していました。
 
-![](/20191117-na-roadster-repair-power-windonw/image10.jpg)
+![](/20191117-na-roadster-repair-power-window/image10.jpg)
 
 こんな大きいトルクスドライバーは持っていないので強行突破。新しい部品に交換。
 
-![](/20191117-na-roadster-repair-power-windonw/image11.jpg)
+![](/20191117-na-roadster-repair-power-window/image11.jpg)
 
 あとは取り外しの逆手順で取り付ければ完成！
 
