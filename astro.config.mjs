@@ -6,7 +6,12 @@ import sitemap from '@astrojs/sitemap';
 import image from "@astrojs/image";
 
 // https://astro.build/config
+import vercel from "@astrojs/vercel/serverless";
+
+// https://astro.build/config
 export default defineConfig({
   site: 'https://example.com',
-  integrations: [mdx(), sitemap(), image()]
+  integrations: [mdx(), sitemap(), image()],
+  output: "server",
+  adapter: vercel()
 });
