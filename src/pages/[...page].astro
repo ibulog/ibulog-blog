@@ -1,0 +1,102 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
+
+export const itemsPerPage = 10
+export async function getStaticPaths({ paginate }) {
+  const allPosts = await Astro.glob('./*.{md,mdx}')
+  const allPostsSorted = allPosts.sort(
+    (a, b) => new Date(b.frontmatter.pubDate).valueOf() - new Date(a.frontmatter.pubDate).valueOf()
+  )
+  return paginate(allPostsSorted, { pageSize: itemsPerPage })
+}
+
+const { page } = Astro.props
+const { start, end, total, data, currentPage, lastPage } = page
+
+---
+
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} url="/" image="/icon.jpeg" />
+		<style>
+			ul {
+				list-style-type: none;
+				padding: unset;
+			}
+      ul li {
+        margin-bottom: 1.5em;
+      }
+      .title a {
+        color: black;
+        text-decoration: none;
+      }
+      .metaData div {
+        font-family: 'Quicksand';
+        font-size: 0.75em;
+        margin-right: 1em;
+        display: inline;
+      }
+			ul li time {
+				flex: 0 0 130px;
+				color: #595959;
+			}
+      ul li span {
+        margin-right: 0.25em;
+        padding: 0 0.5em 0 0.5em;
+        border: 1px solid #CCCCCC;
+        border-radius: 15px;
+				color: #595959;
+      }
+      .page a {
+        color: black;
+        text-decoration: none;
+      }
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section>
+				<ul>
+					{
+						page.data.map((post) => (
+							<li>
+								<div class="title">
+								  <a href={post.url}>{post.frontmatter.title}</a>
+                </div>
+                <div class="metaData">
+                  <div>
+                    <i class="fa-regular fa-calendar"></i>
+                    <time datetime={post.frontmatter.pubDate}>
+                      {new Date(post.frontmatter.pubDate).toLocaleDateString('en-us', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </time>
+                  </div>
+                  <div>
+                    <i class="fa-solid fa-tag"></i>
+                    {post.frontmatter.tags.map((tag) => (
+                      <span>{tag}</span>
+                    ))}
+                  </div>
+                </div>
+							</li>
+						))
+					}
+				</ul>
+			</section>
+      <div class="page">
+        {currentPage !== 1 && currentPage !== 2 ? <a href={page.url.prev}><i class="fa-regular fa-circle-left"></i> Prev</a> : null}
+        {currentPage === 2 ? <a href='/'><i class="fa-regular fa-circle-left"></i> Prev</a> : null}
+        {currentPage !== lastPage ? <a href={page.url.next}>Next <i class="fa-regular fa-circle-right"></i></a> : null}
+      </div>
+		</main>
+		<Footer />
+	</body>
+</html>
