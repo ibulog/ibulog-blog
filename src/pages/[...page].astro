@@ -14,7 +14,7 @@ export async function getStaticPaths({ paginate }) {
 }
 
 const { page } = Astro.props
-// const { start, end, total, data, currentPage } = page
+const { start, end, total, data, currentPage, lastPage } = page
 
 ---
 
@@ -92,9 +92,9 @@ const { page } = Astro.props
 				</ul>
 			</section>
       <div class="page">
-        {page.currentPage !== 1 && page.currentPage !== 2 ? <a href={page.url.prev}><i class="fa-regular fa-circle-left"></i> Prev</a> : null}
-        {page.currentPage === 2 ? <a href='/'><i class="fa-regular fa-circle-left"></i> Prev</a> : null}
-        {page.currentPage !== page.lastPage ? <a href={page.url.next}>Next <i class="fa-regular fa-circle-right"></i></a> : null}
+        {currentPage !== 1 && currentPage !== 2 ? <a href={page.url.prev}><i class="fa-regular fa-circle-left"></i> Prev</a> : null}
+        {currentPage === 2 ? <a href='/'><i class="fa-regular fa-circle-left"></i> Prev</a> : null}
+        {currentPage !== lastPage ? <a href={page.url.next}>Next <i class="fa-regular fa-circle-right"></i></a> : null}
       </div>
 		</main>
 		<Footer />
