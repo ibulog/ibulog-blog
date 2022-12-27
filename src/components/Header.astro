@@ -4,11 +4,14 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../config';
 ---
 
 <header>
-	<img class="icon" src="/icon.jpeg" width={36} />
-	<h2>
-		{SITE_TITLE}
-	</h2>
+	<a class="blog-title" href="/blog">
+		<h2>
+			{SITE_TITLE}
+		</h2>
+	</a>
 	<nav>
+		<a href="/"><i class="fa-solid fa-user"></i></a>
+		<a href="/blog"><i class="fa-solid fa-pen"></i></a>
 		<a href="https://twitter.com/ibulog_" target="_blank"><i class="fa-brands fa-twitter fa-lg"></i></a>
 		<a href="https://github.com/ibulog" target="_blank"><i class="fa-brands fa-github fa-lg"></i></a>
 	</nav>
@@ -18,17 +21,21 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../config';
 		display: flex;
 		margin: 0em 0 1em;
 	}
+	header a {
+		color: black;
+		text-decoration: none;
+	}
 	img {
 		margin: 12px 0 12px 0;
 	}
 	h2 {
-		margin: 0.5em 0.5em;
+		margin: 0.5em 0;
 	}
 	nav {
 		margin: 18px 0 18px auto;
 	}
 	nav a {
 		color: black;
-		margin: 8px;
+		margin: 12px;
 	}
 </style>

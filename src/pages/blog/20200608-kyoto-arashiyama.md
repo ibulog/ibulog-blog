@@ -1,5 +1,5 @@
 ---
-layout: "../layouts/BlogPost.astro"
+layout: "../../layouts/BlogPost.astro"
 title: "京都の嵐山に行ったらちょっと遠くまで歩いたほうがいいと思う" 
 description: "京都の嵐山に行ったら、ぜひ「二尊院」に足を運んでみてね、というお話です。"
 pubDate: "2020/06/08"

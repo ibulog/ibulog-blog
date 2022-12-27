@@ -1,8 +1,8 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../config';
 
 export const itemsPerPage = 10
 export async function getStaticPaths({ paginate }) {
@@ -103,7 +103,7 @@ const { start, end, total, data, currentPage, lastPage } = page
       <div class="page">
         <div class="page-button">
           {currentPage !== 1 && currentPage !== 2 ? <a href={page.url.prev}><i class="fa-regular fa-circle-left"></i> Prev</a> : null}
-          {currentPage === 2 ? <a href='/'><i class="fa-regular fa-circle-left"></i> Prev</a> : null}
+          {currentPage === 2 ? <a href='/blog'><i class="fa-regular fa-circle-left"></i> Prev</a> : null}
           {currentPage !== lastPage ? <a href={page.url.next}>Next <i class="fa-regular fa-circle-right"></i></a> : null}
         </div>
         <div class="page-number">

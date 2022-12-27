@@ -1,5 +1,5 @@
 ---
-layout: "../layouts/BlogPost.astro"
+layout: "../../layouts/BlogPost.astro"
 title: "UXライター歴2/3年の私が、UI文言をつくるときに考えたりやったりしていること"
 description: "UXライター歴2/3年の私が、UI文言作成時に何を考えているのか、何をしているのかをメモしています。"
 pubDate: "2022/12/04"

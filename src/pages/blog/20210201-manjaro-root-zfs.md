@@ -1,5 +1,5 @@
 ---
-layout: "../layouts/BlogPost.astro"
+layout: "../../layouts/BlogPost.astro"
 title: "ManjaroをZFS上にインストールする"
 description: "ZFSのパーティションをrootとして、Manjaroをインストールする方法を説明します。"
 pubDate: "2021/2/1"

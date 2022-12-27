@@ -1,5 +1,5 @@
 ---
-layout: "../layouts/BlogPost.astro"
+layout: "../../layouts/BlogPost.astro"
 title: "ユーノスロードスターのECUを調べてみたら、いろいろあって交換する羽目になった"
 description: "私のNA8C ユーノスロードスターのECUについてのお話です。"
 pubDate: "2021/08/01"
