@@ -3,6 +3,8 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
+
+
 ---
 
 <html lang="en">
@@ -11,6 +13,8 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
 		<style>
 			.wrapper {
 				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
 				margin-top: 2em;
 				margin-bottom: 2em;
 			}
@@ -20,6 +24,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
 			}
 			.icon {
 				margin-right: 25px;
+				margin-bottom: 40px;
 			}
 			.bio {
 				line-height: 2;
