@@ -31,7 +31,7 @@ const { start, end, total, data, currentPage, lastPage } = page
         margin-bottom: 1.5em;
       }
       .title a {
-        color: black;
+        color: #030302;
         text-decoration: none;
       }
       .metaData div {
@@ -42,27 +42,31 @@ const { start, end, total, data, currentPage, lastPage } = page
       }
 			ul li time {
 				flex: 0 0 130px;
-				color: #595959;
+				color: #23221e;
 			}
       ul li span {
         margin-right: 0.25em;
         padding: 0 0.5em 0 0.5em;
-        border: 1px solid #CCCCCC;
+        border: 1px solid #c1bdb7;
         border-radius: 15px;
-				color: #595959;
+				color: #23221e;
       }
-      .page {
+      .wrapper {
         display: flex;
         justify-content: center;
         position: relative;
+        color: #030302;
       }
       .page-button {
         position: absolute;
         left: 0;
       }
       .page-button a {
-        color: black;
+        color: #030302;
         text-decoration: none;
+      }
+      .page-number {
+        color: #030302;
       }
 		</style>
 	</head>
@@ -100,7 +104,7 @@ const { start, end, total, data, currentPage, lastPage } = page
 					}
 				</ul>
 			</section>
-      <div class="page">
+      <div class="wrapper">
         <div class="page-button">
           {currentPage !== 1 && currentPage !== 2 ? <a href={page.url.prev}><i class="fa-regular fa-circle-left"></i> Prev</a> : null}
           {currentPage === 2 ? <a href='/blog'><i class="fa-regular fa-circle-left"></i> Prev</a> : null}

@@ -29,28 +29,28 @@ const {
 				margin: 0.25em 0 0;
 			}
 			hr {
-				border-top: 1px solid #ddd;
+				border-top: 0.5px solid #c1bdb7;
 				margin: 1rem 0;
 			}
 			.metaData div {
-        		font-family: 'Quicksand';
+        font-family: 'Quicksand';
 				font-size: 0.75em;
 				margin-right: 1em;
 				display: inline;
-      		}
+      }
 			.metaData time {
 				flex: 0 0 130px;
-				color: #595959;
+				color: #23221e;
 			}
 			.metaData span {
 				margin-right: 0.25em;
 				padding: 0 0.5em 0 0.5em;
-				border: 1px solid #CCCCCC;
+				border: 1px solid #c1bdb7;
 				border-radius: 15px;
-				color: #595959;
+				color: #23221e;
 			}
       .back a {
-        color: black;
+        color: #030302;
         text-decoration: none;
       }
 		</style>
@@ -63,23 +63,23 @@ const {
 				{heroImage && <img width={1080} height={540} src={heroImage} alt="" />}
 				<h1 class="title">{title}</h1>
 				<div class="metaData">
-                  <div>
-                    <i class="fa-regular fa-calendar"></i>
-                    <time datetime={pubDate}>
-                      {new Date(pubDate).toLocaleDateString('en-us', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                    </time>
-                  </div>
-                  <div>
-                    <i class="fa-solid fa-tag"></i>
-                    {tags.map((tag) => (
-                      <span>{tag}</span>
-                    ))}
-                  </div>
-                </div>
+					<div>
+						<i class="fa-regular fa-calendar"></i>
+						<time datetime={pubDate}>
+							{new Date(pubDate).toLocaleDateString('en-us', {
+								year: 'numeric',
+								month: 'short',
+								day: 'numeric',
+							})}
+						</time>
+					</div>
+					<div>
+						<i class="fa-solid fa-tag"></i>
+						{tags.map((tag) => (
+							<span>{tag}</span>
+						))}
+					</div>
+				</div>
 				{
 					updatedDate && (
 						<div>
@@ -91,8 +91,8 @@ const {
 				<slot />
 			</article>
 			<div class="back">
-				<a href="/"><i class="fa-solid fa-arrow-rotate-left"></i> Return</a>
-      		</div>
+				<a href="/blog"><i class="fa-solid fa-arrow-rotate-left"></i> Return</a>
+      </div>
 		</main>
 		<Footer />
 	</body>
