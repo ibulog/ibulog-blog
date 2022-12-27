@@ -1,0 +1,56 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} url="/" image="/icon.jpeg" />
+		<style>
+			.wrapper {
+				display: flex;
+				margin-top: 2em;
+				margin-bottom: 2em;
+			}
+			.sectionTitle {
+				font-weight: 700;
+				font-size: var(--f-u8);
+			}
+			.icon {
+				margin-right: 25px;
+			}
+			.bio {
+				line-height: 2;
+				margin-bottom: 2rem;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div class="wrapper">
+				<img class="icon" src="/icon.jpeg" width={200} />
+				<div class="bio">
+					<span class="sectionTitle">About me</span>
+					<ul>
+						<li>
+							名前: ibulog
+						</li>
+						<li>
+							場所: 京都
+						</li>
+						<li>
+							仕事: UXライター
+						</li>
+						<li>
+							好きなもの: 車、つけもの、京都、諏訪
+						</li>
+					</ul>
+				</div>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>
