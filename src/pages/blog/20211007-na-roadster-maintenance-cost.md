@@ -48,7 +48,7 @@ heroImage: "/20211107-na-roadster-maintenance-cost/top.jpg"
 
 価格は車両本体が80万円、車検・諸経費込で100万円でした。ちょっと割高かな？と思いましたが、BBSホイールや車高調、ボディ錆なしなどを考慮して、買っちゃいました。
 
-![](20211107-na-roadster-maintenance-cost/image01.jpg)
+![](/20211107-na-roadster-maintenance-cost/image01.jpg)
 
 ## 税金・保険・車検費用
 
@@ -131,7 +131,7 @@ NAロードスターはレギュラー指定ですが、ノッキングを軽減
 
 一度屋根付きの駐車場を使ってしまうと、青空には戻れませんね。
 
-![](20211107-na-roadster-maintenance-cost/image02.jpg)
+![](/20211107-na-roadster-maintenance-cost/image02.jpg)
 
 ### ガソリン・駐車場代まとめ
 
@@ -153,7 +153,7 @@ NAロードスターはレギュラー指定ですが、ノッキングを軽減
 
 乗り始めて2ヶ月、京都の細い路地でブロック塀にフェンダーを擦ってしまいました...
 
-![](20211107-na-roadster-maintenance-cost/image03.jpg)
+![](/20211107-na-roadster-maintenance-cost/image03.jpg)
 
 10kmくらいの低速走行での擦りだったため、被害が最小限だったのは不幸中の幸いでした。
 
@@ -167,7 +167,7 @@ NAロードスターはレギュラー指定ですが、ノッキングを軽減
 
 警察とレッカーを手配して、自分はレンタカーのプリウスで帰りました。
 
-![](20211107-na-roadster-maintenance-cost/image04.jpg)
+![](/20211107-na-roadster-maintenance-cost/image04.jpg)
 
 原因はコンデンサー液漏れによるECU故障。これの修理費用が**11万円**！
 
@@ -282,11 +282,11 @@ ECUの余計な11万円と、事故による板金7万円、きれいに乗る�
 
 #### Before：
 
-![](20211107-na-roadster-maintenance-cost/image05.jpg)
+![](/20211107-na-roadster-maintenance-cost/image05.jpg)
 
 #### After：
 
-![](20211107-na-roadster-maintenance-cost/image06.jpg)
+![](/20211107-na-roadster-maintenance-cost/image06.jpg)
 
 ロードスターを購入した段階で、絶対に全塗装はやろうと思っていました。20年以上前の車なので、塗装は傷んでいて当然です。
 
@@ -304,7 +304,7 @@ ECUの余計な11万円と、事故による板金7万円、きれいに乗る�
 
 オーディオはCarPlay対応。ナビタイムのナビを使っています。
 
-![](20211107-na-roadster-maintenance-cost/image07.jpg)
+![](/20211107-na-roadster-maintenance-cost/image07.jpg)
 
 | 機器名 | 費用 |
 | :--- | :---|
@@ -319,7 +319,7 @@ ECUの余計な11万円と、事故による板金7万円、きれいに乗る�
 
 Vスペシャルのタン色以外の黒色の部分は、できるだけ白ステッチ革で揃えていく方針です。残すはコラムカバーのみ。
 
-![](20211107-na-roadster-maintenance-cost/image08.jpg)
+![](/20211107-na-roadster-maintenance-cost/image08.jpg)
 
 |  | 費用 |
 | :--- | :---|
@@ -335,7 +335,7 @@ Vスペシャルのタン色以外の黒色の部分は、できるだけ白ス�
 
 両面テープで貼り付けるのですが、この作業が非常に難儀したのを覚えています...
 
-![](20211107-na-roadster-maintenance-cost/image09.jpg)
+![](/20211107-na-roadster-maintenance-cost/image09.jpg)
 
 価格は**18,700円**でした。
 
@@ -345,7 +345,7 @@ Vスペシャルのタン色以外の黒色の部分は、できるだけ白ス�
 
 普段走っていて「なんか不安感あるな」「ちょっと左に流れるな」という感覚があって、せっかくなので専門店で調整してもらいました。
 
-![](20211107-na-roadster-maintenance-cost/image10.jpg)
+![](/20211107-na-roadster-maintenance-cost/image10.jpg)
 
 作業価格は**49,500円**と、相場よりはお高めです。
 
@@ -423,7 +423,7 @@ TE37Vみたく太いスポークのホイールもいいですが、NAはちょ�
 
 ## これからNAロードスター購入を検討している方へ
 
-![](20211107-na-roadster-maintenance-cost/image11.jpg)
+![](/20211107-na-roadster-maintenance-cost/image11.jpg)
 
 まず、2021年現在、NAロードスターの価格はめちゃ高騰しています。私は2018年に滑り込みでアウトかセーフかわからないくらいのタイミングでそこそこ良個体を買えましたが、今は無理です。
 
