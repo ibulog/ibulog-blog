@@ -9,11 +9,11 @@ body {
 	padding: 20px;
 	max-width: 700px;
 	text-align: left;
-	background-color: #fff;
+	background-color: #f8f7f6;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 	line-height: 1.5;
-	color: #444;
+	color: #23221e;
 }
 h1,
 h2,
@@ -23,10 +23,10 @@ h5,
 h6,
 strong,
 b {
-	color: #222;
+	color: #23221e;
 }
 a {
-	color: #3273dc;
+	color: #0071c1;
 }
 textarea {
 	width: 100%;
@@ -47,7 +47,8 @@ img {
 }
 code {
 	padding: 2px 5px;
-	background-color: #f2f2f2;
+	background-color: #f2f1f0;
+	color: #e01e5a;
 }
 pre {
 	padding: 1rem;
@@ -56,9 +57,12 @@ pre > code {
 	all: unset;
 }
 blockquote {
-	border: 1px solid #999;
-	color: #222;
+	border: 1px solid #c1bdb7;
+	color: #23221e;
 	padding: 2px 0px 2px 20px;
 	margin: 0px;
 	font-style: italic;
+}
+mark {
+	background-color: #ffcc17;
 }
