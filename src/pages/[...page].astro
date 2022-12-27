@@ -51,9 +51,15 @@ const { start, end, total, data, currentPage, lastPage } = page
         border-radius: 15px;
 				color: #595959;
       }
-      .page a {
+      .page {
+        display: flex;
+      }
+      .page-button a {
         color: black;
         text-decoration: none;
+      }
+      .page-number {
+        margin-left: auto;
       }
 		</style>
 	</head>
@@ -92,9 +98,14 @@ const { start, end, total, data, currentPage, lastPage } = page
 				</ul>
 			</section>
       <div class="page">
-        {currentPage !== 1 && currentPage !== 2 ? <a href={page.url.prev}><i class="fa-regular fa-circle-left"></i> Prev</a> : null}
-        {currentPage === 2 ? <a href='/'><i class="fa-regular fa-circle-left"></i> Prev</a> : null}
-        {currentPage !== lastPage ? <a href={page.url.next}>Next <i class="fa-regular fa-circle-right"></i></a> : null}
+        <div class="page-button">
+          {currentPage !== 1 && currentPage !== 2 ? <a href={page.url.prev}><i class="fa-regular fa-circle-left"></i> Prev</a> : null}
+          {currentPage === 2 ? <a href='/'><i class="fa-regular fa-circle-left"></i> Prev</a> : null}
+          {currentPage !== lastPage ? <a href={page.url.next}>Next <i class="fa-regular fa-circle-right"></i></a> : null}
+        </div>
+        <div class="page-number">
+          {currentPage} / {lastPage}
+        </div>
       </div>
 		</main>
 		<Footer />
