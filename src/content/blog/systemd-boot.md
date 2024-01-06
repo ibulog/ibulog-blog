@@ -1,9 +1,9 @@
 ---
-layout: "../../layouts/BlogPost.astro"
 title: "Ubuntu 20.04でsystemd-bootを試してみたら、けっこういい感じだった"
 description: "Ubuntu 20.04で、ブートローダーにsystemd-bootを使用する手順を説明しています。"
-pubDate: "Jun 06 2020"
+pubDate: 2020-06-14
 tags: ["Linux", "Infrastracture"]
+heroImage: ""
 ---
 
 最近姿勢を正そうと頑張っているいぶろぐです。

@@ -1,9 +1,9 @@
 ---
-layout: "../../layouts/BlogPost.astro"
 title: "ユーノスロードスターのパワーウィンドウが故障したので、自分で修理した" 
 description: "NA8C ユーノスロードスターのパワーウィンドウワイヤー切れを修理する手順を説明します。"
-pubDate: "2019/11/17"
+pubDate: 2019-11-17
 tags: ["Roadster"]
+heroImage: ""
 ---
 
 こんにちは。

@@ -1,16 +1,23 @@
 ---
+import type { GetStaticPathsOptions, Page } from "astro";
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../config';
 
-export const itemsPerPage = 10
-export async function getStaticPaths({ paginate }) {
-  const allPosts = await Astro.glob('./*.{md,mdx}')
+type Props = {
+  page: Page<CollectionEntry<'blog'>>;
+};
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const allPosts = await getCollection('blog');
   const allPostsSorted = allPosts.sort(
-    (a, b) => new Date(b.frontmatter.pubDate).valueOf() - new Date(a.frontmatter.pubDate).valueOf()
+    (a, b) => new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf()
   )
-  return paginate(allPostsSorted, { pageSize: itemsPerPage })
+  return paginate(allPostsSorted, { pageSize: 3 });
 }
 
 const { page } = Astro.props
@@ -76,16 +83,16 @@ const { start, end, total, data, currentPage, lastPage } = page
 			<section>
 				<ul>
 					{
-						page.data.map((post) => (
+						page.data.map(({ data, slug }) => (
 							<li>
 								<div class="title">
-								  <a href={post.url}>{post.frontmatter.title}</a>
+								  <a href={`/blog/${slug}`}>{data.title}</a>
                 </div>
                 <div class="metaData">
                   <div>
                     <i class="fa-regular fa-calendar"></i>
-                    <time datetime={post.frontmatter.pubDate}>
-                      {new Date(post.frontmatter.pubDate).toLocaleDateString('en-us', {
+                    <time datetime={data.pubDate}>
+                      {new Date(data.pubDate).toLocaleDateString('en-us', {
                         year: 'numeric',
                         month: 'short',
                         day: 'numeric',
@@ -94,7 +101,7 @@ const { start, end, total, data, currentPage, lastPage } = page
                   </div>
                   <div>
                     <i class="fa-solid fa-tag"></i>
-                    {post.frontmatter.tags.map((tag) => (
+                    {data.tags.map((tag) => (
                       <span>{tag}</span>
                     ))}
                   </div>

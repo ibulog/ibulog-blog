@@ -1,8 +1,7 @@
 ---
-layout: "../../layouts/BlogPost.astro"
 title: "NA8C ユーノスロードスターを3年間所有してかかった費用まとめ"
 description: "NA8C ユーノスロードスターを3年間維持してかかった費用をまとめています。"
-pubDate: "2021/11/07"
+pubDate: 2021-11-07
 tags: ["Roadster"]
 heroImage: "/20211107-na-roadster-maintenance-cost/top.jpg" 
 ---

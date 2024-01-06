@@ -1,9 +1,9 @@
 ---
-layout: "../../layouts/BlogPost.astro"
 title: "LinuxのブラウザでYouTube 4K60fpsをヌルヌルで再生したい人生だった"
 description: "Geforce GXT1660Tiの再生支援を使って、LinuxのブラウザでYouTube 4K60fpsの再生にトライしています。"
-pubDate: "2020/11/24"
+pubDate: 2020-11-24
 tags: ["Linux"]
+heroImage: ""
 ---
 
 「みんなやってそうだけど意外と情報がなかった」シリーズ、始まりました。

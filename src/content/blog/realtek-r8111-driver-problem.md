@@ -1,8 +1,7 @@
 ---
-layout: "../../layouts/BlogPost.astro"
 title: "Realtek 8111Gのドライバー問題を解決する"
 description: "なんかサーバーが不安定だと思ったらRealtekのドライバーのせいでしたというお話です。"
-pubDate: "2023/02/01"
+pubDate: 2023-02-01
 tags: ["Infrastructure"]
 heroImage: "/20230201-realtek-r8111-driver-problem/top.jpeg"
 ---

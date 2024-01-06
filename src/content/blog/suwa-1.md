@@ -1,8 +1,7 @@
 ---
-layout: "../../layouts/BlogPost.astro"
 title: "諏訪が好き ミシャグジさまの 諏訪が好き（前編）" 
 description: "いぶろぐが愛してやまない「諏訪大社」のいろいろのお話です。"
-pubDate: "2020/06/28"
+pubDate: 2020-06-28
 tags: ["History"]
 heroImage: "/20200628-suwa-1/top.webp" 
 ---
