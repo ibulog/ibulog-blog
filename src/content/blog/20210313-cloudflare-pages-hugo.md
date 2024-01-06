@@ -1,7 +1,7 @@
 ---
 title: "Cloudflare Pages + Hugoでウェブアルバムをつくった"
 description: "Hugoで静的サイトを構築し、Cloudflare Pagesにデプロイする手順を説明します。"
-pubDate: "2021/3/13"
+pubDate: 2021-03-13
 tags: ["Frontend"]
 ---
 

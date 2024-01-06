@@ -1,7 +1,7 @@
 ---
 title: "Astroでページ分割（pagination）を実装する"
 description: "Astroでpaginationを実装する方法を説明します。"
-pubDate: "2022/12/28"
+pubDate: 2022-12-28
 tags: ["Frontend"]
 heroImage: "/20221228-astro-pagination/top.jpg"
 ---

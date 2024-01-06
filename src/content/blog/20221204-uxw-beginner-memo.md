@@ -1,7 +1,7 @@
 ---
 title: "UXライター歴2/3年の私が、UI文言をつくるときに考えたりやったりしていること"
 description: "UXライター歴2/3年の私が、UI文言作成時に何を考えているのか、何をしているのかをメモしています。"
-pubDate: "2022/12/04"
+pubDate: 2022-12-04
 tags: ["UX Writing"]
 heroImage: "/20221204-uxw-beginner-memo/top.jpeg"
 ---

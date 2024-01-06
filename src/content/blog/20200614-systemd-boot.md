@@ -1,7 +1,7 @@
 ---
 title: "Ubuntu 20.04でsystemd-bootを試してみたら、けっこういい感じだった"
 description: "Ubuntu 20.04で、ブートローダーにsystemd-bootを使用する手順を説明しています。"
-pubDate: "2020/06/06"
+pubDate: 2020-06-14
 tags: ["Linux", "Infrastracture"]
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "京都の嵐山に行ったらちょっと遠くまで歩いたほうがいいと思う" 
 description: "京都の嵐山に行ったら、ぜひ「二尊院」に足を運んでみてね、というお話です。"
-pubDate: "2020/06/08"
+pubDate: 2020-06-08
 tags: ["History"]
 heroImage: "/20200608-kyoto-arashiyama/top.webp" 
 ---

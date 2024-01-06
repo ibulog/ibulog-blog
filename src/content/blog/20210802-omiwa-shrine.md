@@ -1,7 +1,7 @@
 ---
 title: "最も古い神社のかたち「大神神社」を訪ねる" 
 description: "奈良は三輪山麓にある「大神大社」を訪れたお話です。"
-pubDate: "2021/08/02"
+pubDate: 2021-08-02
 tags: ["History"]
 heroImage: "/20210802-omiwa-shrine/top.webp" 
 ---

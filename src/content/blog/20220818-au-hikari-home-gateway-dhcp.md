@@ -1,7 +1,7 @@
 ---
 title: "auひかりで発生する「通信が突然切れる問題」を、DHCPサーバーを立てて解決する"
 description: "auひかりで発生する「通信が突然切れる問題」を、DHCPサーバーを立てて解決する手順を説明します。"
-pubDate: "2022/8/18"
+pubDate: 2022-08-18
 tags: ["Linux", "Infrastracture"]
 ---
 
