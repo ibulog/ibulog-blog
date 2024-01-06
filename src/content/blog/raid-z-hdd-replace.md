@@ -3,6 +3,7 @@ title: "【備忘録】RAID-ZのHDD交換手順"
 description: "RAID-Zを構築したHDDの交換手順を説明します。"
 pubDate: 2022-07-16
 tags: ["Linux"]
+heroImage: ""
 ---
 
 今年はなんでもいいからアウトプットしていこうと思い、久々にブログを動かしてみました。
