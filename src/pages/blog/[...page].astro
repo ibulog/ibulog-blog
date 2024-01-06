@@ -17,7 +17,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const allPostsSorted = allPosts.sort(
     (a, b) => new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf()
   )
-  return paginate(allPostsSorted, { pageSize: 3 });
+  return paginate(allPostsSorted, { pageSize: 10 });
 }
 
 const { page } = Astro.props
