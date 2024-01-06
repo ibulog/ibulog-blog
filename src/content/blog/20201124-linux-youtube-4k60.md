@@ -1,0 +1,170 @@
+---
+title: "LinuxのブラウザでYouTube 4K60fpsをヌルヌルで再生したい人生だった"
+description: "Geforce GXT1660Tiの再生支援を使って、LinuxのブラウザでYouTube 4K60fpsの再生にトライしています。"
+pubDate: "2020/11/24"
+tags: ["Linux"]
+---
+
+「みんなやってそうだけど意外と情報がなかった」シリーズ、始まりました。
+
+記念すべき第一回は「YouTubeの4K60fpsムービーをLinux＆ブラウザで視聴する」です。
+
+意外と情報がなかったので、戦いの模様を書いておきます。
+
+## そろそろグラボ買い替えよか
+
+### Radeon RX480 限界に到達
+
+YouTubeの4K60fpsは「VP9」コーデックなんですが、こいつのデコードに我が家のおじさんグラボ(Radeon RX480)は対応していないとのこと。
+
+腐っても3年前のミドルハイなんですから、VP9くらいサクッと読み解いていただきたいものなんですが・・・
+
+ちなみに同世代のGeforceはVP9デコードに対応しており、RadeonがVP9デコードにきちんと対応したのはRX5000シリーズから。
+
+AMDさん、あんまり動画やる気ないんですかね(Fluid Motion廃止とか)。
+
+### 日本橋になんか怪しいやつが売ってた
+
+「最近シロッコファンのGTX1660Tiがパソコン工房に蔓延している」という情報を聞きつけ、日本橋に赴くとこんなものを拾うことができました。
+
+![](/20201124-linux-youtube-4k60/image01.jpg)
+
+完全にノーブランドの謎グラボ。例のグラボとは違って映像出力はきちんとついています。
+
+![](/20201124-linux-youtube-4k60/image02.jpg)
+
+私が使っているJonsbo RM2はけっこう小さいケースなんで、外排気のシロッコファンはありがたい。何回かベンチ回しましたが、とりあえず無事動いてるみたいです。
+
+![](/20201124-linux-youtube-4k60/image03.jpg)
+
+こんな感じでめちゃくちゃ溢れてました。15000円台で10日保証は買いですね。
+
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">GTX1660TI15980円とGTX16660 13980円 <a href="https://t.co/EcIgD2wYRD">pic.twitter.com/EcIgD2wYRD</a></p>&mdash; 白銀のレガ (@megutasorin) <a href="https://twitter.com/megutasorin/status/1330010172828176384?ref_src=twsrc%5Etfw">November 21, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+## LinuxでVP9は一筋縄ではいかないみたい
+
+我が家のCPUはおじいさんHaswell(Core i5 4570)なので、4K60fpsのVP9をCPUだけで再生するのは無理。
+
+というわけでグラボに再生支援していただきたいのですが、これがどうも一筋縄ではいかないようで。
+
+### LinuxとNvidiaとVP9を取り巻く現状
+
+以下、適当まとめ。
+
+- Geforce GTX1660TiはVP9デコードに対応している
+- NvidiaのLinux向けプロプライエタリドライバもVDPAUによるVP9デコードに対応している
+- LinuxではChromiumのbeta/dev版とFirefoxでVAAPIによる再生支援を利用できる
+- VAAPIのバックエンドにVDPAUを使える「vdpau-va-driver」というものが存在する
+
+ここまで聞くとブラウザでもVP9を再生支援できそうなのですが、vdpau-va-driverがVP9に非対応。
+
+あぁ〜夢敗れる・・・と思いきや、捨てる神あれば拾う神ありとはよく言ったもの。
+
+### vdpau-va-driver-vp9
+
+なんと有志によってvdpau-va-driverにVP9デコード対応パッチを当てた「vdpau-va-driver-vp9」というものが公開されていました。
+
+[xtknight/vdpau-va-driver-vp9: Experimental VP9 codec support for vdpau-va-driver (NVIDIA VDPAU-VAAPI wrapper) and chromium-vaapi](https://github.com/xtknight/vdpau-va-driver-vp9)
+
+これを使うとVAAPIのバックエンドにVDPAUを使ってVP9を再生支援できる！！
+
+というわけでセットアップやっていきましょう。
+
+## vdpau-va-driver-vp9セットアップ
+
+まずは依存パッケージをインストール。ビルド時のエラーを見つつ調整していったので、もしかしたら無駄なパッケージがあるかもしれません。
+
+```shell
+sudo apt install \
+git \
+build-essential \
+automake \
+autoconf \
+libtool \
+pkg-config \
+meson \
+libx11-dev \
+xtrans-dev \
+x11proto-dri2-dev \
+x11proto-dev \
+libxext-dev \
+x11proto-xext-dev \
+libx11-xcb-dev \
+doxygen \
+dot2tex \
+libva-dev
+```
+
+続いてVP9パッチ済みのVDPAUライブラリ`libvdpau`をビルド＆インストール。
+
+```shell
+git clone https://gitlab.freedesktop.org/vdpau/libvdpau.git
+cd libvdpau
+meson --prefix=/usr build
+ninja -C build
+sudo ninja -C build install
+```
+
+今回のチャレンジの核となる`vdpau-va-driver-vp9`をビルド＆インストールします。インストールしたあとは念のため再起動。
+
+```shell
+git clone https://github.com/xtknight/vdpau-va-driver-vp9.git
+cd vdpau-va-driver-vp9
+./autogen.sh --prefix=/usr
+make
+sudo make install
+```
+
+Firefoxを使いたい場合はそのままでOK、Chromiumを使いたい場合はbeta/dev版をインストール。
+
+```shell
+sudo add-apt-repository ppa:saiarcot895/chromium-dev
+sudo apt update
+sudo apt install chromium-browser
+```
+
+Chromiumの場合はchrome://flagsで「Hardware-accelerated video decode」を有効に。
+
+これで万事OKのはず！だったんですが・・・
+
+## 無念の敗北
+
+嬉々としてYouTubeの4K60fps動画を再生してみると・・・カクカクなんですが。
+
+vainfoを見ると`nvidia_drv_video.so`を読み込んでいるし、`VAProfileVP9Profile0`も認識している。
+
+![](/20201124-linux-youtube-4k60/image04.png)
+
+でもFirefoxがGPUのメモリを全然使ってない。
+
+![](/20201124-linux-youtube-4k60/image05.png)
+
+何よりCPUが張り付いてしまっている。
+
+![](/20201124-linux-youtube-4k60/image06.png)
+
+SMPlayerでハードウェアデコードに「VAAPI」を設定すると、きちんとSMPlayerバックエンドのmpvがGPUのメモリを使う。動画自体もヌルヌルで再生できる。ハードウェアデコードに「VDPAU」を設定した場合も同じ。
+
+![](/20201124-linux-youtube-4k60/image07.png)
+
+## LinuxのブラウザでVAAPIの再生支援が使えなくなっている？
+
+状況から見て、おそらくブラウザでVAAPIの再生支援が効かなくなってしまっていますね。なぜか。
+
+これが直ればたぶん「LinuxでブラウザからYouTubeの4K60fpsをグラボの支援を使ってヌルヌルで再生する」という夢を叶えることができると思うのですが、今回は力及ばずここまで・・・
+
+SMPlayerを使えば「LinuxでYouTubeの4K60fpsをグラボの支援を使ってヌルヌルで再生する」ことは可能なので、しらばくこれで我慢します。
+
+ブラウザのVAAPI再生支援はバグで死んでいるのか、こちらの不手際なのか、ちょっとわからないので追加で調査していきます。
+
+YouTuber・瀬戸弘司の4K60fps実況をコメントと一緒に再生できる日は来るのか・・・
+
+### P.S.
+
+RX480のリファレンス(左)と今回のGTX1660Ti(右)のサイズ比較。基板だけならGTX1660Tiのほうが短いのにケース含めるとRX480のほうが短くなるという。
+
+![](/20201124-linux-youtube-4k60/image08.jpg)
+
+というわけでRX480さん、3年間お疲れ様でした。
+
+![](/20201124-linux-youtube-4k60/image09.jpg)
