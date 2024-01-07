@@ -4,6 +4,7 @@ import type { CollectionEntry } from "astro:content";
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Tag from '../components/Tag.astro';
 import MarkdownPostLayout from '../../layouts/MarkdownPostLayout.astro';
 
 type Props = {
@@ -38,13 +39,6 @@ const { slug } = entry;
 				flex: 0 0 130px;
 				color: #23221e;
 			}
-			.metaData span {
-				margin-right: 0.25em;
-				padding: 0 0.5em 0 0.5em;
-				border: 1px solid #c1bdb7;
-				border-radius: 15px;
-				color: #23221e;
-			}
       .back a {
         color: #030302;
         text-decoration: none;
@@ -72,7 +66,7 @@ const { slug } = entry;
 					<div>
 						<i class="fa-solid fa-tag"></i>
 						{tags.map((tag) => (
-							<span>{tag}</span>
+							<Tag tag={tag} />
 						))}
 					</div>
 				</div>

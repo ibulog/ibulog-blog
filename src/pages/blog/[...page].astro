@@ -6,6 +6,8 @@ import { getCollection } from "astro:content";
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import Pagination from '../../components/Pagination.astro';
+import Tag from '../../components/Tag.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../config';
 
 type Props = {
@@ -17,7 +19,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const allPostsSorted = allPosts.sort(
     (a, b) => new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf()
   )
-  return paginate(allPostsSorted, { pageSize: 10 });
+  return paginate(allPostsSorted, { pageSize: 7 });
 }
 
 const { page } = Astro.props
@@ -51,30 +53,7 @@ const { start, end, total, data, currentPage, lastPage } = page
 				flex: 0 0 130px;
 				color: #23221e;
 			}
-      ul li span {
-        margin-right: 0.25em;
-        padding: 0 0.5em 0 0.5em;
-        border: 1px solid #c1bdb7;
-        border-radius: 15px;
-				color: #23221e;
-      }
-      .wrapper {
-        display: flex;
-        justify-content: center;
-        position: relative;
-        color: #030302;
-      }
-      .page-button {
-        position: absolute;
-        left: 0;
-      }
-      .page-button a {
-        color: #030302;
-        text-decoration: none;
-      }
-      .page-number {
-        color: #030302;
-      }
+
 		</style>
 	</head>
 	<body>
@@ -102,7 +81,7 @@ const { start, end, total, data, currentPage, lastPage } = page
                   <div>
                     <i class="fa-solid fa-tag"></i>
                     {data.tags.map((tag) => (
-                      <span>{tag}</span>
+                      <Tag tag={tag} />
                     ))}
                   </div>
                 </div>
@@ -111,16 +90,7 @@ const { start, end, total, data, currentPage, lastPage } = page
 					}
 				</ul>
 			</section>
-      <div class="wrapper">
-        <div class="page-button">
-          {currentPage !== 1 && currentPage !== 2 ? <a href={page.url.prev}><i class="fa-regular fa-circle-left"></i> Prev</a> : null}
-          {currentPage === 2 ? <a href='/blog'><i class="fa-regular fa-circle-left"></i> Prev</a> : null}
-          {currentPage !== lastPage ? <a href={page.url.next}>Next <i class="fa-regular fa-circle-right"></i></a> : null}
-        </div>
-        <div class="page-number">
-          {currentPage} / {lastPage}
-        </div>
-      </div>
+      <Pagination currentPage={currentPage} lastPage={lastPage} page={page} />
 		</main>
 		<Footer />
 	</body>
