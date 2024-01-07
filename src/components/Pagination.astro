@@ -1,0 +1,28 @@
+---
+const {currentPage, lastPage, page} = Astro.props
+---
+
+<div class="wrapper">
+  <div class="page-button prev">
+    {currentPage !== 1 && currentPage !== 2 ? <a href={page.url.prev}><i class="fa-regular fa-circle-left"></i> Prev</a> : null}
+    {currentPage === 2 ? <a href='/blog'><i class="fa-regular fa-circle-left prev"></i> Prev</a> : null}
+  </div>
+  <div class="page-button next">
+    {currentPage !== lastPage ? <a href={page.url.next}>Next <i class="fa-regular fa-circle-right"></i></a> : null}
+  </div>
+</div>
+<style>
+.wrapper {
+  display: flex;
+  position: relative;
+  color: #030302;
+  justify-content: space-between;
+}
+.page-button a {
+  color: #030302;
+  text-decoration: none;
+}
+.page-number {
+  color: #030302;
+}
+</style>
