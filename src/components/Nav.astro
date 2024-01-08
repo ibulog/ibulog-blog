@@ -1,0 +1,68 @@
+---
+const currentPageTitle = '🥱 About';
+---
+<style>
+#nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f7f6;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #23221e;
+  gap: 0.25rem;
+
+}
+#toggle {
+  display: none;
+  cursor: pointer;
+}
+#menu {
+  display: none;
+}
+#toggle:checked + #menu {
+  display: block;
+  position: absolute;
+  top: 50px;
+}
+#drop-menu {
+  list-style: none;
+  background-color: #f8f7f6;
+  /* https://getcssscan.com/css-box-shadow-examplesの#33 */
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  border-radius: 5px;
+  padding: 0;
+}
+.drop-menu-list a {
+  display: block;
+  padding: 7px 10px;
+  text-decoration: none;
+  color: #23221e;
+}
+#arrow{
+  transform: rotate(180deg);
+}
+#toggle:checked ~ #arrow{
+  transform: rotate(0deg);
+}
+</style>
+<div id="nav">
+  <label for="toggle" onclick="">{currentPageTitle}</label>
+  <input type="checkbox" id="toggle" autocomplete="off">
+  <div id="menu">
+    <ul id="drop-menu">
+      <li class="drop-menu-list">
+        <a href="/">🥱 About</a>
+      </li>
+      <li class="drop-menu-list">
+        <a href="/">🧑‍🔧 Job</a>
+      </li>
+      <li class="drop-menu-list">
+        <a href="/blog">📝 Blog</a>
+      </li>
+    </ul>
+  </div>
+  <div id="arrow">
+    <i class="fa-solid fa-chevron-up"></i>
+  </div>
+</div>
