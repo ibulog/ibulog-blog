@@ -3,14 +3,21 @@ const today = new Date();
 ---
 
 <footer>
-	&copy; {today.getFullYear()} ibulog, Built with Astro
+	<span>
+		&copy; {today.getFullYear()} ibulog, Built with Astro
+	</span>
 </footer>
 <style>
-	footer {
-		padding: 25px;
-		text-align: right;
-		font-size: small;
-		font-weight: 300;
-		color: #030302;
-	}
+footer {
+	display: flex;
+	align-items: center;
+	font-size: small;
+	height: 100px;
+	font-weight: 300;
+	color: #030302;
+}
+nav a{
+	color: #030302;
+	margin-right: 12px;
+}
 </style>
