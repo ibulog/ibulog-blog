@@ -25,10 +25,15 @@ const pageKind = 'about'
 				font-size: var(--f-u8);
 			}
 			.icon {
+				width: 150px; 
 				margin: 0 25px 40px 25px;
 				border-radius: 50%;
 				border: 1px solid #ccc;
+				transition: transform 2s ease;
 			}
+			.icon:hover {
+      transform: rotate(360deg); /* クリック時に360度回転 */
+    }
 			.bio {
 				line-height: 2;
 				margin-bottom: 2rem;
@@ -42,7 +47,7 @@ const pageKind = 'about'
 				About
 			</h1>
 			<div class="wrapper">
-				<img class="icon" src="/icon.jpeg" width={100} />
+				<img class="icon" src="/icon.jpeg" />
 				<div class="bio">
 					<ul>
 						<li>
