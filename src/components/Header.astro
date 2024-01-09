@@ -1,6 +1,9 @@
 ---
 import HeaderLink from './HeaderLink.astro';
+import Nav from './Nav.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../config';
+
+const {pageKind} = Astro.props;
 ---
 
 <header>
@@ -9,16 +12,12 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../config';
 			{SITE_TITLE}
 		</h2>
 	</a>
-	<nav>
-		<a href="/"><i class="fa-solid fa-user"></i></a>
-		<a href="/blog"><i class="fa-solid fa-pen"></i></a>
-		<a href="https://twitter.com/ibulog_" target="_blank"><i class="fa-brands fa-twitter fa-lg"></i></a>
-		<a href="https://github.com/ibulog" target="_blank"><i class="fa-brands fa-github fa-lg"></i></a>
-	</nav>
+	<Nav pageKind={pageKind}/>
 </header>
 <style>
 	header {
 		display: flex;
+		justify-content: space-between;
 		margin: 0em 0 1em;
 	}
 	header a {
@@ -30,12 +29,5 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../config';
 	}
 	h2 {
 		margin: 0.5em 0;
-	}
-	nav {
-		margin: 18px 0 18px auto;
-	}
-	nav a {
-		color: #030302;
-		margin: 12px;
 	}
 </style>
