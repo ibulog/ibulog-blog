@@ -4,7 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
 
-const pageKind = 'job'
+const pageKind = '🧑‍🔧 Job'
 ---
 <style>
   .job {
@@ -18,7 +18,9 @@ const pageKind = 'job'
 	<body>
 		<Header pageKind={pageKind}/>
 		<main>
-    <h1>Job</h1>
+    <h1>
+      {pageKind}
+    </h1>
     <h2>
       <small class="job">
         <time datetime="2022-03">
