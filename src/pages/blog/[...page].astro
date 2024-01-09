@@ -24,7 +24,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 
 const { page } = Astro.props
 const { start, end, total, data, currentPage, lastPage } = page
-const pageKind = 'blog'
+const pageKind = '📝 Blog'
 ---
 
 <!DOCTYPE html>
@@ -37,17 +37,19 @@ const pageKind = 'blog'
 				padding: unset;
 			}
       ul li {
-        margin-bottom: 1.5em;
+        margin-bottom: 2em;
       }
       .title a {
         color: #030302;
-        text-decoration: none;
       }
-      .metaData div {
+      .metaData {
         font-family: 'Quicksand';
         font-size: 0.75em;
-        margin-right: 1em;
-        display: inline;
+        margin-top: 8px;
+        display: flex;
+      }
+      #tag {
+        margin-left: 16px;
       }
 			ul li time {
 				flex: 0 0 130px;
@@ -60,18 +62,19 @@ const pageKind = 'blog'
 		<Header pageKind={pageKind} />
 		<main>
       <h1>
-        Blog
+        {pageKind}
       </h1>
 			<section>
 				<ul>
 					{
 						page.data.map(({ data, slug }) => (
 							<li>
+                <h2>
 								<div class="title">
 								  <a href={`/blog/${slug}`}>{data.title}</a>
                 </div>
                 <div class="metaData">
-                  <div>
+                  <div id="datetime">
                     <i class="fa-regular fa-calendar"></i>
                     <time datetime={data.pubDate}>
                       {new Date(data.pubDate).toLocaleDateString('en-us', {
@@ -80,13 +83,14 @@ const pageKind = 'blog'
                         day: 'numeric',
                       })}
                     </time>
-                  </div>
-                  <div>
+                    </div>
+                  <div id="tag">
                     <i class="fa-solid fa-tag"></i>
                     {data.tags.map((tag) => (
                       <Tag tag={tag} />
                     ))}
                   </div>
+                  </h2>
                 </div>
 							</li>
 						))

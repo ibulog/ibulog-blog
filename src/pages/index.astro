@@ -4,7 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
 
-const pageKind = 'about'
+const pageKind = '🥱 About'
 ---
 
 <html lang="en">
@@ -14,7 +14,7 @@ const pageKind = 'about'
 			.wrapper {
 				display: flex;
 				flex-wrap: wrap;
-				justify-content: center;
+				justify-content: space-around;
 				align-items: center;
 				width: 100%;
 				margin-top: 2em;
@@ -35,8 +35,24 @@ const pageKind = 'about'
       transform: rotate(360deg); /* クリック時に360度回転 */
     }
 			.bio {
+				border-radius: 10px;
+				box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+				width: 300px;
+				height: 150px;
+				padding: 20px;
 				line-height: 2;
 				margin-bottom: 2rem;
+				display: inline;
+				justify-content: center;
+			}
+			.bio-img {
+				width: 300px;
+				height: 150px;
+				padding: 20px;
+				line-height: 2;
+				margin-bottom: 2rem;
+				display: flex;
+				justify-content: center;
 			}
 		</style>
 	</head>
@@ -44,12 +60,62 @@ const pageKind = 'about'
 		<Header pageKind={pageKind}/>
 		<main>
 			<h1>
-				About
+				{pageKind}
 			</h1>
 			<div class="wrapper">
+				<div class="bio-img">
 				<img class="icon" src="/icon.jpeg" />
+				</div>
+					<div class="bio">
+					<h2>
+						ハンドルネーム	
+					</h2>
+					<p>
+						ibulog
+					</p>
+				</div>
 				<div class="bio">
+					<h2>
+						居住地
+					</h2>
+					<p>
+						京都
+					</p>
+				</div>
+				<div class="bio">
+					<h2>
+						お仕事
+					</h2>
+					<p>
+						UXライター, SmartHR
+					</p>
+					</div>
+					<div class="bio">
+					<h2>
+						好きなもの
+					</h2>
+					<p>
+						車、つけもの、京都、諏訪
+					</p>
+					</div>
+					<div class="bio">
+					<h2>
+						連絡先
+					</h2>
 					<ul>
+						<li>
+							<i class="fa-brands fa-x-twitter fa-lg"></i>
+							：
+							<a href="https://twitter.com/ibulog_" target="_blank">@ibulog_</a>
+						</li>
+						<li>
+							<i class="fa-brands fa-github fa-lg"></i>
+							：
+							<a href="https://github.com/ibulog" target="_blank">ibulog</a>
+						</li>
+					</ul>
+					</div>
+					<!-- <ul>
 						<li>
 							名前：ibulog
 						</li>
@@ -72,9 +138,8 @@ const pageKind = 'about'
 							：
 							<a href="https://github.com/ibulog" target="_blank">ibulog</a>
 						</li>
-					</ul>
+					</ul> -->
 				</div>
-			</div>
 		</main>
 		<Footer />
 	</body>

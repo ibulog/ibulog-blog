@@ -1,19 +1,5 @@
 ---
 const {pageKind} = Astro.props;
-
-let navMenuLabel = '';
-
-switch (pageKind) {
-  case 'blog':
-    navMenuLabel = '📝 Blog';
-    break;
-  case 'job':
-    navMenuLabel = '🧑‍🔧 Job';
-    break;
-  default:
-    navMenuLabel = '🥱 About';
-    break;
-}
 ---
 <style>
 #nav {
@@ -21,8 +7,7 @@ switch (pageKind) {
   justify-content: center;
   align-items: center;
   background-color: #f8f7f6;
-  font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.25rem;
   color: #23221e;
   gap: 0.25rem;
 
@@ -61,7 +46,7 @@ switch (pageKind) {
 }
 </style>
 <div id="nav">
-  <label for="toggle" onclick="">{navMenuLabel}</label>
+  <label for="toggle" onclick="">{pageKind}</label>
   <input type="checkbox" id="toggle" autocomplete="off">
   <div id="menu">
     <ul id="drop-menu">
