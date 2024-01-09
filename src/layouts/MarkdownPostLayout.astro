@@ -15,6 +15,7 @@ const { entry } = Astro.props;
 const { title, description, pubDate, heroImage, tags } = entry.data;
 const { slug } = entry;
 
+const pageKind = 'blog';
 ---
 
 <html lang="ja">
@@ -47,7 +48,7 @@ const { slug } = entry;
 	</head>
 
 	<body>
-		<Header />
+		<Header pageKind={pageKind} />
 		<main>
 			<article>
 				{heroImage && <img width={1080} height={540} src={heroImage} alt="" />}

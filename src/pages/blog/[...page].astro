@@ -24,7 +24,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 
 const { page } = Astro.props
 const { start, end, total, data, currentPage, lastPage } = page
-
+const pageKind = 'blog'
 ---
 
 <!DOCTYPE html>
@@ -57,7 +57,7 @@ const { start, end, total, data, currentPage, lastPage } = page
 		</style>
 	</head>
 	<body>
-		<Header />
+		<Header pageKind={pageKind} />
 		<main>
 			<section>
 				<ul>
