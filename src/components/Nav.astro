@@ -1,5 +1,19 @@
 ---
-const currentPageTitle = '🥱 About';
+const {pageKind} = Astro.props;
+
+let navMenuLabel = '';
+
+switch (pageKind) {
+  case 'blog':
+    navMenuLabel = '📝 Blog';
+    break;
+  case 'job':
+    navMenuLabel = '🧑‍🔧 Job';
+    break;
+  default:
+    navMenuLabel = '🥱 About';
+    break;
+}
 ---
 <style>
 #nav {
@@ -47,7 +61,7 @@ const currentPageTitle = '🥱 About';
 }
 </style>
 <div id="nav">
-  <label for="toggle" onclick="">{currentPageTitle}</label>
+  <label for="toggle" onclick="">{navMenuLabel}</label>
   <input type="checkbox" id="toggle" autocomplete="off">
   <div id="menu">
     <ul id="drop-menu">
@@ -55,7 +69,7 @@ const currentPageTitle = '🥱 About';
         <a href="/">🥱 About</a>
       </li>
       <li class="drop-menu-list">
-        <a href="/">🧑‍🔧 Job</a>
+        <a href="/job">🧑‍🔧 Job</a>
       </li>
       <li class="drop-menu-list">
         <a href="/blog">📝 Blog</a>
