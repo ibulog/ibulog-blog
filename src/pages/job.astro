@@ -6,7 +6,15 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
 
 const pageKind = 'job'
 ---
-
+<style>
+  .job {
+    display: block;
+  }
+  .company-name {
+    color: #000;
+    text-decoration: none;
+  }
+</style>
 <html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} url="/" image="/icon.jpeg" />
@@ -14,7 +22,68 @@ const pageKind = 'job'
 	<body>
 		<Header pageKind={pageKind}/>
 		<main>
-      <h1>Job</h1>
+    <h1>Job</h1>
+    <h2>
+      <small class="job">
+        <time datetime="2022-03">
+          2022年3月 
+        </time>
+        〜
+      </small>
+      <a class="company-name" href="https://smarthr.jp/">株式会社SmartHR</a>
+    </h2>
+    <ul>
+        <li><strong>所属：</strong>UXライティング部</li>
+        <li><strong>業務：</strong>UI文言・ヘルプページ作成、ヘルプセンター基盤開発</li>
+    </ul>
+    <h2>
+      <small class="job">
+        <time datetime="2021-03">
+          2021年3月
+        </time>
+        〜
+        <time datetime="2022-02">
+          2022年2月
+      </small>
+      <a class="company-name" href="https://cybozu.co.jp/">サイボウズ株式会社</a>
+    </h2>
+    <ul>
+        <li><strong>所属：</strong>システムコンサルティング本部</li>
+        <li><strong>業務：</strong>APIドキュメント・開発Tips記事作成、開発者コミュニティ運営</li>
+    </ul>
+    <h2>
+      <small class="job">
+        <time datetime="2019-11">
+          2019年11月
+        </time>
+        〜
+        <time datetime="2021-02">
+          2021年2月
+      </small>
+      <a class="company-name" href="https://gigazine.net/">GIGAZINE</a>
+    </h2>
+    <ul>
+        <li><strong>所属：</strong>技術部</li>
+        <li><strong>業務：</strong>記事作成、インフラ保守、システム開発</li>
+    </ul>
+    <h2>
+      <small class="job">
+        <time datetime="2018-04">
+          2018年4月
+        </time>
+        〜
+        <time datetime="2019-10">
+          2019年10月
+      </small>
+      <a class="company-name" href="https://www.brother.co.jp/">ブラザー工業株式会社</a>
+    </h2>
+    <ul>
+        <li><strong>所属：</strong>事業企画グループ</li>
+        <li><strong>業務：</strong>単体損益の予実管理など管理会計業務</li>
+    </ul>
+</body>
+</html>
+
 		</main>
 		<Footer />
 	</body>
