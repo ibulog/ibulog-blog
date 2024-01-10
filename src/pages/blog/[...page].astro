@@ -40,7 +40,7 @@ const pageKind = '📝 Blog'
         margin-bottom: 2.5rem;
       }
       h2 {
-        margin: 0;
+        margin-bottom: 0.5rem;
       }
       .title a {
         color: #030302;
@@ -71,6 +71,11 @@ const pageKind = '📝 Blog'
 					{
 						page.data.map(({ data, slug }) => (
 							<li>
+                <h2>
+								<div class="title">
+								  <a href={`/blog/${slug}`}>{data.title}</a>
+                </div>
+                </h2>
                 <div class="metaData">
                   <div id="datetime">
                     <i class="fa-regular fa-calendar"></i>
@@ -85,11 +90,6 @@ const pageKind = '📝 Blog'
                     ))}
                   </div>
                 </div>
-                <h2>
-								<div class="title">
-								  <a href={`/blog/${slug}`}>{data.title}</a>
-                </div>
-                </h2>
                 <div class="description">
                   <p>
                     {data.description}
