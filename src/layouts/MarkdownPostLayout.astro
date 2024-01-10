@@ -6,6 +6,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Tag from '../components/Tag.astro';
 import MarkdownPostLayout from '../../layouts/MarkdownPostLayout.astro';
+import getFormatDay from '../utils/getFormatDay.ts';
 
 type Props = {
   entry: CollectionEntry<'blog'>;
@@ -15,7 +16,7 @@ const { entry } = Astro.props;
 const { title, description, pubDate, heroImage, tags } = entry.data;
 const { slug } = entry;
 
-const pageKind = 'blog';
+const pageKind = '📝 Blog'
 ---
 
 <html lang="ja">
@@ -23,18 +24,20 @@ const pageKind = 'blog';
 		<BaseHead title={title} description={description} url={`/blog/${slug}`} image={heroImage} />
 		<style>
 			.title {
-				font-size: 2em;
-				margin: 0.25em 0 0;
+				margin: 0.25rem 0 0;
 			}
 			hr {
 				border-top: 0.5px solid #c1bdb7;
 				margin: 1rem 0;
 			}
-			.metaData div {
+			.metaData {
         font-family: 'Quicksand';
-				font-size: 0.75em;
-				margin-right: 1em;
-				display: inline;
+				font-size: 1rem;
+        margin-top: 0.5rem;
+        display: flex;
+      }
+      #tag {
+        margin-left: 16px;
       }
 			.metaData time {
 				flex: 0 0 130px;
@@ -43,7 +46,7 @@ const pageKind = 'blog';
       .back a {
         color: #030302;
         text-decoration: none;
-				font-size: 1.25em;
+				font-size: 1.25rem;
       }
 		</style>
 	</head>
@@ -58,14 +61,10 @@ const pageKind = 'blog';
 					<div>
 						<i class="fa-regular fa-calendar"></i>
 						<time datetime={pubDate}>
-							{new Date(pubDate).toLocaleDateString('en-us', {
-								year: 'numeric',
-								month: 'short',
-								day: 'numeric',
-							})}
+							{getFormatDay(pubDate)}
 						</time>
 					</div>
-					<div>
+					<div id="tag">
 						<i class="fa-solid fa-tag"></i>
 						{tags.map((tag) => (
 							<Tag tag={tag} />
