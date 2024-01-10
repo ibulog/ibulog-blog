@@ -36,7 +36,10 @@ const pageKind = '📝 Blog'
 				padding: unset;
 			}
       ul li {
-        margin-bottom: 2em;
+        margin-bottom: 2.5rem;
+      }
+      h2 {
+        margin: 0;
       }
       .title a {
         color: #030302;
@@ -44,7 +47,6 @@ const pageKind = '📝 Blog'
       .metaData {
         font-family: 'Quicksand';
         font-size: 1rem;
-        margin-top: 8px;
         display: flex;
       }
       #tag {
@@ -68,10 +70,6 @@ const pageKind = '📝 Blog'
 					{
 						page.data.map(({ data, slug }) => (
 							<li>
-                <h2>
-								<div class="title">
-								  <a href={`/blog/${slug}`}>{data.title}</a>
-                </div>
                 <div class="metaData">
                   <div id="datetime">
                     <i class="fa-regular fa-calendar"></i>
@@ -89,7 +87,16 @@ const pageKind = '📝 Blog'
                       <Tag tag={tag} />
                     ))}
                   </div>
-                  </h2>
+                </div>
+                <h2>
+								<div class="title">
+								  <a href={`/blog/${slug}`}>{data.title}</a>
+                </div>
+                </h2>
+                <div class="description">
+                  <p>
+                    {data.description}
+                  </p>
                 </div>
 							</li>
 						))
