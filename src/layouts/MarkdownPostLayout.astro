@@ -23,18 +23,20 @@ const pageKind = 'blog';
 		<BaseHead title={title} description={description} url={`/blog/${slug}`} image={heroImage} />
 		<style>
 			.title {
-				font-size: 2em;
-				margin: 0.25em 0 0;
+				margin: 0.25rem 0 0;
 			}
 			hr {
 				border-top: 0.5px solid #c1bdb7;
 				margin: 1rem 0;
 			}
-			.metaData div {
+			.metaData {
         font-family: 'Quicksand';
-				font-size: 0.75em;
-				margin-right: 1em;
-				display: inline;
+				font-size: 1rem;
+        margin-top: 8px;
+        display: flex;
+      }
+      #tag {
+        margin-left: 16px;
       }
 			.metaData time {
 				flex: 0 0 130px;
@@ -43,7 +45,7 @@ const pageKind = 'blog';
       .back a {
         color: #030302;
         text-decoration: none;
-				font-size: 1.25em;
+				font-size: 1.25rem;
       }
 		</style>
 	</head>
@@ -65,7 +67,7 @@ const pageKind = 'blog';
 							})}
 						</time>
 					</div>
-					<div>
+					<div id="tag">
 						<i class="fa-solid fa-tag"></i>
 						{tags.map((tag) => (
 							<Tag tag={tag} />
