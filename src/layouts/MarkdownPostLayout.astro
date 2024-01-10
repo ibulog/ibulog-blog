@@ -6,6 +6,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Tag from '../components/Tag.astro';
 import MarkdownPostLayout from '../../layouts/MarkdownPostLayout.astro';
+import getFormatDay from '../utils/getFormatDay.ts';
 
 type Props = {
   entry: CollectionEntry<'blog'>;
@@ -60,11 +61,7 @@ const pageKind = '📝 Blog'
 					<div>
 						<i class="fa-regular fa-calendar"></i>
 						<time datetime={pubDate}>
-							{new Date(pubDate).toLocaleDateString('en-us', {
-								year: 'numeric',
-								month: 'short',
-								day: 'numeric',
-							})}
+							{getFormatDay(pubDate)}
 						</time>
 					</div>
 					<div id="tag">

@@ -8,6 +8,7 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import Pagination from '../../components/Pagination.astro';
 import Tag from '../../components/Tag.astro';
+import getFormatDay from '../../utils/getFormatDay.ts';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../config';
 
 type Props = {
@@ -74,11 +75,7 @@ const pageKind = '📝 Blog'
                   <div id="datetime">
                     <i class="fa-regular fa-calendar"></i>
                     <time datetime={data.pubDate}>
-                      {new Date(data.pubDate).toLocaleDateString('en-us', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      })}
+                      {getFormatDay(data.pubDate)}
                     </time>
                     </div>
                   <div id="tag">
