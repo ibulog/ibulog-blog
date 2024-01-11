@@ -14,6 +14,8 @@ type Props = {
 
 const { entry } = Astro.props;
 const { title, description, pubDate, heroImage, tags } = entry.data;
+const { headings } = await entry.render();
+console.log(headings);
 const { slug } = entry;
 
 const pageKind = '📝 Blog'
@@ -48,6 +50,12 @@ const pageKind = '📝 Blog'
         text-decoration: none;
 				font-size: 1.25rem;
       }
+			.toc {
+				border-radius: 10px;
+				border: 2px solid #23221e;
+				padding: 0.5rem 1rem;
+				margin-top: 2rem;
+			}
 		</style>
 	</head>
 
@@ -71,7 +79,16 @@ const pageKind = '📝 Blog'
 						))}
 					</div>
 				</div>
-				<hr />
+				<div class="toc">
+					<h2>目次</h2>
+					<ul>
+						{headings.map((heading) => (
+							<li>
+								<a href={`#${heading.slug}`}>{heading.text}</a>
+							</li>
+						))}
+					</ul>
+				</div>
 				<slot />
 			</article>
 			<div class="back">
