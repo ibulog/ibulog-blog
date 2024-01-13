@@ -12,7 +12,7 @@ type Props = {
   entry: CollectionEntry<'blog'>;
 };
 
-const { entry } = Astro.props;
+const { entry, prevArticle, nextArticle } = Astro.props;
 const { title, description, pubDate, heroImage, tags } = entry.data;
 const { headings } = await entry.render();
 const { slug } = entry;
@@ -90,6 +90,16 @@ const pageKind = 'Blog'
 				</div>
 				<slot />
 			</article>
+			<div class="prevNextArticle">
+				{(prevArticle === undefined)
+					? undefined
+					: <a href={`/blog/${prevArticle.slug}`}>{prevArticle.data.title}</a>
+				}
+				{(nextArticle === undefined)
+					? undefined
+					: <a href={`/blog/${nextArticle.slug}`}>{nextArticle.data.title}</a>
+				}
+			</div>
 			<div class="back">
 				<a href="/blog"><i class="fa-solid fa-arrow-rotate-left"></i> Return</a>
       </div>
