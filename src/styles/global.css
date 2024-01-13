@@ -3,17 +3,24 @@
   https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
+html {
+	background-color: #f8f7f6;
+	color: #23221e;
+}
+html.dark {
+	background-color: #23221e;
+	color: #f8f7f6;
+}
+
 body {
 	font-family: 'Noto Sans JP', 'Quicksand', sans-serif;
 	margin: auto;
 	padding: 20px;
 	max-width: 700px;
 	text-align: left;
-	background-color: #f8f7f6;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 	line-height: 1.5;
-	color: #23221e;
 }
 h1,
 h2,
@@ -25,8 +32,14 @@ strong,
 b {
 	color: #23221e;
 }
+b.dark {
+	color: #f8f7f6;
+}
 a {
 	color: #23221e;
+}
+a.dark {
+	color: #f8f7f6;
 }
 textarea {
 	width: 100%;
@@ -68,5 +81,9 @@ mark {
 }
 hr {
 	background-color: #23221e;
+	height: 1px;
+}
+hr.dark {
+	background-color: #f8f7f6;
 	height: 1px;
 }

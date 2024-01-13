@@ -1,6 +1,7 @@
 ---
 import HeaderLink from './HeaderLink.astro';
 import Nav from './Nav.astro';
+import ThemeIcon from './ThemeIcon.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../config';
 
 const {pageKind} = Astro.props;
@@ -12,6 +13,7 @@ const {pageKind} = Astro.props;
 			{SITE_TITLE}
 		</h2>
 	</a>
+	<ThemeIcon />
 	<Nav pageKind={pageKind}/>
 </header>
 <style>
