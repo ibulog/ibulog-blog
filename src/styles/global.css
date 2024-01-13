@@ -66,3 +66,7 @@ blockquote {
 mark {
 	background-color: #ffcc17;
 }
+hr {
+	background-color: #23221e;
+	height: 1px;
+}

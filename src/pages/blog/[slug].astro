@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from 'astro:content';
 import MarkdownPostLayout from '../../layouts/MarkdownPostLayout.astro';
+import sortArticleByDate from "../../utils/sortArticleByDate.ts";
 
 type Props = {
   entry: CollectionEntry<'blog'>;
@@ -9,14 +10,21 @@ type Props = {
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection('blog');
-  return blogEntries.map(entry => ({
-    params: { slug: entry.slug }, props: { entry },
+  const articleNumber = blogEntries.length;
+
+  return blogEntries.sort(sortArticleByDate).map((entry, i) => ({
+    params: { slug: entry.slug },
+    props: {
+      entry,
+      prevArticle: i === 0 ? undefined : blogEntries[i - 1],
+      nextArticle: i + 1 === articleNumber ? undefined : blogEntries[i + 1],
+    }
   }));
 }
 
-const { entry } = Astro.props;
+const { entry, prevArticle, nextArticle } = Astro.props;
 const { Content } = await entry.render();
 ---
-<MarkdownPostLayout entry={entry}>
+<MarkdownPostLayout entry={entry} prevArticle={prevArticle} nextArticle={nextArticle}>
   <Content />
 </MarkdownPostLayout>
