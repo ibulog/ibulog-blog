@@ -9,6 +9,7 @@ import Footer from '../../components/Footer.astro';
 import Pagination from '../../components/Pagination.astro';
 import Tag from '../../components/Tag.astro';
 import getFormatDay from '../../utils/getFormatDay.ts';
+import sortArticleByDate from "../../utils/sortArticleByDate.ts";
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../config';
 
 type Props = {
@@ -17,9 +18,7 @@ type Props = {
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const allPosts = await getCollection('blog');
-  const allPostsSorted = allPosts.sort(
-    (a, b) => new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf()
-  )
+  const allPostsSorted = allPosts.sort(sortArticleByDate)
   return paginate(allPostsSorted, { pageSize: 7 });
 }
 

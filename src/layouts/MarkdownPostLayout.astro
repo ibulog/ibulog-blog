@@ -55,6 +55,26 @@ const pageKind = 'Blog'
 				padding: 0.5rem 1rem;
 				margin-top: 2rem;
 			}
+			.nextPrevArticle {
+				display: flex;
+				justify-content: space-between;
+				margin-top: 2rem;
+				flex-wrap: wrap;
+			}
+			.nextArticle {
+				width: 300px;
+				padding: 10px;
+				line-height: 2;
+				margin-bottom: 2rem;
+				display: inline;
+			}
+			.prevArticle {
+				width: 300px;
+				padding: 10px;
+				line-height: 2;
+				margin-bottom: 2rem;
+				display: inline;
+			}
 		</style>
 	</head>
 
@@ -90,15 +110,20 @@ const pageKind = 'Blog'
 				</div>
 				<slot />
 			</article>
-			<div class="prevNextArticle">
-				{(prevArticle === undefined)
-					? undefined
-					: <a href={`/blog/${prevArticle.slug}`}>{prevArticle.data.title}</a>
-				}
-				{(nextArticle === undefined)
-					? undefined
-					: <a href={`/blog/${nextArticle.slug}`}>{nextArticle.data.title}</a>
-				}
+			<hr />
+			<div class="nextPrevArticle">
+				<div class="prevArticle">
+					{(prevArticle === undefined)
+						? undefined
+						: <p>前の記事</p><a href={`/blog/${prevArticle.slug}`}>{prevArticle.data.title}</a>
+					}
+				</div>
+				<div class="nextArticle">
+					{(nextArticle === undefined)
+						? undefined
+						: <p>次の記事</p><a href={`/blog/${nextArticle.slug}`}>{nextArticle.data.title}</a>
+					}
+				</div>
 			</div>
 			<div class="back">
 				<a href="/blog"><i class="fa-solid fa-arrow-rotate-left"></i> Return</a>
