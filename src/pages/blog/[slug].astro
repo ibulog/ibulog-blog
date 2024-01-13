@@ -16,8 +16,9 @@ export async function getStaticPaths() {
     params: { slug: entry.slug },
     props: {
       entry,
-      prevArticle: i + 1 === articleNumber ? undefined : blogEntries[i + 1],
-      nextArticle: i === 0 ? undefined : blogEntries[i - 1]},
+      prevArticle: i === 0 ? undefined : blogEntries[i - 1],
+      nextArticle: i + 1 === articleNumber ? undefined : blogEntries[i + 1],
+    }
   }));
 }
 

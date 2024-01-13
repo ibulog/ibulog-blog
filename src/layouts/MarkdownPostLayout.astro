@@ -55,20 +55,13 @@ const pageKind = 'Blog'
 				padding: 0.5rem 1rem;
 				margin-top: 2rem;
 			}
-			.nextPrevArticle {
+			.suggestArticle {
 				display: flex;
 				justify-content: space-between;
 				margin-top: 2rem;
 				flex-wrap: wrap;
 			}
-			.nextArticle {
-				width: 300px;
-				padding: 10px;
-				line-height: 2;
-				margin-bottom: 2rem;
-				display: inline;
-			}
-			.prevArticle {
+			.prevNextArticle {
 				width: 300px;
 				padding: 10px;
 				line-height: 2;
@@ -111,14 +104,14 @@ const pageKind = 'Blog'
 				<slot />
 			</article>
 			<hr />
-			<div class="nextPrevArticle">
-				<div class="prevArticle">
+			<div class="suggestArticle">
+				<div class="prevNextArticle">
 					{(prevArticle === undefined)
 						? undefined
 						: <p>前の記事</p><a href={`/blog/${prevArticle.slug}`}>{prevArticle.data.title}</a>
 					}
 				</div>
-				<div class="nextArticle">
+				<div class="prevNextArticle">
 					{(nextArticle === undefined)
 						? undefined
 						: <p>次の記事</p><a href={`/blog/${nextArticle.slug}`}>{nextArticle.data.title}</a>
