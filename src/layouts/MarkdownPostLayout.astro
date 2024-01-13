@@ -15,10 +15,11 @@ type Props = {
 const { entry } = Astro.props;
 const { title, description, pubDate, heroImage, tags } = entry.data;
 const { headings } = await entry.render();
-console.log(headings);
 const { slug } = entry;
 
-const pageKind = '📝 Blog'
+const {params} = Astro.params;
+console.log(params);
+const pageKind = 'Blog'
 ---
 
 <html lang="ja">
