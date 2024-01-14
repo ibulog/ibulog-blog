@@ -11,13 +11,14 @@
   #themeToggle {
     border: 0;
     background: none;
+    margin-top: 6px;
   }
-  .sun { fill: black; }
+  .sun { fill: var(--text-color); }
   .moon { fill: transparent; }
 
 
   :global(.dark) .sun { fill: transparent; }
-  :global(.dark) .moon { fill: white; }
+  :global(.dark) .moon { fill: var(--text-color); }
 </style>
 
 <script is:inline>
