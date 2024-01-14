@@ -3,12 +3,12 @@ const { tag } = Astro.props;
 ---
 
 <style>
-  span {
-    margin-right: 0.25em;
-    padding: 0 0.5em 0 0.5em;
-    border-radius: 15px;
-    background-color: #23221e;
-    color: #f2f1f0;
+.tag {
+  margin-right: 0.25em;
+  padding: 0 0.5em 0 0.5em;
+  border-radius: 15px;
+  background-color: var(--text-color);
+  color: var(--background-color);
   }
 </style>
-<span>{tag}</span>
+<span class="tag">{tag}</span>

@@ -1,18 +1,19 @@
 ---
-import HeaderLink from './HeaderLink.astro';
 import Nav from './Nav.astro';
+import ThemeIcon from './ThemeIcon.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../config';
 
 const {pageKind} = Astro.props;
 ---
 
 <header>
-	<a class="blog-title" href="/blog">
-		<h2>
+	<h2>
 			{SITE_TITLE}
-		</h2>
-	</a>
-	<Nav pageKind={pageKind}/>
+	</h2>
+	<div class="property">
+		<ThemeIcon />
+		<Nav pageKind={pageKind}/>
+	</div>
 </header>
 <style>
 	header {
@@ -20,14 +21,8 @@ const {pageKind} = Astro.props;
 		justify-content: space-between;
 		margin: 0em 0 1em;
 	}
-	header a {
-		color: #030302;
-		text-decoration: none;
-	}
-	img {
-		margin: 12px 0 12px 0;
-	}
-	h2 {
-		margin: 0.5em 0;
+	.property {
+		display: flex;
+		align-items: center;
 	}
 </style>

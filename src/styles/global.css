@@ -3,30 +3,32 @@
   https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
-body {
+:root {
+	--background-color: #f8f7f6;
+	--text-color: #23221e;
+	--navigation-color: #f2f1f0;
+	--code-color: #f2f1f0; 
+}
+:root.dark {
+	--background-color: #23221e;
+	--text-color: #f8f7f6;
+	--navigation-color: #2d2c27;
+	--code-color: #2d2c27;
+}
+body { 
+	background-color: var(--background-color);
+	color: var(--text-color);
 	font-family: 'Noto Sans JP', 'Quicksand', sans-serif;
 	margin: auto;
 	padding: 20px;
 	max-width: 700px;
 	text-align: left;
-	background-color: #f8f7f6;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 	line-height: 1.5;
-	color: #23221e;
 }
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-strong,
-b {
-	color: #23221e;
-}
-a {
-	color: #23221e;
+h1, h2, h3, h4, h5, h6, strong, a, b {
+	color: var(--text-color);
 }
 textarea {
 	width: 100%;
@@ -47,7 +49,7 @@ img {
 }
 code {
 	padding: 2px 5px;
-	background-color: #f2f1f0;
+	background-color: var(--code-color);
 	color: #e01e5a;
 }
 pre {
@@ -67,6 +69,6 @@ mark {
 	background-color: #ffcc17;
 }
 hr {
-	background-color: #23221e;
+	background-color: var(--text-color);
 	height: 1px;
 }
