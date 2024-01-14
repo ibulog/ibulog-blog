@@ -12,8 +12,8 @@
 :root.dark {
 	--background-color: #23221e;
 	--text-color: #f8f7f6;
-	--navigation-color: #2d2c27;
-	--code-color: #2d2c27;
+	--navigation-color: #191815;
+	--code-color: #191815;
 }
 body { 
 	background-color: var(--background-color);
