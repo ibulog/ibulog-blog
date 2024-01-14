@@ -3,17 +3,17 @@
   https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
-:root {
+ :root {
 	--background-color: #f8f7f6;
 	--text-color: #23221e;
-	--navigation-color: #f2f1f0;
-	--code-color: #f2f1f0; 
+	--navigation-color: #edebe8;
+	--code-color: #edebe8; 
 }
 :root.dark {
 	--background-color: #23221e;
 	--text-color: #f8f7f6;
-	--navigation-color: #191815;
-	--code-color: #191815;
+	--navigation-color: #1c1c18;
+	--code-color: #1c1c18;
 }
 body { 
 	background-color: var(--background-color);
@@ -59,8 +59,7 @@ pre > code {
 	all: unset;
 }
 blockquote {
-	border: 1px solid #c1bdb7;
-	color: #23221e;
+	background-color: var(--code-color);
 	padding: 2px 0px 2px 20px;
 	margin: 0px;
 	font-style: italic;
