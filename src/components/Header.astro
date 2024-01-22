@@ -7,21 +7,24 @@ const {pageKind} = Astro.props;
 ---
 
 <header>
-	<h2>
+	<div class="title">
+		<h2>
 			{SITE_TITLE}
-	</h2>
-	<div class="property">
+		</h2>
 		<ThemeIcon />
-		<Nav pageKind={pageKind}/>
 	</div>
+	<Nav pageKind={pageKind}/>
 </header>
 <style>
 	header {
+		position: sticky;
+		top: 0;
 		display: flex;
 		justify-content: space-between;
-		margin: 0em 0 1em;
+		background-color: var(--background-color);
+		margin: 0em 0 1rem;
 	}
-	.property {
+	.title {
 		display: flex;
 		align-items: center;
 	}
