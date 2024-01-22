@@ -17,9 +17,12 @@ const {pageKind} = Astro.props;
 </header>
 <style>
 	header {
+		position: sticky;
+		top: 0;
 		display: flex;
 		justify-content: space-between;
-		margin: 0em 0 1em;
+		background-color: var(--background-color);
+		margin: 0em 0 1rem;
 	}
 	.property {
 		display: flex;
