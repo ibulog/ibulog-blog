@@ -11,15 +11,6 @@ const pageKind = 'About'
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} url="/" image="/icon.jpeg" />
 		<style>
-			.wrapper {
-				display: flex;
-				flex-wrap: wrap;
-				justify-content: space-around;
-				align-items: center;
-				width: 100%;
-				margin-top: 2em;
-				margin-bottom: 2em;
-			}
 			.sectionTitle {
 				font-weight: 700;
 				font-size: var(--f-u8);
@@ -34,26 +25,6 @@ const pageKind = 'About'
 			.icon:hover {
       transform: rotate(360deg); /* クリック時に360度回転 */
     }
-			.bio {
-				border-radius: 10px;
-				border: 2px solid var(--text-color);
-				width: 300px;
-				height: 150px;
-				padding: 20px;
-				line-height: 2;
-				margin-bottom: 2rem;
-				display: inline;
-				justify-content: center;
-			}
-			.bio-img {
-				width: 300px;
-				height: 150px;
-				padding: 20px;
-				line-height: 2;
-				margin-bottom: 2rem;
-				display: flex;
-				justify-content: center;
-			}
 		</style>
 	</head>
 	<body>
@@ -62,84 +33,49 @@ const pageKind = 'About'
 			<h1>
 				{pageKind}
 			</h1>
-			<div class="wrapper">
+			<h2>Self-Portrait</h2>
 				<div class="bio-img">
-				<img class="icon" src="/icon.jpeg" />
+					<img class="icon" src="/icon.jpeg" />
 				</div>
-					<div class="bio">
-					<h2>
-						ハンドルネーム	
-					</h2>
-					<p>
-						ibulog
-					</p>
-				</div>
-				<div class="bio">
-					<h2>
-						居住地
-					</h2>
-					<p>
-						京都
-					</p>
-				</div>
-				<div class="bio">
-					<h2>
-						お仕事
-					</h2>
-					<p>
-						UXライター, SmartHR
-					</p>
-					</div>
-					<div class="bio">
-					<h2>
-						好きなもの
-					</h2>
-					<p>
-						車、つけもの、京都、諏訪
-					</p>
-					</div>
-					<div class="bio">
-					<h2>
-						連絡先
-					</h2>
-					<ul>
-						<li>
-							<i class="fa-brands fa-x-twitter fa-lg"></i>
-							：
-							<a href="https://twitter.com/ibulog_" target="_blank">@ibulog_</a>
-						</li>
-						<li>
-							<i class="fa-brands fa-github fa-lg"></i>
-							：
-							<a href="https://github.com/ibulog" target="_blank">ibulog</a>
-						</li>
-					</ul>
-					</div>
-					<!-- <ul>
-						<li>
-							名前：ibulog
-						</li>
-						<li>
-							場所：京都
-						</li>
-						<li>
-							仕事：UXライター
-						</li>
-						<li>
-							好きなもの：車、つけもの、京都、諏訪
-						</li>
-						<li>
-							<i class="fa-brands fa-x-twitter fa-lg"></i>
-							：
-							<a href="https://twitter.com/ibulog_" target="_blank">@ibulog_</a>
-						</li>
-						<li>
-							<i class="fa-brands fa-github fa-lg"></i>
-							：
-							<a href="https://github.com/ibulog" target="_blank">ibulog</a>
-						</li>
-					</ul> -->
-				</div>
+			<h2>
+				Name
+			</h2>
+			<p>
+				ibulog
+			</p>
+			<h2>
+				Location
+			</h2>
+			<p>
+				Kyoto, Japan
+			</p>
+			<h2>
+				Job
+			</h2>
+			<p>
+				Technical Writer
+			</p>
+			<h2>
+				Interest
+			</h2>
+			<p>
+				Web Development, Documentation, Car Racing🏎️
+			</p>
+			<h2>
+				Contact
+			</h2>
+			<ul>
+				<li>
+					<i class="fa-brands fa-x-twitter fa-lg"></i>
+					：
+					<a href="https://twitter.com/ibulog_" target="_blank">@ibulog_</a>
+				</li>
+				<li>
+					<i class="fa-brands fa-github fa-lg"></i>
+					：
+					<a href="https://github.com/ibulog" target="_blank">ibulog</a>
+				</li>
+			</ul>
 		</main>
 		<Footer />
 	</body>

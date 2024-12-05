@@ -1,8 +1,5 @@
 ---
-import getPageEmoji from '../utils/getPageEmoji.ts';
-
 const {pageKind} = Astro.props;
-const emoji = getPageEmoji(pageKind);
 ---
 <style>
 .nav {
@@ -53,18 +50,18 @@ const emoji = getPageEmoji(pageKind);
 }
 </style>
 <div class="nav">
-  <label for="toggle" onclick="">{emoji} {pageKind}</label>
+  <label for="toggle" onclick="">{pageKind}</label>
   <input type="checkbox" id="toggle" class="toggle" autocomplete="off">
   <div class="menu">
     <ul class="drop-menu">
       <li class="drop-menu-list">
-        <a href="/">🥱 About</a>
+        <a href="/">About</a>
       </li>
       <li class="drop-menu-list">
-        <a href="/job">🧑‍🔧 Job</a>
+        <a href="/job">Job</a>
       </li>
       <li class="drop-menu-list">
-        <a href="/blog">📝 Blog</a>
+        <a href="/blog">Blog</a>
       </li>
     </ul>
   </div>
