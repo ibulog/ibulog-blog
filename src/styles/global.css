@@ -3,71 +3,85 @@
   https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
- :root {
-	--background-color: #f8f7f6;
-	--text-color: #23221e;
-	--navigation-color: #edebe8;
-	--code-color: #edebe8; 
+:root {
+  --background-color: #f8f7f6;
+  --text-color: #23221e;
+  --navigation-color: #edebe8;
+  --code-color: #edebe8;
 }
 :root.dark {
-	--background-color: #23221e;
-	--text-color: #f8f7f6;
-	--navigation-color: #1c1c18;
-	--code-color: #1c1c18;
+  --background-color: #23221e;
+  --text-color: #f8f7f6;
+  --navigation-color: #1c1c18;
+  --code-color: #1c1c18;
 }
-body { 
-	background-color: var(--background-color);
-	color: var(--text-color);
-	font-family: 'Noto Sans JP', 'Quicksand', sans-serif;
-	margin: auto;
-	padding: 20px;
-	max-width: 700px;
-	text-align: left;
-	word-wrap: break-word;
-	overflow-wrap: break-word;
-	line-height: 1.5;
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: "Noto Sans JP", "Quicksand", sans-serif;
+  margin: auto;
+  padding: 20px;
+  max-width: 900px;
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.7;
 }
-h1, h2, h3, h4, h5, h6, strong, a, b {
-	color: var(--text-color);
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+strong,
+a,
+b {
+  color: var(--text-color);
+}
+p a:link {
+  color: #0000ee;
+}
+p a:visited {
+  color: #551a8b;
 }
 textarea {
-	width: 100%;
-	font-size: 16px;
+  width: 100%;
+  font-size: 16px;
 }
 input {
-	font-size: 16px;
+  font-size: 16px;
 }
 content {
-	line-height: 1.6;
+  line-height: 1.6;
 }
 table {
-	width: 100%;
+  width: 100%;
 }
 img {
-	max-width: 100%;
-	height: max-content;
+  max-width: 100%;
+  height: max-content;
 }
 code {
-	padding: 2px 5px;
-	background-color: var(--code-color);
-	color: #e01e5a;
+  padding: 2px 5px;
+  background-color: var(--code-color);
+  color: #e01e5a;
 }
 pre {
-	padding: 1rem;
+  padding: 1rem;
 }
 pre > code {
-	all: unset;
+  all: unset;
 }
 blockquote {
-	background-color: var(--code-color);
-	padding: 2px 0px 2px 20px;
-	margin: 0px;
-	font-style: italic;
+  background-color: var(--code-color);
+  padding: 2px 0px 2px 20px;
+  margin: 0px;
+  font-style: italic;
 }
 mark {
-	background-color: #ffcc17;
+  background-color: #ffcc17;
 }
 hr {
-	background-color: var(--text-color);
-	height: 1px;
+  background-color: var(--text-color);
+  height: 1px;
 }
