@@ -6,13 +6,13 @@ tags: ["CI/CD"]
 heroImage: ""
 ---
 
-この記事は [SmartHR Advent Calendar 2024](https://qiita.com/advent-calendar/2024/smarthr) 10日目の記事です。5日目の [sh-miyoshiさんの記事](https://qiita.com/sh-miyoshi/items/855cd33bd74622d5a32c) と若干ネタかぶりですが気にしない。
+この記事は [SmartHR Advent Calendar 2024](https://qiita.com/advent-calendar/2024/smarthr) 10日目の記事です。5日目の [sh-miyoshiさんの記事](https://qiita.com/sh-miyoshi/items/855cd33bd74622d5a32c) と若干ネタかぶりですが気にしない！
 
 ---
 
-今さらFate/stay nightのアニメと映画を一気見しまして、たいへん感動したibulogです。
+今さらFate/stay nightのアニメと映画を一気見しまして、たいへん感動したibulogです。アーチャー、かっこいいですね。
 
-会社ではヘルプページの情報設計からヘルプセンターそのものの開発まで、主にヘルプセンター全般に関わるお仕事をしておりまして、
+会社ではヘルプページの情報設計からヘルプセンターそのものの開発、効果測定のダッシュボードづくりに至るまで、いろいろお仕事をしておりまして、
 今日はヘルプセンターのデプロイに利用しているVercelとGitHub Actionsまわりのあれこれを整えたお話です。
 
 ## VercelとGitHubの連携、便利だけど
@@ -23,13 +23,13 @@ Vercelへデプロイする手段として一番てっとり早いのは、GitHu
 
 設定を有効にするだけで、プルリクエスト作成時に自動でプレビューを生成してくれるので、めちゃくちゃ楽。
 
-ただ一つ難点がありまして、素直に使うと「プルリクエスト作成者ごとにVercelのアカウントを発行する」必要があります。
+ただ一つ難点があります。「プルリクエストを作る人全員に、Vercelのアカウントを発行する」必要があります。
 
 つまり、コストがめっちゃかかります。
 
-ただ画面を確認するためだけに、安くないアカウントを利用者全員に発行するのはちょっとツライですね。
+Vercelを使ってなにか開発をするならいざ知らず、画面を確認するためだけに、安くないアカウントを発行するのはちょっとツライですね。
 
-そこでコストを抑えるため、[Vercel CLI](https://vercel.com/docs/cli)で対象ブランチをデプロイするGitHub Actionsを作成し、プルリクエスト作成時に実行されるようにしていました。
+そこでコストを抑えるため、[Vercel CLI](https://vercel.com/docs/cli)を使って対象ブランチをデプロイするGitHub Actionsを作成し、プルリクエスト作成時に実行されるようにしていました。
 
 以下はGitHub Actionsの設定イメージ。
 
@@ -40,7 +40,7 @@ on: pull_request
 jobs:
   Deploy-Preview:
     env:
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_TEAM_ID: ${{ secrets.VERCEL_TEAM_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     runs-on: ubuntu-latest
     steps:
@@ -60,6 +60,8 @@ jobs:
         run: pnpm --silent vercel deploy --archive=tgz --token=${{ secrets.VERCEL_TOKEN }})
 ```
 
+GitHub Actions経由であれば、トークンを発行するアカウントが1つあればよいというわけです。
+
 ## もうちょっとだけ便利にしたい
 
 Vercel CLIを使ったデプロイ環境でおおむね満足でしたが、もうちょっとだけ便利にしたいな〜という点がいくつか出てきました。
@@ -73,13 +75,14 @@ Vercel CLIを使ったデプロイ環境でおおむね満足でしたが、も�
 VercelのInspectを確認すると、デプロイ待ちのキューがパンパンになっておりました😇
 
 キューがパンパンになっていた理由は主に3つ。
-1. そもそもビルドにそこそこ時間がかかる（10分くらい）
+
+1. そもそもビルドに時間がかかる（10分くらい）
 2. 同時に5〜6人程度がプルリクエストを作ることがあるが、Vercelの現プランで並列実行できるデプロイは2件
-3. 同じプルリクエストに間髪入れずPushされている
+3. 同じプルリクエストに間髪入れずPushされ、何度もデプロイが実行されてしまう
 
 上記のうち、1と2はすぐに解決するのが難しかったり、解決にお金がかかったりするので、一旦保留するとして、3はGitHub Actionsにconcurrency設定を入れればなんとかなるかな？と思っていました。
 
-が、すでにVercel側でデプロイが始まっている場合、Vercel CLIの実行をキャンセルしても、デプロイはキャンセルされません。
+GitHub Actions上でVercel CLIの実行をキャンセルしても、Vercel上で始まったデプロイはキャンセルできません。
 
 つまり、GitHub Actionsのワークフローをキャンセルするようconcurrencyを設定しても、Vercelのデプロイキューが詰まるのは解消されない......。
 
@@ -91,27 +94,27 @@ VercelのInspectを確認すると、デプロイ待ちのキューがパンパ�
 
 `https://{プロジェクト名}-{ブランチ名}-example.vercel.app`
 
-上記のドメインに最新デプロイのドメインがエイリアスされるので、同一ブランチの最新のプレビューを確認するには、常に同じURLにアクセスすればよいというわけです。
+上記のドメインに最新デプロイのドメインがエイリアスされるので、同じプルリクエストの最新プレビューを確認するには、常に同じURLにアクセスすればよいというわけです。
 
 これが割と使い勝手がよくて、プレビューを確認してほしい関係者に「このURLでプレビュー確認できます！」と共有しておけば、あとで変更を加えてもURLを共有し直さずに済みます。
 
-ですが、Vercel CLIを使ってデプロイした場合、先述のエイリアスは使えず、デプロイごとのドメインのみ生成されていました（自分がVercel CLIを使いこなせていないだけかもですが）。
+ですが、Vercel CLIでデプロイする場合、先述のエイリアスは使えず、デプロイごとのドメインのみ生成されます。
 
 関係者へのプレビュー共有がやや手間になってしまっていたので、なんとかしたいお気持ちでした。
 
 ## Vercel REST APIを使う
 
-結局、上記2つの課題は、Vercel CLIではなくVercel REST APIをGitHub Actionsで実行することで解決しました。
+上記2つの課題は、Vercel CLIではなくVercel REST APIをGitHub Actionsで実行することで解決しました。
 
 [Vercel REST API](https://vercel.com/docs/rest-api)
 
 ### 「1. デプロイのキューがパンパンになる問題」への対応
 
-Vercel REST APIには、デプロイをキャンセルできるエンドポイントが用意されています。
+Vercel REST APIには、デプロイをキャンセルできるエンドポイントがあります。
 
 [Deployments](https://vercel.com/docs/rest-api/endpoints/deployments#cancel-a-deployment)
 
-デプロイを実行する前に同一ブランチのデプロイが実行されていないか確認し、実行されていればそのデプロイをキャンセルすればよさそう。
+デプロイを実行する前に、同一ブランチのデプロイが実行されていないか確認し、実行されていればそのデプロイをキャンセルします。
 
 GitHub Actionsのワークフローはこんなイメージです。
 
@@ -147,23 +150,23 @@ jobs:
         run: pnpm deploy-branch-to-vercel --branch ${{ github.head_ref }}
 ```
 
-まず、`concurrency` で `cancel-in-progress: true` を指定し、同一ブランチで新たにワークフローが実行された場合は、ワークフローがキャンセルされるようにしています。
+まず、`concurrency` で `cancel-in-progress: true` を指定し、同一ブランチで新たにワークフローが実行された場合は、ワークフローをキャンセルします。
 
-ただし、ワークフローのconcurrency設定は、あくまでGitHub Actionsのキャンセル処理で、Vercel上ですでに実行されたデプロイはキャンセルされません。
+ただし、ワークフローのconcurrency設定は、あくまでGitHub Actionsのキャンセル処理で、Vercel上ですでに実行されたデプロイはキャンセルできません。
 
 Vercel上のデプロイもキャンセルするために、 `pnpm run cancel-same-branch-deploy --branch ${{ github.head_ref }}` で、プルリクエストのブランチ名を引数にして自作のスクリプトを実行しています。
 
-スクリプト実装は詳細には説明しませんが、下記のようなことをVercel REST APIでやっています。
+実装の詳細は割愛しますが、下記のようなことをVercel REST APIでやっています。
 
-1. ブランチ名をもとにVercel上で実行中のデプロイを取得するAPIを叩く
-2. デプロイが存在する場合は、そのデプロイをキャンセルするAPIを叩く
+1. ブランチ名をもとに、Vercel上で実行中のデプロイを取得する
+2. デプロイが存在する場合は、そのデプロイをキャンセルする
 
-キャンセル処理が終わったらデプロイを実行するだけ。`pnpm deploy-branch-to-vercel --branch ${{ github.head_ref }}` がデプロイ処理で、こちらも自作のスクリプトを実行しています。
+キャンセル処理が終わってから、デプロイを実行します。`pnpm deploy-branch-to-vercel --branch ${{ github.head_ref }}` がデプロイ処理で、こちらも自作のスクリプトを実行しています。
 
 またまた詳細は割愛しますが、下記のようなことを同じくREST APIでやっています。
 
-1. ブランチ名をもとにVercelのデプロイを実行するAPIを叩く
-2. デプロイが完了したか定期的にAPIを叩いて確認する
+1. ブランチ名をもとにVercelのデプロイを実行する
+2. デプロイが完了したか1分ごとにチェックする
 
 デプロイ状況の取得、もうちょっとスマートにやりたかったんですが、いい方法が思い浮かばず......。
 
@@ -171,11 +174,13 @@ Vercel上のデプロイもキャンセルするために、 `pnpm run cancel-sa
 
 Vercel REST APIでは、ブランチを指定したデプロイを実行するために、GitHub連携を利用します。つまり、最新のデプロイがブランチごとのドメインにエイリアスされる機能を使えるので、自動的にこの課題は解決します。
 
-ただし、単純にGitHub連携を有効にしてしまうと、GitHub連携がプレビューを自動生成しようとデプロイ処理を走らせるので、Vercelアカウントを持っていない人がプルリクエストを作るとCIが落ちます。
+ただし、単純にGitHub連携を有効にしてしまうと、GitHub連携のプレビュー自動生成が動作し、GitHub Actionsと二重でデプロイが実行されてしまいます。
+
+そもそも、GitHub連携のプレビュー自動生成は、Vercelアカウントを持っていない人がプルリクエストを作るとエラーになります。
 
 ![](/20241210-vercel-github-actions/image00.png)
 
-GitHub Actions経由でデプロイするため、GitHub連携の自動生成は不要。 `.vercel.json` で止めておくとよいです。
+デプロイ処理の重複やエラーを避けるため、GitHub連携のプレビュー自動生成を `.vercel.json` で止めておきます。
 
 [Git Configuration](https://vercel.com/docs/projects/project-configuration/git-configuration)
 
@@ -189,13 +194,13 @@ GitHub Actions経由でデプロイするため、GitHub連携の自動生成は
 
 ## おわりに
 
-Vercel CLIからVercel REST APIに移行することで、コストを抑えてデプロイ環境を整えることができました 🎉
+Vercel CLIからVercel REST APIに移行することで、コストを抑えていい感じのデプロイ環境を整えることができました 🎉
 
-GitHub連携を有効にしたことで、プルリクエスト上にVercelのBotがデプロイ状況をコメントしてくれたりと、他にもよいことがいくつかあったので、乗り換えてよかったです。
+GitHub連携を有効にしたことで、プルリクエスト上にVercelのBotがデプロイ状況をコメントしてくれたりと、便利な点が増えたので、乗り換えてよかったです。
 
 ## ふろく：実は他にも動機がありました
 
-今回のVercel CLIからVercel REST APIへの乗り換え、書いた2つの課題を解決したかったのは確かなのですが、実は他にもう一つ大きな理由がありました。
+今回のVercel CLIからVercel REST APIへの乗り換え、書いた2つの課題を解決したかったのは確かなのですが、実は他にも大きな理由がありました。
 
 ### なんらかのサイズ制限がある？
 
@@ -203,9 +208,9 @@ Vercel CLIを使ったデプロイ体制時代に、「Request Entity Too Large�
 
 リポジトリのサイズが大きすぎるのかな？と当たりをつけて、あまり重要でない大きめの画像などを削除すると、デプロイが成功するようになりました。
 
-上記から、なんらかのアップロード制限があると考えてVercel CLIからVercel REST APIへの乗り換えを考えることに。
+上記から、なんらかのアップロード制限があると考えて、Vercel CLIからVercel REST APIへの乗り換えを考えることに。
 
-- GitHub Actions→VercelへのArtifactsアップロード時に、なにか制限がある
+- GitHub Actions→Vercelへのアップロード時に、なにか制限がある
 - 今後も画像などは増える一方なので、いずれはまた制限に引っかかる日が来る
 - Vercel REST APIを使えば、GitHubからVercelへのアップロードは発生しなくなるので、問題は解決しそう
 
