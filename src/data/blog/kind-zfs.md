@@ -2,7 +2,7 @@
 title: "kindをZFS上で利用する場合はおまじないが必要なんです"
 description: "ローカルでk8sクラスタを展開できるkindを、ZFS上で利用する場合の注意点を説明します。"
 pubDate: 2020-12-16
-tags: ["Linux", "Infrastracture"]
+tags: ["Linux", "Infrastructure"]
 ---
 
 ローカルにKubernetesクラスタをお手軽に構築できるのが「kind」さんです。「Kubernetes in Docker」でkind。

@@ -2,7 +2,7 @@
 title: "ManjaroをZFS上にインストールする"
 description: "ZFSのパーティションをrootとして、Manjaroをインストールする方法を説明します。"
 pubDate: 2021-02-01
-tags: ["Linux", "Infrastracture"]
+tags: ["Linux", "Infrastructure"]
 ---
 
 意外と情報がなかったので。
