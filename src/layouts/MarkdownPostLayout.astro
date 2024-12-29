@@ -44,7 +44,7 @@ const pageKind = 'Blog'
 				border-radius: 10px;
 				border: 2px solid var(--text-color);
 				padding: 0.5rem 1rem;
-				margin-top: 2rem;
+				margin: 2rem 0;
 			}
 			.suggestArticle {
 				display: flex;
@@ -73,7 +73,6 @@ const pageKind = 'Blog'
 		<Header pageKind={pageKind} />
 		<main>
 			<article>
-				{heroImage && <img width={1080} height={540} src={heroImage} alt="" />}
 				<h1 class="title">{title}</h1>
 				<div class="metaData">
 					<div>
@@ -99,6 +98,7 @@ const pageKind = 'Blog'
 						))}
 					</ul>
 				</div>
+				{heroImage && <img width={1080} height={540} src={heroImage} alt="" />}
 				<slot />
 			</article>
 			<hr />
