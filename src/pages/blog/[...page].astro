@@ -72,11 +72,11 @@ const pageKind = 'Blog'
 			<section>
 				<ul>
 					{
-						page.data.map(({ data, slug }) => (
+						page.data.map(({ data, id }) => (
 							<li>
                 <h2>
 								<div class="title">
-								  <a href={`/blog/${slug}`}>{data.title}</a>
+								  <a href={`/blog/${id}`}>{data.title}</a>
                 </div>
                 </h2>
                 <div class="metaData">

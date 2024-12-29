@@ -1,6 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
 
+import { render } from "astro:content";
+
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -14,15 +16,15 @@ type Props = {
 
 const { entry, prevArticle, nextArticle } = Astro.props;
 const { title, description, pubDate, heroImage, tags } = entry.data;
-const { headings } = await entry.render();
-const { slug } = entry;
+const { headings } = await render(entry);
+const { id } = entry;
 
 const pageKind = 'Blog'
 ---
 
 <html lang="ja">
 	<head>
-		<BaseHead title={title} description={description} url={`/blog/${slug}`} image={heroImage} />
+		<BaseHead title={title} description={description} url={`/blog/${id}`} image={heroImage} />
 		<style>
 			.title {
 				margin: 0.25rem 0 0;
@@ -106,13 +108,13 @@ const pageKind = 'Blog'
 				<div class="prevNextArticle">
 					{(prevArticle === undefined)
 						? undefined
-						: <p>前の記事</p><a href={`/blog/${prevArticle.slug}`}>{prevArticle.data.title}</a>
+						: <p>前の記事</p><a href={`/blog/${prevArticle.id}`}>{prevArticle.data.title}</a>
 					}
 				</div>
 				<div class="prevNextArticle">
 					{(nextArticle === undefined)
 						? undefined
-						: <p>次の記事</p><a href={`/blog/${nextArticle.slug}`}>{nextArticle.data.title}</a>
+						: <p>次の記事</p><a href={`/blog/${nextArticle.id}`}>{nextArticle.data.title}</a>
 					}
 				</div>
 			</div>
