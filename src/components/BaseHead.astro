@@ -12,7 +12,8 @@ export interface Props {
   image?: string;
 }
 
-const { title, description, url, image } = Astro.props;
+const { title, description, url, image: hero_image } = Astro.props;
+const image = hero_image || "404.jpg";
 ---
 
 <!-- Global Metadata -->
