@@ -6,6 +6,8 @@ import sortArticleByDate from "../../utils/sortArticleByDate.ts";
 
 type Props = {
   entry: CollectionEntry<'blog'>;
+  prevArticle?: CollectionEntry<'blog'>
+  nextArticle?: CollectionEntry<'blog'>
 };
 
 export async function getStaticPaths() {
