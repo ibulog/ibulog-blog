@@ -3,7 +3,6 @@ title: "Vercel CLIでデプロイする際の環境変数の取り回しにハ�
 description: "Vercel CLIでアプリケーションをデプロイする際、Vercelが提供する環境変数をうまく使えなくて困ったお話です。"
 pubDate: 2024-04-13
 tags: ["CI/CD"]
-heroImage: ""
 ---
 
 こんにちは。気がつけば最後の更新が1年以上前になっていました。

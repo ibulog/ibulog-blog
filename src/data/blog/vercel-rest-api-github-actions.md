@@ -3,7 +3,6 @@ title: "Vercel REST APIとGitHub Actionsを使ってデプロイする"
 description: "Vercel REST APIとGitHub Actionsを使って、便利にお安くデプロイする方法を説明します。"
 pubDate: 2024-12-10
 tags: ["CI/CD"]
-heroImage: ""
 ---
 
 この記事は [SmartHR Advent Calendar 2024](https://qiita.com/advent-calendar/2024/smarthr) 10日目の記事です。5日目の [sh-miyoshiさんの記事](https://qiita.com/sh-miyoshi/items/855cd33bd74622d5a32c) と若干ネタかぶりですが気にしない！
