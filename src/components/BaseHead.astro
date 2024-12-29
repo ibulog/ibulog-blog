@@ -1,15 +1,15 @@
 ---
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
-import { SITE_BASE_URL } from '../config';
-import '../styles/global.css';
-import { ViewTransitions } from 'astro:transitions'
+import { SITE_BASE_URL } from "../config";
+import "../styles/global.css";
+import { ViewTransitions } from "astro:transitions";
 
 export interface Props {
-	title: string;
-	description: string;
-	url: string;
-	image?: string;
+  title: string;
+  description: string;
+  url: string;
+  image?: string;
 }
 
 const { title, description, url, image } = Astro.props;
@@ -34,32 +34,44 @@ const { title, description, url, image } = Astro.props;
 <meta property="og:image" content={new URL(image, SITE_BASE_URL)} />
 
 <!-- Twitter -->
-<meta property="twitter:card" content="summary" />
-<meta property="twitter:site" content="@ibulog_">
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:site" content="@ibulog_" />
 <meta property="twitter:url" content={new URL(url, SITE_BASE_URL)} />
 
 <!-- Google Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;500&family=Quicksand:wght@300;400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link
+  rel="preconnect"
+  href="https://fonts.gstatic.com"
+  crossorigin
+/><link
+  href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;500&family=Quicksand:wght@300;400&display=swap"
+  rel="stylesheet"
+/>
 
 <!-- Google tag (gtag.js) -->
-<script type="text/partytown" async src="https://www.googletagmanager.com/gtag/js?id=G-X5X35DYWPP"></script>
+<script
+  type="text/partytown"
+  async
+  src="https://www.googletagmanager.com/gtag/js?id=G-X5X35DYWPP"></script>
 <script type="text/partytown">
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
 
-  gtag('config', 'G-X5X35DYWPP');
+  gtag("config", "G-X5X35DYWPP");
 </script>
 
 <!-- https://zenn.dev/chot/articles/48a58019f246bd -->
 <script is:inline>
   function setMode() {
-    if (localStorage.getItem('theme') === 'dark') {
-      document.documentElement.classList.add('dark');
+    if (localStorage.getItem("theme") === "dark") {
+      document.documentElement.classList.add("dark");
     }
-  };
+  }
   setMode();
-  document.addEventListener('astro:after-swap', setMode); // NOTE: astro:before-swapだと、モード設定が維持されない
+  document.addEventListener("astro:after-swap", setMode); // NOTE: astro:before-swapだと、モード設定が維持されない
 </script>
 
 <ViewTransitions />
