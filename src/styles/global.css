@@ -85,3 +85,66 @@ hr {
   background-color: var(--text-color);
   height: 1px;
 }
+
+/* Link Preview Styles */
+.link-preview {
+  --link-preview-corners: 0.5em;
+  --link-preview-padding-inline: 0.75rem;
+  background-color: floralwhite;
+  color: darkblue;
+  font-family: sans-serif;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.link-preview:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.link-preview a {
+  color: purple;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* Tweet Embed Styles */
+.twitter-tweet {
+  background: #ffffff;
+  color: #0f1419;
+  font-size: 1rem;
+  border: 1px solid #cfd9de;
+  border-radius: 12px;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  max-width: 550px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.twitter-tweet:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+:root.dark .twitter-tweet {
+  background: #15202b;
+  color: #ffffff;
+  border-color: #38444d;
+}
+
+.twitter-tweet a {
+  color: #1d9bf0;
+  text-decoration: none;
+  font-weight: normal;
+}
+
+.twitter-tweet a:hover {
+  text-decoration: underline;
+}
+
+:root.dark .twitter-tweet a {
+  color: #1d9bf0;
+}
