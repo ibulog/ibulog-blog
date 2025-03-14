@@ -18,7 +18,7 @@ tags: ["CI/CD"]
 
 Vercelへデプロイする手段として一番てっとり早いのは、GitHubリポジトリとVercelの連携機能を使うことです。
 
-[Deploying GitHub Projects with Vercel](https://vercel.com/docs/deployments/git/vercel-for-github)
+https://vercel.com/docs/deployments/git/vercel-for-github
 
 設定を有効にするだけで、プルリクエスト作成時に自動でプレビューを生成してくれるので、めちゃくちゃ楽。
 
@@ -105,13 +105,11 @@ GitHub Actions上でVercel CLIの実行をキャンセルしても、Vercel上�
 
 上記2つの課題は、Vercel CLIではなくVercel REST APIをGitHub Actionsで実行することで解決しました。
 
-[Vercel REST API](https://vercel.com/docs/rest-api)
+https://vercel.com/docs/rest-api
 
 ### 「1. デプロイのキューがパンパンになる問題」への対応
 
 Vercel REST APIには、デプロイをキャンセルできるエンドポイントがあります。
-
-[Deployments](https://vercel.com/docs/rest-api/endpoints/deployments#cancel-a-deployment)
 
 デプロイを実行する前に、同一ブランチのデプロイが実行されていないか確認し、実行されていればそのデプロイをキャンセルします。
 
@@ -181,7 +179,7 @@ Vercel REST APIでは、ブランチを指定したデプロイを実行する�
 
 デプロイ処理の重複やエラーを避けるため、GitHub連携のプレビュー自動生成を `.vercel.json` で止めておきます。
 
-[Git Configuration](https://vercel.com/docs/projects/project-configuration/git-configuration)
+https://vercel.com/docs/projects/project-configuration/git-configuration
 
 ```json
 {

@@ -21,7 +21,7 @@ OSはUbuntu 20.04。VirtualBoxにクリーンインストールしたUbuntuで�
 
 エラーメッセージで検索すると、同じエラーに悩まされている人を発見。
 
-[RROR: failed to create cluster: failed to init node with kubeadm · Issue #1437 · kubernetes-sigs/kind](https://github.com/kubernetes-sigs/kind/issues/1437)
+https://github.com/kubernetes-sigs/kind/issues/1437
 
 ここには解決策はありませんでしたが、ヒントを掴むことはできました。
 
@@ -33,7 +33,7 @@ Dockerコンテナの中でDockerコンテナを動かせないファイルシ�
 
 もう少し探すと、下記の記事がヒット。
 
-[Cannot create cluster in Arch Linux with ZFS Storage Driver · Issue #1121 · kubernetes-sigs/kind](https://github.com/kubernetes-sigs/kind/issues/1121)
+https://github.com/kubernetes-sigs/kind/issues/1121
 
 ZFS/btrfs上でDocker in Dockerすると、overlayfsに問題が生じるらしい。
 
@@ -43,7 +43,7 @@ ZFS/btrfs上でDocker in Dockerすると、overlayfsに問題が生じるらし�
 
 下記のissueに解決策がありました。
 
-[Create cluster fails - kind-control-plane does not work on zfs · Issue #1719 · kubernetes-sigs/kind](https://github.com/kubernetes-sigs/kind/issues/1719)
+https://github.com/kubernetes-sigs/kind/issues/1719
 
 具体的には、kind実行時に指定するconfigファイルを以下のように書けばOK。
 
@@ -62,7 +62,7 @@ containerdConfigPatches:
 
 microk8sでも同じ問題が起こっていて、こちらが先に修正されていたようです。
 
-[Use native containerd snapshotter for ZFS (#1000) · canonical/microk8s@a5ec1f9](https://github.com/canonical/microk8s/commit/a5ec1f9540dbc6500e39dbdf30c79027f8e99239#diff-e263cbd0de8da1f880f701684ae8b035R35-R36)
+https://github.com/canonical/microk8s/commit/a5ec1f9540dbc6500e39dbdf30c79027f8e99239#diff-e263cbd0de8da1f880f701684ae8b035R35-R36
 
 ## 無事動いた
 
@@ -74,4 +74,4 @@ microk8sでも同じ問題が起こっていて、こちらが先に修正され
 
 最近知ったLinuxのランチャー「Ulauncher」、かなりよい。
 
-[Ulauncher — Application launcher for Linux 🐧](https://ulauncher.io/)
+https://ulauncher.io/
