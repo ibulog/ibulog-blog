@@ -1,0 +1,176 @@
+---
+title: "HaltechのメインコネクタからOBDを取りたいんじゃ！-ESP32でELM327をエミュレート編-"
+description: "Haltechのメインコネクタから出ているCANバスを利用し、OBD2のデータを取得する方法を模索しています。まずは第一段階として、ELM327をエミュレートします。"
+pubDate: 2025-03-15
+tags: ["Roadster"]
+heroImage: "/20250315-haltech-esp32-elm327/hero.jpg"
+---
+
+トップ画像は記事とは何も関係がない、先日行った九州旅行で撮影した桜島とフェリー。
+
+こんにちは。
+
+うちのロードスターもいろいろ整備・改良し、いよいよエンジンを触らんとす、ということで、4スロHaltech制御の導入を予定しています。
+
+せっかくフルコンを入れるなら、なんかいろいろデータ見れるようにしたいな？という素人考えから、Haltechから各種データを取得する方法を模索していきます。
+
+# スマホでデータを表示したい
+
+現在、運転中はスマホをディスプレイオーディオにつないで、Android Autoを利用しています。ディスプレイオーディオは無線に非対応なので、有線で接続。
+
+このスマホが遊んでしまっている状態なので、スマホホルダーを取り付けて、スマホでデータを見れるようにしたい。
+
+上記を踏まえると、「無線でデータを飛ばせる」「スマホのダッシュボード系アプリで表示できる」というのが条件になりそうです。
+
+となると、真っ先に思い浮かぶのは、BluetoothでOBD2を飛ばす手法です。
+
+# 事例を探す
+
+HaltechからOBD2のデータを取得する事例を探してみると、インパクト！さんの記事がたくさん出てきます。ありがたい...。
+
+https://ameblo.jp/impact55/entry-12304986743.html
+
+https://ameblo.jp/impact55/entry-12589965343.html
+
+どうやらHaltech Elite 1500や2500は、CAN系統が下記の2つあるようです。
+
+* メインコネクタ（26pinのほう）
+  * [Main Connector 26 Pin (Elite1500)](https://support.haltech.com/portal/en/kb/articles/main-connector-26-pin-elite1500)
+* AUXコネクタ
+  * [Auxiliary CAN Bus Port](https://support.haltech.com/portal/en/kb/articles/auxiliary-can-bus-port-7-4-2020)
+
+AUXコネクタを使う場合は、専用のハーネスを使えば一発でOBD2のデータを取得できるようです。
+
+ただ、AUXコネクタを使う場合は、USBコネクタなどを保護するカバーを外した状態で運用しないといけない...
+
+メインコネクタからもCANが使えるなら、カバーを外さなくて済むメインコネクタからOBD2を取得したい！（謎のこだわり）
+
+というのと、メインコネクタを使った事例が見当たらなかったので、人柱も兼ねてメインコネクタからOBD2を取得し、Bluetoothで飛ばしてみる方法にトライすることに。
+
+# 構成を固める
+
+流れとしては下記のような感じになります。
+
+1. HaltechのメインコネクタからCAN HiとCAN Loを取り出す
+2. CAN HiとCAN Loから、OBD2のデータを読み取る
+3. OBD2のデータをBluetoothで飛ばす
+
+手元に現物がないので想像ですが、Haltech側でCANに流すプロトコルにOBD2を指定できるようなので、CANからデータを読み取るのは簡単なんじゃないかなぁ...頑張って解析する必要はないはず...。
+
+上記を手っ取り早く実現できるマイコンとして、ESP32を選択しました。
+
+* CANコントローラを内蔵している
+* Bluetoothも内蔵している
+* 入手が楽ちん
+
+ただ、Haltechからのメインコネクタから取り出したCAN Hi/LoをESP32に接続するには、CANトランシーバが必要です。
+
+一般的にはTJA1050が使われることが多いっぽいのですが、ESP32は3.3V駆動であるのに対し、TJA1050は5V駆動。レベルシフタを入れるのもなぁ...と思っていたところ、SN65HVD230というチップが3.3V駆動ということで、これをトランシーバに採用することにしました。
+
+https://www.amazon.co.jp/dp/B083R69Q6N
+
+というわけで、`Haltech→SN65HVD230→ESP32→スマホ`という構成が固まりました。
+
+
+# まずはESP32→スマホの部分をつくる
+
+構成が固まったとはいっても、手元にHaltechがあるわけではないw ので、実装に差し掛かるのは無理。
+
+なのですが、ESP32からBluetoothでデータを飛ばし、スマホで表示できるのか、という部分は確認できるので、まずはそこから確認していくことに。やっと記事の本題に突入しました！
+
+スマホでOBD2を表示する系のアプリでよく併用されるデバイスが、ELM327というやつ。OBD2のコネクタに接続するだけで、Bluetoothでデータを飛ばしてくれる便利なやつです。Amazonでも1000円くらいで買えます。
+
+https://maxwin.jp/item/m-obd-v01a/
+
+前述のAUXコネクタからハーネスを使ってOBD2を取る場合は、これが使えるわけですね。
+
+なので、今回はこのチップの動きをESP32でそのままエミュレートしてやればいいわけです。
+
+# ESP32でELM327をエミュレートする
+
+ELM327をエミュレートするということは、下記の機能をESP32で実装するということになります。
+
+* OBD2のコマンドを適切に送受信できる
+* シリアル通信をBluetoothで行う
+
+このうち、Bluetoothの部分は非常に簡単で、`BluetoothSerial` というESP32のライブラリを使うだけでOK。`Serial` が `SerialBT` になるイメージです。
+
+```c
+#include "BluetoothSerial.h"
+
+BluetoothSerial SerialBT;
+
+void setup() {
+    Serial.begin(115200);
+    SerialBT.begin("ESP32_Master", true);  // true: マスターとして動作
+    Serial.println("Bluetooth Master Mode Started");
+
+    if (SerialBT.connect("Slave_Device_Name")) { // ペアリングしたいデバイスの名前
+        Serial.println("Connected to slave!");
+    } else {
+        Serial.println("Failed to connect.");
+    }
+}
+
+void loop() {
+    if (SerialBT.connected()) {
+        SerialBT.println("Hello from Master!");
+        delay(1000);
+    }
+}
+```
+
+OBD2コマンドの送受信もそこまで複雑ではないです。基本的には、シリアル経由で送信されてきたコマンド文字列に対して、適切なレスポンスを返すだけ。
+
+で、そのコマンドとレスポンスは下記のように規定されています。ATコマンドというのがELM327そのものの設定を確認・変更するコマンドで、01コマンドというのがOBD2のデータを取得するコマンドです。
+
+* ATコマンド：[OBD2/src/main/java/io/github/macfja/obd2/elm327/command/Commands.md at master · MacFJA/OBD2](https://github.com/MacFJA/OBD2/blob/master/src/main/java/io/github/macfja/obd2/elm327/command/Commands.md)
+* 01コマンド：[OBD-II PIDs - Wikipedia](https://en.wikipedia.org/wiki/OBD-II_PIDs)
+
+ATコマンドも01コマンドもすべて実装する必要はないので、必要なものだけ実装していきます。
+
+というわけでいきなりですが実装したコードが以下。モックなので、取得できる値は項目含め適当です。
+
+https://github.com/ibulog/esp32-elm327-emu/blob/main/src/main.cpp
+
+改めてOBD2のPIDを調べていて知ったのですが、油圧に対するPIDが存在しないのはちょっと驚きました。上記コードでは、通常のOBD2のPID範囲外である `01C9` というPIDを追加して、油圧を返すようにしています。
+
+# スマホでデータを表示する
+
+ESP32のコードが書けたので、あとはスマホでデータを表示するだけです。今回はRealDashを使って表示します。
+
+注意点として、RealDashにデフォルトで用意されているOBD2のデータマップには、AFRや油圧といった項目が含まれていませんでした。なので、XMLにマップを追加する必要があります。
+
+以下がAFRと油圧をOBD2経由で取得できるようにしたXMLです。targetIdなどはOBD2ではない接続方式のXMLを参考にして指定しています。
+
+https://github.com/ibulog/esp32-elm327-emu/blob/main/realdash_obd2.xml
+
+ESP32とスマホをペアリングして、RealDashでOBD2の接続先としてESP32を選択し、XMLを読み込むと...
+
+無事データが表示されました！！
+
+![](/20250315-haltech-esp32-elm327/image02.png)
+
+安定稼働するかな〜というのが心配だったので、実際に車載して運転してみましたが、特に接続が切れることなく、データが表示されていました。
+
+ESP32の動作温度範囲的には、夏場も大丈夫...なはず...！
+
+# 宿題
+
+さて、データは取得できるようになったのですが、宿題がひとつ。それは、Torque Proでは接続がうまくいかないということ。
+
+GitHubに置いている実際のコードを見てもらうとわかるのですが、09コマンドというコマンドも実装しています。これは、車両情報などを取得するコマンドのようで、Torque Proではこのコマンドで取得できる値も見ている模様。
+
+見様見真似で実装してみましたが、Torque Proでは接続がうまくいかない...。
+
+プロトコル選定がうまく行っていないようなので、プロトコル種別に関する実装も厚くしているのですが、ダメ。
+
+自分の用途ではRealDashが動けばそれでいいのですが、時間があるときにTorque Proでも動くようにしておきたいところ。
+
+# まとめ
+
+というわけで、今回は全構成のうち、ESP32とスマホの部分を実装しました。
+
+Haltechをお迎えしたら、Haltech→ESP32の部分を実装して、実際に車載してみたいと思います。
+
+![](/20250315-haltech-esp32-elm327/image01.jpg)
