@@ -88,8 +88,6 @@ hr {
 
 /* Link Preview Styles */
 .link-preview {
-  --link-preview-corners: 0.5em;
-  --link-preview-padding-inline: 0.75rem;
   background-color: var(--background-color);
   color: var(--text-color);
   font-family: "Noto Sans JP", "Quicksand", sans-serif;
@@ -99,22 +97,16 @@ hr {
   padding: 0.75rem 1rem;
   width: calc(100% - 2rem);
   max-width: 550px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease-in-out;
   box-sizing: border-box;
+  z-index: -1000;
 }
+
 
 @media (max-width: 600px) {
   .link-preview {
     margin: 1rem auto;
     padding: 0.75rem;
   }
-}
-
-.link-preview:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border-color: var(--text-color);
 }
 
 .link-preview a {
@@ -147,18 +139,11 @@ hr {
   font-size: 0.875rem;
 }
 
-:root.dark .link-preview {
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-}
-
-:root.dark .link-preview:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
 :root.dark .link-preview p:first-of-type,
 :root.dark .link-preview p:nth-of-type(3) {
   color: #999999;
 }
+
 
 /* Tweet Embed Styles */
 .twitter-tweet {
@@ -174,6 +159,7 @@ hr {
     Arial, sans-serif;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  z-index: -1000;
 }
 
 .twitter-tweet:hover {
