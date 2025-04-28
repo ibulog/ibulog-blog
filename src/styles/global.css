@@ -98,9 +98,7 @@ hr {
   width: calc(100% - 2rem);
   max-width: 550px;
   box-sizing: border-box;
-  z-index: -1000;
 }
-
 
 @media (max-width: 600px) {
   .link-preview {
@@ -143,7 +141,6 @@ hr {
 :root.dark .link-preview p:nth-of-type(3) {
   color: #999999;
 }
-
 
 /* Tweet Embed Styles */
 .twitter-tweet {
