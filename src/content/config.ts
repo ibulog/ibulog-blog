@@ -1,4 +1,5 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
+import { z } from "astro/zod";
 import { glob } from "astro/loaders";
 
 const tags = [
@@ -14,12 +15,12 @@ const tags = [
 
 const blogCollection = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/data/blog" }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     description: z.string(),
     pubDate: z.date(),
     tags: z.array(z.enum(tags)).min(1),
-    heroImage: z.string().optional(),
+    heroImage: image().optional(),
   }),
 });
 
