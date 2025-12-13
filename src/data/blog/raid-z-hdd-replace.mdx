@@ -19,13 +19,13 @@ RAID-Zを組んでいるのでちょっと手順がややこしく、メモし�
 
 これが10年くらい使っているSeagate製HDDのS.M.A.R.T値です。
 
-![](/20220716-raid-z-hdd-replace/image01.png)
+![](../../assets/20220716-raid-z-hdd-replace/image01.png)
 
 `CurrentPendingSector`（代替処理が保留されている不良セクタ数）と`Offline_Uncorrectable`（回復不能なセクタ数）はゼロですが、`RawReadErrorRate`（データ読み込みのエラー率）や`SeekError_Rate`（シークのエラー率）はけっこうヤバそう。
 
 対してこちらが2年ほど使っているWDのHDDのS.M.A.R.T値。健康です。
 
-![](/20220716-raid-z-hdd-replace/image02.png)
+![](../../assets/20220716-raid-z-hdd-replace/image02.png)
 
 RAID-Zなので片方のHDDが壊れても無問題ですが、予防整備として交換しておきます。
 
@@ -36,7 +36,7 @@ RAID-Zなので片方のHDDが壊れても無問題ですが、予防整備と�
 
 `zpool status`で現状を確認します。
 
-![](/20220716-raid-z-hdd-replace/image03.png)
+![](../../assets/20220716-raid-z-hdd-replace/image03.png)
  
 ディスクはどちらもオンラインなので、壊れてはないっぽい？
 
@@ -56,7 +56,7 @@ sudo zpool offline upool sdc1
 
 左が古いSeagate製HDD、右が新しい東芝製HDDです。
 
-![](/20220716-raid-z-hdd-replace/image04.jpg)
+![](../../assets/20220716-raid-z-hdd-replace/image04.jpg)
 
 SeagateのHDDは、確か2012年モデルのiMacに内蔵されていたものだった気がします。
 
@@ -70,7 +70,7 @@ SeagateのHDDは、確か2012年モデルのiMacに内蔵されていたもの�
 sudo zpool replace upool sdc1 /dev/sdc
 ```
 
-![](/20220716-raid-z-hdd-replace/image05.png)
+![](../../assets/20220716-raid-z-hdd-replace/image05.png)
 
 ## まとめ 
 
