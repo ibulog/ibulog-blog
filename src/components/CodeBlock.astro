@@ -4,6 +4,7 @@ import { type BuiltinLanguage, type SpecialLanguage } from "shiki";
 import {
   transformerNotationDiff,
   transformerMetaHighlight,
+  transformerNotationHighlight,
   transformerNotationFocus,
 } from "@shikijs/transformers";
 interface Props {
@@ -15,12 +16,12 @@ const { lang, title, code } = Astro.props;
 ---
 
 <figure class="code-block">
-  <div class="code-block-header-wrapper">
-    <figcaption class="code-block-header">
-      {title ? title : "code"}
+  {title && (
+    <figcaption class="code-block-label">
+      {title}
     </figcaption>
-  </div>
-  <div>
+  )}
+  <div class="code-block-content">
     <Code
       lang={lang as BuiltinLanguage | SpecialLanguage | undefined}
       code={decodeURIComponent(code)}
@@ -28,6 +29,7 @@ const { lang, title, code } = Astro.props;
       theme={"dark-plus"}
       transformers={[
         transformerNotationDiff(),
+        transformerNotationHighlight(),
         transformerMetaHighlight(),
         transformerNotationFocus(),
       ]}
