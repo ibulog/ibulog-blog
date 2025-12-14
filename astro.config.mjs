@@ -4,6 +4,9 @@ import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import partytown from "@astrojs/partytown";
 
+import remarkBreaks from 'remark-breaks';
+import remarkCodeBlock from "./src/remark/remark-code-block";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://ibulog.me",
@@ -17,6 +20,11 @@ export default defineConfig({
       },
     }),
   ],
+  markdown: {
+    syntaxHighlight: false,
+    remarkPlugins: [remarkBreaks, remarkCodeBlock],
+    extendDefaultPlugins: true,
+  },
   image: {
     layout: "constrained",
   },

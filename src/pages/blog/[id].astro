@@ -1,17 +1,18 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { getCollection, render } from 'astro:content';
-import MarkdownPostLayout from '../../layouts/MarkdownPostLayout.astro';
+import { getCollection, render } from "astro:content";
+import MarkdownPostLayout from "../../layouts/MarkdownPostLayout.astro";
 import sortArticleByDate from "../../utils/sortArticleByDate.ts";
+import CodeBlock from "../../components/CodeBlock.astro";
 
 type Props = {
-  entry: CollectionEntry<'blog'>;
-  prevArticle?: CollectionEntry<'blog'>
-  nextArticle?: CollectionEntry<'blog'>
+  entry: CollectionEntry<"blog">;
+  prevArticle?: CollectionEntry<"blog">;
+  nextArticle?: CollectionEntry<"blog">;
 };
 
 export async function getStaticPaths() {
-  const blogEntries = await getCollection('blog');
+  const blogEntries = await getCollection("blog");
   const articleNumber = blogEntries.length;
 
   return blogEntries.sort(sortArticleByDate).map((entry, i) => ({
@@ -20,13 +21,18 @@ export async function getStaticPaths() {
       entry,
       prevArticle: i === 0 ? undefined : blogEntries[i - 1],
       nextArticle: i + 1 === articleNumber ? undefined : blogEntries[i + 1],
-    }
+    },
   }));
 }
 
 const { entry, prevArticle, nextArticle } = Astro.props;
 const { Content } = await render(entry);
 ---
-<MarkdownPostLayout entry={entry} prevArticle={prevArticle} nextArticle={nextArticle}>
-  <Content />
+
+<MarkdownPostLayout
+  entry={entry}
+  prevArticle={prevArticle}
+  nextArticle={nextArticle}
+>
+  <Content components={{ "code-block": CodeBlock }} />
 </MarkdownPostLayout>

@@ -15,7 +15,9 @@
     "@astrojs/partytown": "^2.1.4",
     "@astrojs/rss": "^4.0.14",
     "@astrojs/sitemap": "^3.6.0",
+    "@shikijs/transformers": "^3.20.0",
     "astro": "^5.16.5",
-    "astro-embed": "^0.9.0"
+    "astro-embed": "^0.9.0",
+    "remark-breaks": "^4.0.0"
   }
 }
