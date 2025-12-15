@@ -4,6 +4,7 @@
 import { SITE_BASE_URL } from "../config";
 import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
+import { getImage } from "astro:assets";
 
 export interface Props {
   title: string;
@@ -13,7 +14,19 @@ export interface Props {
 }
 
 const { title, description, url, image: hero_image } = Astro.props;
-const image = hero_image || "404.jpg";
+
+const absoluteUrl = new URL(url, SITE_BASE_URL).toString();
+
+const ogImage = hero_image 
+  ? await getImage({
+    src: hero_image,
+    width: 1200,
+    height: 630,
+    format: "webp"
+  })
+  : null;
+
+const ogImageUrl = ogImage ? new URL(ogImage.src, SITE_BASE_URL).toString() : null;
 ---
 
 <!-- Global Metadata -->
@@ -29,15 +42,18 @@ const image = hero_image || "404.jpg";
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
-<meta property="og:url" content={new URL(url, SITE_BASE_URL)} />
+<meta property="og:url" content={absoluteUrl} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={new URL(image, SITE_BASE_URL)} />
+<meta property="og:image" content={ogImageUrl} />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary" />
 <meta property="twitter:site" content="@ibulog_" />
-<meta property="twitter:url" content={new URL(url, SITE_BASE_URL)} />
+<meta property="twitter:url" content={absoluteUrl} />
+<meta property="twitter:title" content={title} />
+<meta property="twitter:description" content={description} />
+<meta property="twitter:image" content={ogImageUrl} />
 
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com" /><link
