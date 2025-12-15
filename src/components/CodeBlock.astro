@@ -1,0 +1,38 @@
+---
+import { Code } from "astro:components";
+import { type BuiltinLanguage, type SpecialLanguage } from "shiki";
+import {
+  transformerNotationDiff,
+  transformerMetaHighlight,
+  transformerNotationHighlight,
+  transformerNotationFocus,
+} from "@shikijs/transformers";
+interface Props {
+  lang?: string;
+  title?: string;
+  code: string;
+}
+const { lang, title, code } = Astro.props;
+---
+
+<figure class="code-block">
+  {title && (
+    <figcaption class="code-block-label">
+      {title}
+    </figcaption>
+  )}
+  <div class="code-block-content">
+    <Code
+      lang={lang as BuiltinLanguage | SpecialLanguage | undefined}
+      code={decodeURIComponent(code)}
+      wrap={false}
+      theme={"dark-plus"}
+      transformers={[
+        transformerNotationDiff(),
+        transformerNotationHighlight(),
+        transformerMetaHighlight(),
+        transformerNotationFocus(),
+      ]}
+    />
+  </div>
+</figure>
