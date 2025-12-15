@@ -42,14 +42,6 @@ b {
   color: var(--text-color);
 }
 
-p a:link {
-  color: #0000ee;
-}
-
-p a:visited {
-  color: #551a8b;
-}
-
 textarea {
   width: 100%;
   font-size: 16px;
