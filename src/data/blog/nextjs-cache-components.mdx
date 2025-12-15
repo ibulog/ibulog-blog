@@ -1,13 +1,16 @@
 ---
 title: "Next.js16のCache Componentsを素振りする"
 description: "Next.js16で実装されたCache Componentsへの理解を深めるためのメモ記事です。"
-pubDate: 2025-12-14
+pubDate: 2025-12-15
 tags: ["Frontend"]
+heroImage: "../../assets/20251215-nextjs-cache-components/hero.jpg" 
 ---
 
-久々の技術記事な気がします。
+こんにちは。トップ画像はこの前訪れた常照皇寺です。とてもよかった。
 
-Next.js16で、PPR（Partial Pre-rendering）を実装する手段として[Cache Components](https://nextjs.org/docs/app/getting-started/cache-components)が導入されました。
+そして久々の技術記事な気がします。
+
+Next.js 16で、PPR（Partial Pre-rendering）を実装する手段として[Cache Components](https://nextjs.org/docs/app/getting-started/cache-components)が導入されました。
 
 私自身、ふだんはプリセールスとして動くことも多く、商談ではSSRやSSG、CSRといった用語はまだまだ使います。
 が、Next.jsの世界観では、少なくともページ単位でそうした用語を使うことは過去のものとなりつつあります。
@@ -16,7 +19,7 @@ React2Shellの脆弱性が見つかったタイミングで間が悪いですが
 
 ## 各キャッシュの挙動をおさらい
 
-Next.jsにはRequest Memorization、Data Cache、Full Route Cache、Router Cacheの4つのキャッシュがあります。
+Next.jsにはRequest Memoization、Data Cache、Full Route Cache、Router Cacheの4つのキャッシュがあります。
 うち、レンダリング手法に深く関係してくるData CacheとFull Route Cacheについておさらいしていきます。
 
 以下が利用するプロジェクトの`app`以下の構成です。microCMSからデータを取得して表示する簡単なプロジェクトです。
@@ -31,10 +34,11 @@ app
 └── page.tsx
 ```
 
-まずは2つのキャッシュを利用します。`fetch()`の`next`オプションに`revalidate: false`を指定し、無期限でキャッシュを保持します。
+### Full Route Cacheが有効な場合
 
-```typescript
-// src/_lib/getPosts.ts
+まずは2つのキャッシュを利用します。`fetch`の`next`オプションに`revalidate: false`を指定し、無期限でキャッシュを保持します。
+
+```typescript src/_lib/getPosts.ts
 export const getPosts = async () => {
   console.log("getPosts is called");
 
@@ -46,7 +50,7 @@ export const getPosts = async () => {
         "X-MICROCMS-API-KEY": "xxx"
       },
       next: {
-        "revalidate": false,
+        "revalidate": false, // [!code highlight]
       },
     });
     if (!response.ok) {
@@ -64,8 +68,7 @@ export const getPosts = async () => {
 
 上記の`getPosts`をServer Component内で実行し、データを取得します。
 
-```typescript
-// src/app/_components/posts.tsx
+```typescript src/app/_components/posts.tsx
 import { getPosts } from "../_lib/getPosts";
 
 const Posts = async () => {
@@ -89,8 +92,7 @@ const Posts = async () => {
 export default Posts;
 ```
 
-```typescript
-// src/app/page.tsx
+```typescript src/app/page.tsx
 import Posts from "./_components/posts";
 
 export default function Home() {
@@ -104,7 +106,6 @@ export default function Home() {
 ```
 
 ビルド結果を確認すると、ルートページはStatic Renderingの対象となっています。
-キャッシュは無期限で保持されるため、SSGと同様に事前ビルドした静的なページを表示するのみの挙動になります。
 
 ```text
 Route (app)
@@ -115,10 +116,12 @@ Route (app)
 ○  (Static)  prerendered as static content
 ```
 
-`revalidate`オプションに秒数を指定すれば、Time-based Revalidationが有効になります。
-一定期間でキャッシュを破棄し、アクセス時に再度データを取得して再レンダリングするISRと同様の挙動になります。
+ルートページにmicroCMSのデータ以外に動的な要素はなく、かつ対象データを取得する`fetch`のData Cacheが有効になっているので、Full Route Cacheも有効になります。
+キャッシュは無期限で保持されるため、SSGと同様に事前ビルドしたページを表示するのみの挙動になります。
 
-```
+`revalidate`オプションに秒数を指定すれば、Time-based revalidationが有効になります。
+
+```text
 Route (app)      Revalidate  Expire
 ┌ ○ /                    1m      1y
 └ ○ /_not-found
@@ -127,7 +130,9 @@ Route (app)      Revalidate  Expire
 ○  (Static)  prerendered as static content
 ```
 
-上記のようにFull Route CacheおよびData Cacheが有効なケースでは、`.next/server/app/index.html`が事前ビルドされます。
+一定期間でキャッシュを破棄し、アクセス時に再度データを取得して再レンダリングするISRと同様の挙動になります。
+
+上記のようにStatic Renderingの対象となるページ（Full Route Cacheが有効なページ）では、`.next/server/app/index.html`が事前ビルドされます。
 中身を見ると、microCMSから取得したコンテンツが埋め込まれているのがわかります。
 
 ```html
@@ -151,17 +156,20 @@ Route (app)      Revalidate  Expire
 </body>
 ```
 
+なお、HTMLと同時にRSC Payloadもキャッシュされていて、HydrationもキャッシュされたRSC Payloadを用いて行われます。
+
+### Data Cacheのみ有効な場合
+
 次にData Cacheのみ使ってみることにします。
 
-ページがDynamic Re-renderingされるように、`page.tsx`のRoute Segment Configとして`revalidate=0`を設定します。
-また、Data Cacheによるキャッシュを見えやすくするため、`getPosts`の戻り値そのものをキャッシュするために`unstable_cache`を使用します。
+ページがDynamic Re-renderingされるように、`posts.tsx`のRoute Segment Configとして`revalidate=0`を設定します。
+また、Data Cacheによるキャッシュの挙動をコンソール上でつかみやすくするため、`getPosts`の戻り値そのものをキャッシュするために`unstable_cache`を使用します。
 
-```typescript
-// src/app/page.tsx
-export const revalidate = 0; // [!code --]
-
+```typescript src/_components/posts.tsx
 import { unstable_cache } from "next/cache";
 import { getPosts } from "../_lib/getPosts";
+
+export const revalidate = 0; // [!code ++] 
 
 const getCachedPosts = unstable_cache(
   getPosts,
@@ -177,7 +185,7 @@ const Posts = async () => {
 
 ビルド結果は以下のように変わり、ルートページがDynamic Renderingの対象となりました。
 
-```
+```text
 Route (app)
 ┌ ƒ /
 └ ○ /_not-found
@@ -188,16 +196,15 @@ Route (app)
 ```
 
 Dynamic Renderingの対象ページとなったことで、Full Route Cacheは利用されなくなります。
-ただ、Data Cacheは引き続き有効で、`.next/cache/fetch-cache`に生成されるキャッシュが利用されます。
 
-getPostsの結果は`unstable_cache`によってキャッシュされるので、コンソールにはアクセスごとに以下のように表示されます。
+ただ、`getPosts`の結果は`unstable_cache`によってData Cacheにキャッシュされるので、コンソールにはアクセスごとに以下のように表示されます。
 
-```
+```text
 getPosts is called
 The component is re-rendered
 The component is re-rendered
 The component is re-rendered
-getPosts is called ←60秒経つとキャッシュがrevalidateされる
+getPosts is called // 60秒経つとキャッシュがrevalidateされる
 The component is re-rendered
 ```
 
@@ -208,7 +215,7 @@ The component is re-rendered
 最後に、Data Cacheも無効にしてみましょう。
 `fetch`のオプションに`revalidate: 0`を指定して、Data Cacheを無効にします。
 
-```typescript:posts.tsx
+```typescript src/_lib/getPosts.ts
 export const getPosts = async () => {
   console.log("getPosts is called");
 
@@ -220,7 +227,7 @@ export const getPosts = async () => {
         "X-MICROCMS-API-KEY": "xxx"
       },
       next: {
-        revalidate: 0,
+        revalidate: 0, // [!code highlight]
       },
     });
 ```
@@ -243,19 +250,21 @@ Posts Component is rendered
 
 ## Cache ComponentsでPPRする
 
+### PPR
+
 おさらいの中でわかることは、Dynamic Renderingされるページの場合、HTMLは事前ビルドされず、Data Cacheのみが使われる点。
 動的な部分はmicroCMSからデータ取得する箇所だけなのに、そこに引っ張られてページ全体がDynamic Renderingされてしまいます。
 
-これを解決するのがPPRで、PPRでは、静的な部分のみを事前ビルドし、動的な部分はあとからレンダリングすることができます。
+これを解決するのがPPRで、PPRでは、静的な部分のみを事前ビルドし、動的な部分は後からブラウザにデリバリーすることができます。
+
 実際に挙動を見ていきます。
+PPRはNext.js 16でもOpt-Inな機能なので、`next.config.ts`に`cacheComponents`オプションを追記し有効化します。
 
-PPRはNext.js 16ではOpt-Inとなっており、`next.config.js`に`cacheComponents`オプションを追記します。
-
-```typescript:next.config.js
+```typescript next.config.ts
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  cacheComponents: true
+  cacheComponents: true // [!code highlight]
 };
 
 export default nextConfig;
@@ -263,14 +272,14 @@ export default nextConfig;
 
 `page.tsx`に少し細工をし、`Posts`コンポーネントを`Suspense`でラップします。
 
-```typescript:page.tsx
+```typescript page.tsx
 import { Suspense } from "react";
 import Posts from "./_components/posts";
 
 export default function Home() {
   return (
-    <main className="max-w-7xl mx-auto text-center">
-      <h1 className="text-3xl font-bold p-6">Posts</h1>
+    <main>
+      <h1>Posts</h1>
       <Suspense fallback={<p>Loading...</p>}>
         <Posts />
       </Suspense>
@@ -280,7 +289,6 @@ export default function Home() {
 ```
 
 この状態でビルドすると、結果は以下のようになります。
-「Partial Prerender」とあるように、PPRされていることがわかります。
 
 ```
 Route (app)
@@ -292,9 +300,11 @@ Route (app)
 ◐  (Partial Prerender)  prerendered as static HTML with dynamic server-streamed content
 ```
 
-ルートページがDynamic Renderingされていた時とは異なり、`.next/server/app/index.html`もビルド時に生成されるようになります。中身はこんな感じ。
+「Partial Prerender」とあるように、PPRされていることがわかります。
 
-```
+Dynamic Renderingされていた時とは異なり、`.next/server/app/index.html`（Static Shell）もビルド時に生成されるようになります。中身はこんな感じ。
+
+```html
 <body class="geist_a71539c9-module__T19VSG__variable geist_mono_8d43a2aa-module__8Li5zG__variable antialiased">
     <div hidden=""><!--$--><!--/$--></div><!--&-->
     <main>
@@ -304,23 +314,23 @@ Route (app)
 ```
 
 このように、`Suspense`で囲った部分は`<template id="B:0">`と`<p>Loading...</p>`となっており、
-Streaming SSRによってサーバーからデータが流れてき次第、表示が置き換わることになります。
+サーバーがデータを取得でき次第RSC Payloadがデリバリーされ、表示が置き換わることになります。
 
-`next.config.js`に`cacheComponents: true`を指定すると、特に意識することなくPPRされるようになります。
+### Cache Components
 
 ここまで説明してきたPPR自体はNext.js 15でも利用できますが、16からはCache ComponentsによってAPIが整理されました。
 具体的には、`use cache`ディレクティブの導入です。
 
 ここまで、Data Cacheを利用するために`fetch`にオプションを指定したり、Route Segment単位で`revalidate`を指定したりと、
-Next.jsのキャッシュ設計とそのAPIをある程度理解する必要がありました。
+Next.jsのキャッシュ設計には、複数のAPIを理解する必要がありました。
 
 Cache Componentsでは`use cache`ディレクティブを指定することで、より簡潔にキャッシュを利用できるようになりました。
 
 利用方法は簡単で、キャッシュしたいページやコンポーネント、関数に`use cache`ディレクティブを記述するだけです。
 ここまで`fetch`やRoute Segmentごとに指定していたキャッシュのオプションを削除し、`posts.tsx`に`use cache`を指定します。
 
-```typescript:posts.tsx
-"use cache";
+```typescript posts.tsx
+"use cache"; // [!code highlight]
 
 import { getPosts } from "../_lib/getPosts";
 
@@ -342,12 +352,12 @@ Route (app)      Revalidate  Expire
 ```
 
 `Posts`コンポーネントはCache Componentsとして扱われ、ルートページはPPRではなくStatic Renderingされるようになりました。
-`use cache`ディレクティブを指定した場合、デフォルトのキャッシュ有効期間は15分となるようです。
 
-このように、Next.js 15以前ではキャッシュまわりのAPIが複雑だったため、PPRの設計もやや複雑でしたが、
-Next.js 16のCache Componentsにより、「Cache ComponentsでないコンポーネントはSuspenseでラップしてPPR」といった見通しがよくなった印象です。
+`use cache`ディレクティブを使用すると、デフォルトで15分間のサーバーサイドrevalidationが設定されます。コンポーネントがキャッシュされるので厳密には異なりますが、Next.js 15以前であれば`fetch`のオプションに`revalidate: 900`（15分 = 900秒）と指定していたのと同じようなキャッシュ設計となったといえます。
 
-## 閑話休題: Client Component
+このように、Next.js 16のCache Componentsにより、「Cache ComponentsでないコンポーネントはSuspenseでラップしてPPR」すればよく、見通しがよくなった印象です。
+
+## 閑話休題: Client Components
 
 ここまでは、RSC登場からNext.jsにおけるデフォルトのレンダリングモデルとなったServer Componentsのお話でした。
 では、`Posts`コンポーネントがClient Componentだったらどうなるのか？というのも見てみます。
@@ -355,8 +365,9 @@ Next.js 16のCache Componentsにより、「Cache Componentsでないコンポ�
 話をCache Componentsを有効にする前に戻します。
 
 `posts.tsx`を以下のように変更し、Client Componentとします。
+前提として、`getPosts`はClient Componentから呼び出せるように改変済みとします。
 
-```
+```typescript posts.tsx
 "use client";
 
 import { getPosts } from "../_lib/getPosts";
@@ -385,7 +396,7 @@ const Posts = () => {
 
 ビルドすると、以下のようにルートページはStatic Renderingされています。
 
-```
+```text
 Route (app)
 ┌ ○ /
 └ ○ /_not-found
@@ -396,7 +407,7 @@ Route (app)
 
 ただし、データ取得はクライアント側で行われるため、事前生成されるHTMLにはmicroCMSの情報は含まれません。
 
-```
+```html
 <body class="geist_a71539c9-module__T19VSG__variable geist_mono_8d43a2aa-module__8Li5zG__variable antialiased">
     <div hidden=""><!--$--><!--/$--></div>
     <main>
@@ -408,15 +419,15 @@ Route (app)
 ```
 
 このように、PPR登場以前も、Client Componentsを利用することで、動的な部分を除いて事前ビルドすること自体は可能でした。
+
 PPRの登場により、Server Componentsにおいても動的な部分を除いて事前ビルドすることが可能になった、という整理もできそうです。
 
 ## おわりに
 
-開発者目線では、キャッシュまわりのAPIが簡潔になったり、PPRによって動的な領域を含むページでもパフォーマンスを高められたりと、
-いいことづくめなアップデートになっている気がします。
+開発者目線では、キャッシュまわりのAPIが簡潔になったり、PPRによって動的な領域を含むページでもパフォーマンスを高められたりと、いいことづくめなアップデートという印象です。
 
-SaaS提供事業者として障害対応などをする立場では、コンポーネント単位でのレンダリング設計は、調査の初動における「あたり」をつけづらくなるかもしれません。
+SaaS提供事業者として障害対応などをする立場では、コンポーネント単位でのレンダリング設計は、調査の初動における「あたり」をつけづらくなるような気もします。
 
-なんにせよ、キャッシュまわりの複雑さから忌避されがちだったApp Routerが普及する前提が整ったように思います。
+なんにせよ、キャッシュまわりの複雑さから忌避されがちだったApp Routerが普及する土台が整ったのではないでしょうか。
 
 おわり。
