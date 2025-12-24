@@ -19,5 +19,9 @@
     "astro": "^5.16.5",
     "astro-embed": "^0.9.0",
     "remark-breaks": "^4.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.18",
+    "tailwindcss": "^4.1.18"
   }
 }

@@ -1,10 +1,23 @@
+@import "tailwindcss";
+
 /*
   The CSS in this style tag is based off of Bear Blog's default CSS.
   https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
+
+@theme {
+  --color-footer-bg: #F5F5F5;
+  --color-footer-text: #3D3D3D;
+}
+
+@theme .dark {
+  --color-footer-bg: #1c1c18;
+  --color-footer-text: #e5e5e5;
+}
+
 :root {
-  --background-color: #f8f7f6;
+  --background-color: #ffffff;
   --text-color: #23221e;
   --navigation-color: #edebe8;
   --code-color: #edebe8;
