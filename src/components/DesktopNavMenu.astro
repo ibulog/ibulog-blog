@@ -1,0 +1,24 @@
+---
+const {pageKind} = Astro.props;
+
+const navItems = [
+  { label: 'About', href: '/' },
+  { label: 'Jobs', href: '/job' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Tags', href: '/tags' },
+];
+---
+
+<nav class="hidden md:flex items-center gap-5">
+	{navItems.map((item) => (
+		<a
+			href={item.href}
+			class={`text-sm font-medium leading-none text-[var(--color-app-text-subtle)] ${
+				pageKind === item.label ? 'font-semibold' : ''
+			}`}
+		>
+			{item.label}
+		</a>
+	))}
+</nav>
+

@@ -1,32 +1,38 @@
 ---
-import Nav from './Nav.astro';
+import DesktopNavMenu from './DesktopNavMenu.astro';
+import MobileNavButton from './MobileNavButton.astro';
+import MobileNavDropdown from './MobileNavDropdown.astro';
 import ThemeIcon from './ThemeIcon.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../config';
+import { SITE_TITLE } from '../config';
 
 const {pageKind} = Astro.props;
 ---
 
-<header>
-	<div class="title">
-		<h2>
+<header class="relative w-full bg-app-bg text-app-text rounded-xl flex flex-col px-6 py-4">
+	<div class="flex justify-between items-center self-stretch h-6 md:h-8">
+		<h2 class="text-xl font-medium leading-none">
 			{SITE_TITLE}
 		</h2>
-		<ThemeIcon />
+		<div class="flex items-center gap-6">
+			<div class="hidden md:flex items-center">
+				<DesktopNavMenu pageKind={pageKind} />
+			</div>
+			<div class="md:hidden flex items-center">
+				<MobileNavButton />
+			</div>
+			<ThemeIcon />
+		</div>
 	</div>
-	<Nav pageKind={pageKind}/>
+	<MobileNavDropdown pageKind={pageKind} />
 </header>
-<style>
-	header {
-		position: sticky;
-		top: 0;
-		display: flex;
-		justify-content: space-between;
-		background-color: var(--background-color);
-		margin: 0em 0 1rem;
-		z-index: 1000;
-	}
-	.title {
-		display: flex;
-		align-items: center;
-	}
-</style>
+
+<script is:inline>
+  const toggle = document.getElementById('mobile-menu-toggle');
+  const menu = document.getElementById('mobile-nav-dropdown');
+
+  toggle?.addEventListener('click', () => {
+    const isOpened = menu?.classList.contains('grid-rows-[1fr]');
+    menu?.classList.toggle('grid-rows-[0fr]', isOpened);
+    menu?.classList.toggle('grid-rows-[1fr]', !isOpened);
+  });
+</script>
