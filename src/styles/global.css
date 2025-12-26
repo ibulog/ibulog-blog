@@ -42,6 +42,10 @@
   --color-app-tag-default: var(--color-gray-800);
 }
 
+html {
+  overflow-y: scroll;
+}
+
 :root {
   --background-color: #ffffff;
   --text-color: #23221e;
