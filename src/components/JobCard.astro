@@ -1,0 +1,67 @@
+---
+import { Image } from "astro:assets";
+
+export interface Props {
+	companyName: string;
+	dateRange: string;
+	companyImage?: any;
+	team: string;
+	work: string;
+}
+
+const { companyName, dateRange, companyImage, team, work } = Astro.props;
+---
+
+<div class="flex flex-row items-center gap-2 w-full">
+	<div class="flex flex-col self-stretch gap-2.5 pt-10">
+		<div class="flex flex-col justify-center items-center w-8 h-8 rounded-full bg-primary">
+			<div class="flex flex-col justify-center items-center w-full h-full p-1 rounded-full border border-app-border-default-reverse">
+				<div class="flex flex-col justify-center items-center w-full h-full p-2 rounded-full bg-app-bg-obvious"></div>
+			</div>
+		</div>
+	</div>
+	<div class="flex flex-col gap-2 flex-1">
+		<div class="flex flex-row justify-stretch items-stretch w-full rounded-xl h-24 bg-app-bg">
+			<div class="flex flex-col self-stretch p-6 flex-1 justify-between">
+					<h3 class="text-xl font-bold leading-none text-app-text">
+						{companyName}
+					</h3>
+					<span class="text-xs font-medium leading-none text-app-text">
+						{dateRange}
+					</span>
+			</div>
+			{companyImage && (
+				<div class="flex flex-row justify-end items-center h-full">
+					<Image
+						src={companyImage}
+						alt={companyName}
+						width={168}
+						height={96}
+						class="h-full rounded-r-xl object-cover"
+					/>
+				</div>
+			)}
+		</div>
+		<div class="flex flex-row self-stretch px-6 py-4">
+			<h4 class="text-base font-bold leading-none text-app-text">
+				Team
+			</h4>
+		</div>
+		<div class="flex flex-row items-center self-stretch flex-wrap px-8">
+			<p class="text-base font-normal leading-[1.8em] text-app-text">
+				{team}
+			</p>
+		</div>
+		<div class="flex flex-row self-stretch px-6 py-4">
+			<h4 class="text-base font-bold leading-none text-app-text">
+				Work
+			</h4>
+		</div>
+		<div class="flex flex-row items-center self-stretch flex-wrap px-8">
+			<p class="text-base font-normal leading-[1.8em] text-app-text whitespace-pre-line">
+				{work}
+			</p>
+		</div>
+	</div>
+</div>
+
