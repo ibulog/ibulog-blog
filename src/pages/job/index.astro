@@ -47,7 +47,7 @@ const jobsData = [
 
 async function getOgImage(url: string): Promise<string | undefined> {
 	try {
-		const { result } = await ogs({ url });
+		const { result } = await ogs({ url, fetchOptions: { headers: { 'user-agent': 'bot' } } });
 		return result.ogImage?.[0]?.url;
 	} catch (error) {
 		console.error(`Failed to fetch OGP image for ${url}:`, error);
