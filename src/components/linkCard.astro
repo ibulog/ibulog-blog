@@ -1,0 +1,33 @@
+---
+
+export interface Props {
+	title: string;
+	description: string;
+	url: string;
+	imageUrl?: string;
+}
+
+const { title, description, url, imageUrl } = Astro.props;
+
+---
+    
+<div class="flex flex-row justify-stretch items-stretch w-full rounded-xl h-24 bg-app-bg">
+  <div class="flex flex-col self-stretch p-6 flex-1 justify-between">
+      <h2 class="text-lg font-bold leading-none text-app-text">
+        <a href={url} target="_blank" rel="noopener noreferrer">{title}</a>
+      </h2>
+      <span class="text-xs font-medium leading-none text-app-text">
+        {description}
+      </span>
+  </div>
+  {imageUrl && (
+    <div class="hidden md:flex flex-row justify-end items-center h-full">
+        <img
+          src={imageUrl}
+          alt={title}
+          class="h-full rounded-r-xl object-cover"
+          style="width: 168px; height: 96px;"
+        />
+    </div>
+  )}
+</div>

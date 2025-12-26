@@ -1,16 +1,17 @@
 ---
-import { Image } from "astro:assets";
+import LinkCard from './linkCard.astro';
 
 export interface Props {
 	companyName: string;
 	dateRange: string;
-	companyImage?: any;
+	companyUrl: string;
+	companyImage?: string | any;
 	team: string;
 	work: string;
 	isFirst?: boolean;
 }
 
-const { companyName, dateRange, companyImage, team, work, isFirst = false } = Astro.props;
+const { companyName, dateRange, companyUrl, companyImage, team, work, isFirst = false } = Astro.props;
 ---
 
 <div class="flex flex-row items-center gap-2 w-full">
@@ -22,27 +23,7 @@ const { companyName, dateRange, companyImage, team, work, isFirst = false } = As
 		</div>
 	</div>
 	<div class="flex flex-col gap-2 flex-1">
-		<div class="flex flex-row justify-stretch items-stretch w-full rounded-xl h-24 bg-app-bg">
-			<div class="flex flex-col self-stretch p-6 flex-1 justify-between">
-					<h2 class="text-lg font-bold leading-none text-app-text">
-						{companyName}
-					</h2>
-					<span class="text-xs font-medium leading-none text-app-text">
-						{dateRange}
-					</span>
-			</div>
-			{companyImage && (
-				<div class="hidden md:flex flex-row justify-end items-center h-full">
-					<Image
-						src={companyImage}
-						alt={companyName}
-						width={168}
-						height={96}
-						class="h-full rounded-r-xl object-cover"
-					/>
-				</div>
-			)}
-		</div>
+		<LinkCard title={companyName} description={dateRange} url={companyUrl} imageUrl={companyImage} />
 		<div class="flex flex-row self-stretch px-6 py-4">
 			<h3 class="text-base font-bold leading-none text-app-text">
 				Team
