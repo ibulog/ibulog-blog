@@ -7,25 +7,26 @@ export interface Props {
 	companyImage?: any;
 	team: string;
 	work: string;
+	isFirst?: boolean;
 }
 
-const { companyName, dateRange, companyImage, team, work } = Astro.props;
+const { companyName, dateRange, companyImage, team, work, isFirst = false } = Astro.props;
 ---
 
 <div class="flex flex-row items-center gap-2 w-full">
-	<div class="flex flex-col self-stretch gap-2.5 pt-10">
-		<div class="flex flex-col justify-center items-center w-8 h-8 rounded-full bg-primary">
+	<div class="flex flex-col self-stretch gap-2.5 pt-8">
+		<div class="relative z-10 flex flex-col justify-center items-center w-8 h-8 rounded-full bg-primary">
 			<div class="flex flex-col justify-center items-center w-full h-full p-1 rounded-full border border-app-border-default-reverse">
-				<div class="flex flex-col justify-center items-center w-full h-full p-2 rounded-full bg-app-bg-obvious"></div>
+				<div class={`flex flex-col justify-center items-center w-full h-full p-2 rounded-full ${isFirst ? "bg-accent" : "bg-app-bg-obvious"}`}></div>
 			</div>
 		</div>
 	</div>
 	<div class="flex flex-col gap-2 flex-1">
 		<div class="flex flex-row justify-stretch items-stretch w-full rounded-xl h-24 bg-app-bg">
 			<div class="flex flex-col self-stretch p-6 flex-1 justify-between">
-					<h3 class="text-xl font-bold leading-none text-app-text">
+					<h2 class="text-lg font-bold leading-none text-app-text">
 						{companyName}
-					</h3>
+					</h2>
 					<span class="text-xs font-medium leading-none text-app-text">
 						{dateRange}
 					</span>
@@ -43,9 +44,9 @@ const { companyName, dateRange, companyImage, team, work } = Astro.props;
 			)}
 		</div>
 		<div class="flex flex-row self-stretch px-6 py-4">
-			<h4 class="text-base font-bold leading-none text-app-text">
+			<h3 class="text-base font-bold leading-none text-app-text">
 				Team
-			</h4>
+			</h3>
 		</div>
 		<div class="flex flex-row items-center self-stretch flex-wrap px-8">
 			<p class="text-base font-normal leading-[1.8em] text-app-text">
@@ -53,9 +54,9 @@ const { companyName, dateRange, companyImage, team, work } = Astro.props;
 			</p>
 		</div>
 		<div class="flex flex-row self-stretch px-6 py-4">
-			<h4 class="text-base font-bold leading-none text-app-text">
+			<h3 class="text-base font-bold leading-none text-app-text">
 				Work
-			</h4>
+			</h3>
 		</div>
 		<div class="flex flex-row items-center self-stretch flex-wrap px-8">
 			<p class="text-base font-normal leading-[1.8em] text-app-text whitespace-pre-line">
