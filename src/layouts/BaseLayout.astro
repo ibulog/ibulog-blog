@@ -1,0 +1,29 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+export interface Props {
+	title: string;
+	description: string;
+	url: string;
+	image?: string;
+	pageKind?: string;
+}
+
+const { title, description, url, image, pageKind = 'About' } = Astro.props;
+---
+
+<html lang="ja">
+	<head>
+		<BaseHead title={title} description={description} url={url} image={image} />
+	</head>
+	<body class="min-h-screen flex flex-col">
+		<Header pageKind={pageKind} />
+		<main class="flex-1 w-full">
+			<slot />
+		</main>
+		<Footer />
+	</body>
+</html>
+
