@@ -1,21 +1,32 @@
 ---
-const {currentPage, lastPage, page} = Astro.props
+import Button from './ui/Button.astro';
+
+export interface Props {
+	currentPage: number;
+	lastPage: number;
+	page: {
+		url: {
+			prev: string | undefined;
+			next: string | undefined;
+		};
+	};
+}
+
+const { currentPage, lastPage, page } = Astro.props;
+
+const prevUrl = currentPage === 2 ? '/blog' : page.url.prev;
+const nextUrl = page.url.next;
 ---
 
-<style>
-  .wrapper {
-    display: flex;
-    position: relative;
-    justify-content: space-between;
-    font-size: 1.25em;
-  }
-</style>
-<div class="wrapper">
-  <div>
-    {currentPage !== 1 && currentPage !== 2 ? <a href={page.url.prev}>前のページ</a> : null}
-    {currentPage === 2 ? <a href='/blog'>前のページ</a> : null}
-  </div>
-  <div>
-    {currentPage !== lastPage ? <a href={page.url.next}>次のページ</a> : null}
-  </div>
+<div class="flex flex-row items-center gap-2.5 w-full">
+	<div class="flex-1 h-8">
+		{currentPage > 1 && prevUrl && (
+			<Button href={prevUrl} text="Prev" />
+		)}
+	</div>
+	<div class="flex justify-end">
+		{currentPage < lastPage && nextUrl && (
+			<Button href={nextUrl} text="Next" />
+		)}
+	</div>
 </div>
