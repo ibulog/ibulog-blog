@@ -13,7 +13,7 @@ const { title, pubDate, heroImage, tags } = entry.data;
 const { id } = entry;
 ---
 
-<article class="flex flex-row gap-8 w-full">
+<article class="flex flex-row gap-8 w-full h-24">
 	<div class="flex flex-col gap-4 flex-1">
 		<div class="flex flex-row items-center gap-3">
 			<div class="flex items-center">
@@ -23,12 +23,12 @@ const { id } = entry;
 			</div>
 			<div class="flex items-center gap-1.5">
 				{tags.map((tag) => (
-					<Tag tag={tag} />
+					<Tag tag={`#${tag}`} />
 				))}
 			</div>
 		</div>
-		<div class="px-3">
-			<h2 class="text-xl font-medium leading-[1.5em] text-app-text">
+		<div class="px-3 h-full">
+			<h2 class="text-xl font-medium leading-[1.5em] text-app-text line-clamp-2">
 				<a href={`/blog/${id}`} class="no-underline hover:underline">
 					{title}
 				</a>
@@ -36,13 +36,13 @@ const { id } = entry;
 		</div>
 	</div>
 	{heroImage && (
-		<div class="hidden md:block flex-shrink-0 w-[163px] h-[105px]">
+		<div class="hidden md:block flex-shrink-0 h-full">
 			<a href={`/blog/${id}`} class="block w-full h-full">
 				<Image
 					src={heroImage as any}
 					alt={title}
-					width={163}
-					height={105}
+					width={160}
+					height={96}
 					class="w-full h-full rounded-xl object-cover"
 				/>
 			</a>
