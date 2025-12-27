@@ -26,8 +26,8 @@ const decodedCode = decodeURIComponent(code);
       </div>
     </div>
   )}
-  <div class="flex flex-row self-stretch p-3 code-block-wrapper relative">
-    <div class="dark:hidden">
+  <div class="flex flex-row self-stretch p-3 code-block-wrapper relative overflow-x-auto">
+    <div class="dark:hidden min-w-0">
       <Code
         lang={lang as BuiltinLanguage | SpecialLanguage | undefined}
         code={decodedCode}
@@ -42,7 +42,7 @@ const decodedCode = decodeURIComponent(code);
         ]}
       />
     </div>
-    <div class="hidden dark:block">
+    <div class="hidden dark:block min-w-0">
       <Code
         lang={lang as BuiltinLanguage | SpecialLanguage | undefined}
         code={decodedCode}
@@ -59,3 +59,20 @@ const decodedCode = decodeURIComponent(code);
     </div>
   </div>
 </figure>
+
+<style>
+  :global(.code-block-wrapper .add) {
+    @apply inline-block w-full relative;
+    background-color: var(--color-code-add);
+  }
+
+  :global(.code-block-wrapper .remove) {
+    @apply inline-block w-full relative;
+    background-color: var(--color-code-remove);
+  }
+
+  :global(.code-block-wrapper .line.highlighted) {
+    @apply inline-block w-full;
+    background-color: var(--color-code-highlight);
+  }
+</style>

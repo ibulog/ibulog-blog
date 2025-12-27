@@ -25,6 +25,11 @@
   --color-app-border-default: var(--color-gray-700);
   --color-app-border-default-reverse: var(--color-gray-400);
   --color-app-tag-default: var(--color-gray-200);
+  
+  --color-code-add: #1e4a1e;
+  --color-code-remove: #4a2f35;
+  --color-code-highlight: #38444d;
+  
 }
 
 .dark {
@@ -40,6 +45,11 @@
   --color-app-border-default: var(--color-gray-400);
   --color-app-border-default-reverse: var(--color-gray-500);
   --color-app-tag-default: var(--color-gray-800);
+  
+  --color-code-add: #d4edda;
+  --color-code-remove: #f8d7da;
+  --color-code-highlight: #e5e7eb;
+  
 }
 
 html {
@@ -57,50 +67,3 @@ body {
   color: var(--color-app-text);
 }
 
-.line {
-  text-indent: 0.75rem;
-}
-
-.add {
-  display: inline-block;
-  background-color: #122616;
-  width: calc(100% + 1.5rem);
-  margin-left: -1rem;
-  margin-right: -1.5rem;
-  padding-left: 0.5rem;
-  text-indent: 0;
-}
-
-.remove {
-  display: inline-block;
-  background-color: #301a1f;
-  width: calc(100% + 1.5rem);
-  margin-left: -1rem;
-  margin-right: -1.5rem;
-  padding-left: 0.5rem;
-  text-indent: 0;
-}
-
-.add::before {
-  content: '+';
-  color: #22c55e;
-  display: inline-block;
-  width: 0.5rem;
-  text-align: center;
-}
-
-.remove::before {
-  content: '-';
-  color: #ef4444;
-  display: inline-block;
-  width: 0.5rem;
-  text-align: center;
-}
-
-.line.highlighted {
-  display: inline-block;
-  background-color: #38444d;
-  margin-left: -1rem;
-  margin-right: -1rem;
-  width: calc(100% + 2rem);
-}
