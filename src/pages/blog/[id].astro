@@ -10,6 +10,7 @@ import H3 from "../../components/ui/H3.astro";
 import H4 from "../../components/ui/H4.astro";
 import Text from "../../components/ui/Text.astro";
 import Quote from "../../components/ui/Quote.astro";
+import ArticleImage from "../../components/ui/ArticleImage.astro";
 
 type Props = {
   entry: CollectionEntry<"blog">;
@@ -43,6 +44,6 @@ const pageKind = 'Blog'
     prevArticle={prevArticle}
     nextArticle={nextArticle}
   >
-    <Content components={{ "code-block": CodeBlock, "h2": H2, "h3": H3, "h4": H4, "p": Text, "blockquote": Quote }} />
+    <Content components={{ "code-block": CodeBlock, "h2": H2, "h3": H3, "h4": H4, "p": Text, "blockquote": Quote, "img": ArticleImage }} />
   </MarkdownPostLayout>
 </BaseLayout>
