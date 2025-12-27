@@ -13,26 +13,49 @@ interface Props {
   code: string;
 }
 const { lang, title, code } = Astro.props;
+const decodedCode = decodeURIComponent(code);
 ---
 
-<figure class="code-block">
+<figure class="flex flex-col gap-2.5 p-3 rounded-xl bg-app-bg-default-reverse">
   {title && (
-    <figcaption class="code-block-label">
-      {title}
-    </figcaption>
+    <div class="flex flex-row gap-2.5 h-6">
+      <div class="flex flex-row items-center self-stretch gap-2.5 px-1.5 rounded-lg bg-app-bg-default-reverse border border-app-border-default-reverse">
+        <span class="text-xs font-medium leading-none text-app-border-default-reverse">
+          {title}
+        </span>
+      </div>
+    </div>
   )}
-  <div class="code-block-content">
-    <Code
-      lang={lang as BuiltinLanguage | SpecialLanguage | undefined}
-      code={decodeURIComponent(code)}
-      wrap={false}
-      theme={"dark-plus"}
-      transformers={[
-        transformerNotationDiff(),
-        transformerNotationHighlight(),
-        transformerMetaHighlight(),
-        transformerNotationFocus(),
-      ]}
-    />
+  <div class="flex flex-row self-stretch p-3 code-block-wrapper relative">
+    <div class="dark:hidden">
+      <Code
+        lang={lang as BuiltinLanguage | SpecialLanguage | undefined}
+        code={decodedCode}
+        wrap={false}
+        theme="dark-plus"
+        style="background-color: transparent;"
+        transformers={[
+          transformerNotationDiff(),
+          transformerNotationHighlight(),
+          transformerMetaHighlight(),
+          transformerNotationFocus(),
+        ]}
+      />
+    </div>
+    <div class="hidden dark:block">
+      <Code
+        lang={lang as BuiltinLanguage | SpecialLanguage | undefined}
+        code={decodedCode}
+        wrap={false}
+        theme="light-plus"
+        style="background-color: transparent;"
+        transformers={[
+          transformerNotationDiff(),
+          transformerNotationHighlight(),
+          transformerMetaHighlight(),
+          transformerNotationFocus(),
+        ]}
+      />
+    </div>
   </div>
 </figure>
