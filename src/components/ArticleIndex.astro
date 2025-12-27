@@ -1,0 +1,36 @@
+---
+export interface Props {
+	headings: Array<{
+		depth: number;
+		slug: string;
+		text: string;
+	}>;
+}
+
+const { headings } = Astro.props;
+
+const filteredHeadings = headings.filter(heading => heading.depth < 3);
+---
+
+{filteredHeadings.length > 0 && (
+	<div class="flex flex-col gap-2.5 p-6 pb-3 rounded-xl bg-app-bg">
+		<div class="flex flex-row items-center gap-2.5 self-stretch">
+			<h2 class="text-xl font-bold leading-none text-app-text">
+				Index
+			</h2>
+		</div>
+		<div class="flex flex-col gap-2.5 self-stretch pt-3 px-3">
+			{filteredHeadings.map((heading) => (
+				<div class="flex flex-row items-center gap-2.5 self-stretch p-2.5">
+					<a
+						href={`#${heading.slug}`}
+						class="text-xl font-medium leading-none text-app-text-subtle no-underline hover:underline"
+					>
+						{heading.text}
+					</a>
+				</div>
+			))}
+		</div>
+	</div>
+)}
+
