@@ -1,27 +1,11 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
 ---
 
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} url="/" image="/icon.jpeg" />
-		<Header />
-		<style>
-			.wrapper {
-				margin-top: 2em;
-				margin-bottom: 2em;
-				text-align: center;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="wrapper">
-				<img class="icon" src="/404.jpg" width={200} />
-				<p>404 Not Found</p>
-		</div>
-		<Footer />
-	</body>
-</html>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url="/" image="/icon.jpeg">
+	<div class="flex flex-col items-center justify-center gap-8 py-12">
+		<img class="icon" src="/404.jpg" width={200} alt="404 Not Found" />
+		<p class="text-xl font-medium">404 Not Found</p>
+	</div>
+</BaseLayout>
