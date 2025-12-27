@@ -24,7 +24,7 @@ const { id } = entry;
   <ArticleHeader id={id} pubDate={pubDate} tags={tags} title={title} />
   <ArticleIndex headings={headings} />
   {heroImage && (
-    <div class="w-full rounded-xl overflow-hidden" transition:name="hero-image">
+    <div class="w-full rounded-xl overflow-hidden" transition:name={`hero-image-${id}`}>
       <Image width={1080} height={540} src={heroImage as any} alt={title} class="w-full h-auto" />
     </div>
   )}

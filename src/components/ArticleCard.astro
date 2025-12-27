@@ -17,7 +17,7 @@ const { id } = entry;
 	{heroImage && (
 		<div class="hidden md:block flex-shrink-0 h-full">
 			<a href={`/blog/${id}`} class="block w-full h-full">
-				<div class="w-full h-full rounded-xl overflow-hidden" transition:name="hero-image">
+				<div class="w-full h-full rounded-xl overflow-hidden" transition:name={`hero-image-${id}`}>
 					<Image
 						src={heroImage as any}
 						alt={title}
