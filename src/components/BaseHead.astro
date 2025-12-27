@@ -4,13 +4,13 @@
 import { SITE_BASE_URL } from "../config";
 import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
-import { getImage } from "astro:assets";
+import { getImage, type ImageMetadata } from "astro:assets";
 
 export interface Props {
   title: string;
   description: string;
   url: string;
-  image?: string;
+  image?: string | ImageMetadata;
 }
 
 const { title, description, url, image: hero_image } = Astro.props;
