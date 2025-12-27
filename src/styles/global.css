@@ -38,7 +38,7 @@
   --color-app-text: var(--color-gray-100);
   --color-app-text-subtle: var(--color-gray-300);
   --color-app-border-default: var(--color-gray-400);
-  --color-app-border-default-reverse: var(--color-gray-700);
+  --color-app-border-default-reverse: var(--color-gray-500);
   --color-app-tag-default: var(--color-gray-800);
 }
 
@@ -46,28 +46,15 @@ html {
   overflow-y: scroll;
 }
 
-:root {
-  --background-color: #ffffff;
-  --text-color: #23221e;
-  --navigation-color: #edebe8;
-  --code-color: #edebe8;
-}
-
-:root.dark {
-  --background-color: #23221e;
-  --text-color: #f8f7f6;
-  --navigation-color: #1c1c18;
-  --code-color: #1c1c18;
-}
 
 body {
-  background-color: var(--background-color);
-  color: var(--text-color);
   font-family: "Noto Sans JP", "Quicksand", sans-serif;
   text-align: left;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  line-height: 1.7;
+  line-height: 1.8;
+  background-color: var(--color-primary);
+  color: var(--color-app-text);
 }
 
 .line {

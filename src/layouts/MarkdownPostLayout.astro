@@ -20,7 +20,7 @@ const { id } = entry;
 
 ---
 
-<article>
+<article class="flex flex-col gap-9">
   <ArticleHeader id={id} pubDate={pubDate} tags={tags} title={title} />
   {heroImage && (
     <div class="w-full rounded-xl overflow-hidden" transition:name={`hero-image-${id}`}>
