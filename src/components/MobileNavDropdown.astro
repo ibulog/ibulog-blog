@@ -14,8 +14,8 @@ const navItems = [
 		{navItems.map((item) => (
 			<a
 				href={item.href}
-				class={`flex justify-center items-center py-2.5 px-2.5 text-base font-medium leading-none text-app-text-subtle ${
-					pageKind === item.label ? 'font-semibold' : ''
+				class={`flex justify-center items-center py-2.5 px-2.5 text-base font-medium leading-none ${
+					pageKind === item.label ? 'font-semibold text-accent' : 'text-app-text-subtle'
 				}`}
 			>
 				{item.label}

@@ -13,8 +13,8 @@ const navItems = [
 	{navItems.map((item) => (
 		<a
 			href={item.href}
-			class={`text-sm font-medium leading-none text-[var(--color-app-text-subtle)] ${
-				pageKind === item.label ? 'font-semibold' : ''
+			class={`text-sm font-medium leading-none ${
+				pageKind === item.label ? 'font-semibold text-accent' : 'text-app-text-subtle'
 			}`}
 		>
 			{item.label}
