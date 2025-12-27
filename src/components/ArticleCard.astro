@@ -1,8 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
-import Tag from './ui/Tag.astro';
-import getFormatDay from '../utils/getFormatDay.ts';
+import ArticleHeader from './ui/ArticleHeader.astro';
 
 export interface Props {
 	entry: CollectionEntry<'blog'>;
@@ -14,27 +13,7 @@ const { id } = entry;
 ---
 
 <article class="flex flex-row gap-8 w-full h-24">
-	<div class="flex flex-col gap-4 flex-1">
-		<div class="flex flex-row items-center gap-3">
-			<div class="flex items-center">
-				<time datetime={pubDate.toString()} class="text-xs font-medium leading-none text-app-text-subtle">
-					{getFormatDay(pubDate)}
-				</time>
-			</div>
-			<div class="flex items-center gap-1.5">
-				{tags.map((tag) => (
-					<Tag tag={`#${tag}`} />
-				))}
-			</div>
-		</div>
-		<div class="px-3 h-full">
-			<h2 class="text-xl font-medium leading-[1.5em] text-app-text line-clamp-2">
-				<a href={`/blog/${id}`} class="no-underline hover:underline">
-					{title}
-				</a>
-			</h2>
-		</div>
-	</div>
+	<ArticleHeader id={id} pubDate={pubDate} tags={tags} title={title} />
 	{heroImage && (
 		<div class="hidden md:block flex-shrink-0 h-full">
 			<a href={`/blog/${id}`} class="block w-full h-full">
