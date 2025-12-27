@@ -86,17 +86,6 @@ const ogImageUrl = ogImage ? new URL(ogImage.src, SITE_BASE_URL).toString() : nu
 			gtag("config", "G-X5X35DYWPP");
 		</script>
 
-		<!-- https://zenn.dev/chot/articles/48a58019f246bd -->
-		<script is:inline>
-			function setMode() {
-				if (localStorage.getItem("theme") === "dark") {
-					document.documentElement.classList.add("dark");
-				}
-			}
-			setMode();
-			document.addEventListener("astro:after-swap", setMode); // NOTE: astro:before-swapだと、モード設定が維持されない
-		</script>
-
 		<ClientRouter />
 	</head>
 	<body class="min-h-screen flex flex-col px-6 py-6 w-full max-w-4xl mx-auto">
