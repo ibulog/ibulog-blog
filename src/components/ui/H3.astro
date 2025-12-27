@@ -1,0 +1,25 @@
+---
+import SideVector from './SideVector.astro';
+
+export interface Props {
+	text?: string;
+	id?: string;
+}
+
+const { text, id } = Astro.props;
+---
+
+<h3
+	id={id}
+	class="flex flex-row items-stretch w-full h-12"
+>
+	<div class="flex flex-row self-stretch">
+		<SideVector />
+	</div>
+	<div class="flex flex-row items-center self-stretch p-2 flex-1">
+		<div class="flex flex-row items-center gap-2.5 text-xl font-bold leading-none text-app-text">
+			{text ? text : <slot />}
+		</div>
+	</div>
+</h3>
+
