@@ -1,0 +1,12 @@
+---
+export interface Props {
+	text?: string;
+}
+
+const { text } = Astro.props;
+---
+
+<p class="flex flex-row items-center flex-wrap px-3 text-base font-normal leading-[1.8em] text-app-text">
+	{text ? text : <slot />}
+</p>
+
