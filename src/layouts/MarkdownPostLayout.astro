@@ -6,6 +6,7 @@ import { Image } from "astro:assets";
 
 import ArticleHeader from '../components/ui/ArticleHeader.astro';
 import ArticleIndex from '../components/ArticleIndex.astro';
+import ArticleCard from '../components/ArticleCard.astro';
 
 type Props = {
   entry: CollectionEntry<'blog'>;
@@ -28,20 +29,25 @@ const { id } = entry;
     </div>
   )}
   <ArticleIndex headings={headings} />
-<slot />
+  <slot />
 </article>
-<hr />
-<div class="suggestArticle">
-  <div class="prevNextArticle">
-    {(prevArticle === undefined)
-      ? undefined
-      : <p>前の記事</p><a href={`/blog/${prevArticle.id}`}>{prevArticle.data.title}</a>
-    }
+{(prevArticle || nextArticle) && (
+  <div class="flex flex-col gap-6 pt-12 mt-12 border-t border-app-border-default-reverse">
+    {nextArticle && (
+      <div class="flex flex-col gap-2.5">
+        <h3 class="text-base font-bold leading-none text-app-text">
+          Next
+        </h3>
+        <ArticleCard entry={nextArticle} />
+      </div>
+    )}
+    {prevArticle && (
+      <div class="flex flex-col gap-2.5">
+        <h3 class="text-base font-bold leading-none text-app-text">
+          Previous
+        </h3>
+        <ArticleCard entry={prevArticle} />
+      </div>
+    )}
   </div>
-  <div class="prevNextArticle">
-    {(nextArticle === undefined)
-      ? undefined
-      : <p>次の記事</p><a href={`/blog/${nextArticle.id}`}>{nextArticle.data.title}</a>
-    }
-  </div>
-</div>
+)}
