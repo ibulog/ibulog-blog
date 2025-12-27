@@ -26,13 +26,14 @@ const {pageKind} = Astro.props;
 	<MobileNavDropdown pageKind={pageKind} />
 </header>
 
-<script is:inline>
-  const toggle = document.getElementById('mobile-menu-toggle');
-  const menu = document.getElementById('mobile-nav-dropdown');
-
-  toggle?.addEventListener('click', () => {
-    const isOpened = menu?.classList.contains('grid-rows-[1fr]');
-    menu?.classList.toggle('grid-rows-[0fr]', isOpened);
-    menu?.classList.toggle('grid-rows-[1fr]', !isOpened);
+<script data-astro-rerun>
+	// TODO: イベントリスナーを重複登録しないようにする
+  document.getElementById('mobile-menu-toggle')?.addEventListener('click', () => {
+		const dropdown = document.getElementById('mobile-nav-dropdown');
+  
+		const isOpened = dropdown?.classList.contains('grid-rows-[1fr]');
+  	
+    dropdown?.classList.toggle('grid-rows-[0fr]', isOpened);
+    dropdown?.classList.toggle('grid-rows-[1fr]', !isOpened);
   });
 </script>
