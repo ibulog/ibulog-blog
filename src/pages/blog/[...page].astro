@@ -4,8 +4,7 @@ import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ArticleCard from '../../components/ArticleCard.astro';
-import Pagination from '../../components/Pagination.astro';
+import ArticleListSection from '../../layouts/ArticleListSection.astro';
 import sortArticleByDate from "../../utils/sortArticleByDate.ts";
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../config';
 
@@ -25,14 +24,9 @@ const pageKind = 'Blog'
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url="/blog" image="/icon.jpeg" pageKind={pageKind}>
-	<div class="flex-1 flex flex-col">
-		<div class="flex flex-col gap-14 justify-between items-stretch self-stretch flex-1">
-			<div class="flex flex-col gap-14 self-stretch">
-				{page.data.map((entry) => (
-					<ArticleCard entry={entry} />
-				))}
-			</div>
-			<Pagination currentPage={currentPage} lastPage={lastPage} page={page} />
-		</div>
-	</div>
+	<ArticleListSection 
+		entries={page.data} 
+		showPagination={true} 
+		pagination={{ currentPage, lastPage, page }} 
+	/>
 </BaseLayout>

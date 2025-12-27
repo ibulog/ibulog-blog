@@ -1,0 +1,17 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ArticleCard from './ArticleCard.astro';
+
+export interface Props {
+	entries: CollectionEntry<'blog'>[];
+}
+
+const { entries } = Astro.props;
+---
+
+<div class="flex flex-col gap-14 w-full">
+	{entries.map((entry) => (
+		<ArticleCard entry={entry} />
+	))}
+</div>
+

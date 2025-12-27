@@ -1,64 +1,42 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
+import { getCollection } from 'astro:content';
+import sortArticleByDate from '../utils/sortArticleByDate.ts';
+import H2 from '../components/ui/H2.astro';
+import Text from '../components/ui/Text.astro';
+import ArticleListSection from '../layouts/ArticleListSection.astro';
 
-const pageKind = 'About'
+const pageKind = 'About';
+
+const allPosts = await getCollection('blog');
+const recentEntries = allPosts.sort(sortArticleByDate).slice(0, 7);
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url="/" image="/icon.jpeg" pageKind={pageKind}>
-	<h1>
-		{pageKind}
-	</h1>
-	<h2>Self-Portrait</h2>
-	<div class="bio-img">
-		<img class="self-portrait" src="/icon.jpeg" />
+	<div class="flex flex-col gap-12">
+		<div class="flex flex-col gap-12">
+			<div class="flex flex-row items-center flex-wrap gap-10">
+				<div class="flex flex-col justify-center items-center gap-6 p-2">
+					<div class="flex flex-col justify-center items-center gap-2.5 p-2 border-2 border-app-bg-obvious rounded-full">
+						<img src="/icon.jpeg" alt="ibulog" class="w-[188px] h-[188px] rounded-full object-cover" />
+					</div>
+				</div>
+				<div class="flex flex-col gap-10 flex-1">
+					<H2 text="ibulog" />
+					<Text text={`京都市在住のカスタマーエンジニア。
+
+新卒はメーカー財務として管理会計を学び、その後はウェブメディアでライターをやったり、SaaS企業でテクニカルライターやナレッジコンテンツの基盤開発・運用などに従事。
+
+現在はSaaS企業でプリセールスとしてセールスの技術支援をしたり、カスタマーサクセスとしてユーザーの導入支援や活用促進を目指しています。
+
+三度の飯よりクルマが大好き。乗る方は新卒フルローンで購入したユーノスロードスターを大事にしつつ、観る方はF1、SUPER GT、スーパーフォーミュラ、耐久レースなどを追いかけています。`} />
+				</div>
+			</div>
+		</div>
+		<div class="flex flex-col items-stretch gap-10 w-full">
+			<H2 text="Recent Articles" />
+			<ArticleListSection entries={recentEntries} showViewMore={true} viewMoreHref="/blog" />
+		</div>
 	</div>
-	<h2>
-		Name
-	</h2>
-	<p>
-		ibulog
-	</p>
-	<h2>
-		Location
-	</h2>
-	<p>
-		Kyoto, Japan
-	</p>
-	<h2>
-		Job
-	</h2>
-	<p>
-		Technical Writer
-	</p>
-	<h2>
-		Interest
-	</h2>
-	<p>
-		Web Development, Documentation, Car Racing🏎️
-	</p>
-	<h2>
-		Contact
-	</h2>
-	<ul>
-		<li>
-			<a href="https://github.com/ibulog">GitHub</a>
-		</li>
-		<li>
-			<a href="https://twitter.com/ibulog_">Twitter</a>
-		</li>
-	</ul>
-	<style>
-		.self-portrait {
-			width: 150px; 
-			border-radius: 50%;
-			border: 2px solid var(--text-color);
-		}
-		.icon {
-			width: 1em;
-			height: 1em;
-			fill: var(--text-color);
-			vertical-align: middle;
-		}
-	</style>
 </BaseLayout>
