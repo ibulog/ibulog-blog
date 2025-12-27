@@ -1,5 +1,6 @@
 ---
 import Tag from './Tag.astro';
+import getFormatDay from '../../utils/getFormatDay';
 
 export interface Props {
 	id: string;
@@ -9,6 +10,7 @@ export interface Props {
 }
 
 const { id, pubDate, tags, title } = Astro.props;
+const formattedPubDate = getFormatDay(pubDate);
 ---
 
 <div 
@@ -17,8 +19,8 @@ const { id, pubDate, tags, title } = Astro.props;
 >
 	<div class="flex flex-row items-center gap-3">
 		<div class="flex items-center">
-			<time datetime={pubDate.toLocaleDateString()} class="text-xs font-medium leading-none text-app-text-subtle">
-				{pubDate.toLocaleDateString()}
+			<time datetime={formattedPubDate} class="text-xs font-medium leading-none text-app-text-subtle">
+				{formattedPubDate}
 			</time>
 		</div>
 		<div class="flex items-center gap-1.5">
