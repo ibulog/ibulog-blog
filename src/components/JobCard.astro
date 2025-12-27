@@ -1,17 +1,21 @@
 ---
 import LinkCard from './ui/LinkCard.astro';
+import getFormatDay from '../utils/getFormatDay';
 
 export interface Props {
 	companyName: string;
-	dateRange: string;
+	startDate: string;
+	endDate?: string;
 	companyUrl: string;
-	companyImage?: string | any;
 	team: string;
 	work: string;
 	isFirst?: boolean;
 }
 
-const { companyName, dateRange, companyUrl, companyImage, team, work, isFirst = false } = Astro.props;
+const { companyName, startDate, endDate, companyUrl, team, work, isFirst = false } = Astro.props;
+const formattedStartDate = getFormatDay(new Date(startDate));
+const formattedEndDate = endDate ? getFormatDay(new Date(endDate)) : null;
+const dateRange = endDate ? `${formattedStartDate} - ${formattedEndDate}` : `${formattedStartDate} - Present`;
 ---
 
 <div class="flex flex-row items-center gap-2 w-full">

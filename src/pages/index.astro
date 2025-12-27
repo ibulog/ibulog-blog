@@ -9,14 +9,16 @@ import ArticleListSection from '../layouts/ArticleListSection.astro';
 
 const pageKind = 'About';
 
+const selfIntroduction = await getCollection('selfIntroduction');
+
 const allPosts = await getCollection('blog');
-const recentEntries = allPosts.sort(sortArticleByDate).slice(0, 7);
+const recentEntries = allPosts.sort(sortArticleByDate).slice(0, 3);
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url="/" image="/icon.jpeg" pageKind={pageKind}>
 	<div class="flex flex-col gap-12">
 		<div class="flex flex-col gap-12">
-			<div class="flex flex-row items-center flex-wrap gap-10">
+			<div class="flex md:flex-row flex-col items-center flex-wrap gap-10">
 				<div class="flex flex-col justify-center items-center gap-6 p-2">
 					<div class="flex flex-col justify-center items-center gap-2.5 p-2 border-2 border-app-bg-obvious rounded-full">
 						<img src="/icon.jpeg" alt="ibulog" class="w-[188px] h-[188px] rounded-full object-cover" />
@@ -24,19 +26,15 @@ const recentEntries = allPosts.sort(sortArticleByDate).slice(0, 7);
 				</div>
 				<div class="flex flex-col gap-10 flex-1">
 					<H2 text="ibulog" />
-					<Text text={`京都市在住のカスタマーエンジニア。
-
-新卒はメーカー財務として管理会計を学び、その後はウェブメディアでライターをやったり、SaaS企業でテクニカルライターやナレッジコンテンツの基盤開発・運用などに従事。
-
-現在はSaaS企業でプリセールスとしてセールスの技術支援をしたり、カスタマーサクセスとしてユーザーの導入支援や活用促進を目指しています。
-
-三度の飯よりクルマが大好き。乗る方は新卒フルローンで購入したユーノスロードスターを大事にしつつ、観る方はF1、SUPER GT、スーパーフォーミュラ、耐久レースなどを追いかけています。`} />
+					<Text text={selfIntroduction[0]?.data.text || ''} />
 				</div>
 			</div>
 		</div>
 		<div class="flex flex-col items-stretch gap-10 w-full">
 			<H2 text="Recent Articles" />
-			<ArticleListSection entries={recentEntries} showViewMore={true} viewMoreHref="/blog" />
+			<div class="px-3">
+				<ArticleListSection entries={recentEntries} showViewMore={true} viewMoreHref="/blog" />
+			</div>
 		</div>
 	</div>
 </BaseLayout>

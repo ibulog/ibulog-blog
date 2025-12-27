@@ -1,69 +1,14 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import JobCard from '../../components/JobCard.astro';
 import SideVector from '../../components/ui/SideVector.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../config';
-import ogs from 'open-graph-scraper';
 
 const pageKind = 'Jobs'
 
-const jobsData = [
-	{
-		companyName: '株式会社microCMS',
-		dateRange: '2025-04-',
-		team: 'カスタマーサクセスグループ',
-		work: 'カスタマーサクセス\nプリセールス\nカスタマーサポート',
-		companyUrl: 'https://microcms.io',
-	},
-	{
-		companyName: '株式会社SmartHR',
-		dateRange: '2022-03-2025-03',
-		team: 'UXライティング部',
-		work: 'UI文言・ヘルプページ作成\nサポートコンテンツ情報設計\nヘルプセンター開発',
-		companyUrl: 'https://smarthr.co.jp',
-	},
-	{
-		companyName: 'サイボウズ株式会社',
-		dateRange: '2021-03-2022-02',
-		team: 'システムコンサルティング本部',
-		work: 'APIドキュメント・開発Tips記事作成\n開発者コミュニティ運営',
-		companyUrl: 'https://cybozu.co.jp',
-	},
-	{
-		companyName: 'GIGAZINE',
-		dateRange: '2019-11-2021-02',
-		team: '技術部',
-		work: '記事作成\nインフラ保守\nシステム開発',
-		companyUrl: 'https://gigazine.net',
-	},
-	{
-		companyName: 'ブラザー工業株式会社',
-		dateRange: '2018-04-2019-10',
-		team: '事業企画グループ',
-		work: '単体損益の予実管理など管理会計業務',
-		companyUrl: 'https://www.brother.co.jp',
-	}
-];
+const jobCollection = await getCollection('job');
 
-async function getOgImage(url: string): Promise<string | undefined> {
-	try {
-		const { result } = await ogs({ url, fetchOptions: { headers: { 'user-agent': 'bot' } } });
-		return result.ogImage?.[0]?.url;
-	} catch (error) {
-		console.error(`Failed to fetch OGP image for ${url}:`, error);
-		return undefined;
-	}
-}
-
-const jobs = await Promise.all(
-	jobsData.map(async (job) => {
-		const ogImage = await getOgImage(job.companyUrl);
-		return {
-			...job,
-			companyImage: ogImage,
-		};
-	})
-);
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url="/job" image="/icon.jpeg" pageKind={pageKind}>
@@ -72,9 +17,14 @@ const jobs = await Promise.all(
 			<SideVector />
 		</div>
 		<div class="flex flex-col flex-1 gap-8">
-			{jobs.map((job, index) => (
+			{jobCollection.map((job, index) => (
 				<JobCard 
-					{...job}
+					companyName={job.data.companyName}
+					startDate={job.data.startDate}
+					endDate={job.data.endDate}
+					companyUrl={job.data.companyUrl}
+					team={job.data.team}
+					work={job.data.work}
 					isFirst={index === 0}
 				/>
 			))}
