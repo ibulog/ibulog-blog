@@ -1,6 +1,7 @@
 ---
 import LinkCard from './ui/LinkCard.astro';
 import getFormatDay from '../utils/getFormatDay';
+import Text from './ui/Text.astro';
 
 export interface Props {
 	companyName: string;
@@ -33,20 +34,16 @@ const dateRange = endDate ? `${formattedStartDate} - ${formattedEndDate}` : `${f
 				Team
 			</h3>
 		</div>
-		<div class="flex flex-row items-center self-stretch flex-wrap px-8">
-			<p class="text-base font-normal leading-[1.8em] text-app-text">
-				{team}
-			</p>
+		<div class="flex flex-row items-center self-stretch flex-wrap px-6">
+			<Text text={team} />
 		</div>
 		<div class="flex flex-row self-stretch px-6 py-4">
 			<h3 class="text-base font-bold leading-none text-app-text">
 				Work
 			</h3>
 		</div>
-		<div class="flex flex-row items-center self-stretch flex-wrap px-8">
-			<p class="text-base font-normal leading-[1.8em] text-app-text whitespace-pre-line">
-				{work}
-			</p>
+		<div class="flex flex-row items-center self-stretch flex-wrap px-6">
+			<Text text={work} />
 		</div>
 	</div>
 </div>
