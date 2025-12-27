@@ -8,7 +8,7 @@ import { SITE_TITLE } from '../config';
 const {pageKind} = Astro.props;
 ---
 
-<header class="sticky top-6 z-50 w-full bg-app-bg text-app-text rounded-xl flex flex-col px-6 py-4">
+<header id="site-header" class="sticky top-6 z-50 w-full bg-app-bg text-app-text rounded-xl flex flex-col px-6 py-4 border-b border-transparent transition-colors duration-200">
 	<div class="flex justify-between items-center self-stretch h-8">
 		<h2 class="text-xl font-medium leading-none">
 			{SITE_TITLE}
@@ -26,14 +26,49 @@ const {pageKind} = Astro.props;
 	<MobileNavDropdown pageKind={pageKind} />
 </header>
 
-<script data-astro-rerun>
-	// TODO: イベントリスナーを重複登録しないようにする
-  document.getElementById('mobile-menu-toggle')?.addEventListener('click', () => {
+<script is:inline>
+	const setupMobileMenu = () => {
+		const toggle = document.getElementById('mobile-menu-toggle');
 		const dropdown = document.getElementById('mobile-nav-dropdown');
   
-		const isOpened = dropdown?.classList.contains('grid-rows-[1fr]');
-  	
-    dropdown?.classList.toggle('grid-rows-[0fr]', isOpened);
-    dropdown?.classList.toggle('grid-rows-[1fr]', !isOpened);
-  });
+		if (toggle && dropdown) {
+			toggle.addEventListener('click', () => {
+				const isOpened = dropdown.classList.contains('grid-rows-[1fr]');
+				dropdown.classList.toggle('grid-rows-[0fr]', isOpened);
+				dropdown.classList.toggle('grid-rows-[1fr]', !isOpened);
+			});
+		}
+	};
+
+	const setupHeaderBorder = () => {
+		const header = document.getElementById('site-header');
+		if (!header) return;
+
+		if (window.__headerScrollHandler) {
+			window.removeEventListener('scroll', window.__headerScrollHandler, { passive: true });
+		}
+
+		const handleScroll = () => {
+			if (window.scrollY > 0) {
+				header.classList.remove('border-transparent');
+				header.classList.add('border-app-border-default-reverse');
+			} else {
+				header.classList.remove('border-app-border-default-reverse');
+				header.classList.add('border-transparent');
+			}
+		};
+
+		window.__headerScrollHandler = handleScroll;
+
+		handleScroll();
+		window.addEventListener('scroll', handleScroll, { passive: true });
+	};
+
+	setupMobileMenu();
+	setupHeaderBorder();
+
+	document.addEventListener('astro:after-swap', () => {
+		setupMobileMenu();
+		setupHeaderBorder();
+	});
 </script>
