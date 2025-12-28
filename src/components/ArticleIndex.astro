@@ -1,4 +1,6 @@
 ---
+import { HEADING_LEVEL } from '../config';
+
 export interface Props {
 	headings: Array<{
 		depth: number;
@@ -10,7 +12,7 @@ export interface Props {
 
 const { headings, id } = Astro.props;
 
-const filteredHeadings = headings.filter(heading => heading.depth < 3);
+const filteredHeadings = headings.filter(heading => heading.depth <= HEADING_LEVEL);
 ---
 
 {filteredHeadings.length > 0 && (

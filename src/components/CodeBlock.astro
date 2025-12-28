@@ -14,6 +14,13 @@ interface Props {
 }
 const { lang, title, code } = Astro.props;
 const decodedCode = decodeURIComponent(code);
+
+const transformers = [
+  transformerNotationDiff(),
+  transformerNotationHighlight(),
+  transformerMetaHighlight(),
+  transformerNotationFocus(),
+];
 ---
 
 <figure class="flex flex-col gap-2.5 py-3 rounded-xl bg-app-bg-default-reverse">
@@ -34,12 +41,7 @@ const decodedCode = decodeURIComponent(code);
         wrap={false}
         theme="dark-plus"
         style="background-color: transparent;"
-        transformers={[
-          transformerNotationDiff(),
-          transformerNotationHighlight(),
-          transformerMetaHighlight(),
-          transformerNotationFocus(),
-        ]}
+        transformers={transformers}
       />
     </div>
     <div class="hidden dark:block min-w-0 w-full">
@@ -49,12 +51,7 @@ const decodedCode = decodeURIComponent(code);
         wrap={false}
         theme="light-plus"
         style="background-color: transparent;"
-        transformers={[
-          transformerNotationDiff(),
-          transformerNotationHighlight(),
-          transformerMetaHighlight(),
-          transformerNotationFocus(),
-        ]}
+        transformers={transformers}
       />
     </div>
   </div>

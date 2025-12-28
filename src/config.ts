@@ -11,3 +11,5 @@ export const NAV_ITEMS = [
 	{ label: 'Blog', href: '/blog' },
 	{ label: 'Tags', href: '/tags' },
 ] as const;
+
+export const HEADING_LEVEL = 2;

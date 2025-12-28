@@ -8,6 +8,7 @@ import ArticleHeader from '../components/ui/ArticleHeader.astro';
 import ArticleIndex from '../components/ArticleIndex.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import ArticleIndexBar from '../components/ArticleIndexBar.astro';
+import { HEADING_LEVEL } from '../config';
 
 type Props = {
   entry: CollectionEntry<'blog'>;
@@ -21,7 +22,7 @@ const heroImage = entry.data.heroImage as ImageMetadata | undefined;
 const { headings } = await render(entry);
 const { id } = entry;
 
-const filteredHeadings = headings.filter(heading => heading.depth < 3);
+const filteredHeadings = headings.filter(heading => heading.depth <= HEADING_LEVEL);
 
 ---
 

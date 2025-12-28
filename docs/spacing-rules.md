@@ -32,7 +32,7 @@
 | カードコンテナ | `p-6` | `p-6` | LinkCardBase |
 | 目次コンテナ | `px-6 py-4` | `px-6 py-4` | ArticleIndex（外側） |
 | 目次リンクエリア | `pt-3 px-3` | `pt-3 px-3` | ArticleIndex（内側） |
-| 目次リンク項目 | `p-2.5` | `p-2.5` | ArticleIndex内の各リンク |
+| 目次リンク項目 | `py-2.5` | `py-2.5` | ArticleIndex内の各リンク |
 | コードブロック | `p-3` | `p-3` | CodeBlock |
 | コードブロック内 | `p-3` | `p-3` | CodeBlock内のコードエリア |
 | 見出し（H2） | `p-6` | `p-6` | セクション見出し |
