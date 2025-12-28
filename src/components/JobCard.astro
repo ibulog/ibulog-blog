@@ -1,6 +1,6 @@
 ---
 import JobLinkCard from './ui/JobLinkCard.astro';
-import getFormatDay from '../utils/getFormatDay';
+import { getFormatMonthYear } from '../utils/getFormatDay';
 import Text from './ui/Text.astro';
 
 export interface Props {
@@ -14,8 +14,8 @@ export interface Props {
 }
 
 const { companyName, startDate, endDate, companyUrl, team, work, isFirst = false } = Astro.props;
-const formattedStartDate = getFormatDay(new Date(startDate));
-const formattedEndDate = endDate ? getFormatDay(new Date(endDate)) : null;
+const formattedStartDate = getFormatMonthYear(new Date(startDate));
+const formattedEndDate = endDate ? getFormatMonthYear(new Date(endDate)) : null;
 const dateRange = endDate ? `${formattedStartDate} - ${formattedEndDate}` : `${formattedStartDate} - Present`;
 ---
 
