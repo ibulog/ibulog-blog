@@ -5,15 +5,16 @@ export interface Props {
 		slug: string;
 		text: string;
 	}>;
+	id?: string;
 }
 
-const { headings } = Astro.props;
+const { headings, id } = Astro.props;
 
 const filteredHeadings = headings.filter(heading => heading.depth < 3);
 ---
 
 {filteredHeadings.length > 0 && (
-	<div class="flex flex-col gap-2.5 p-6 pb-3 rounded-xl bg-app-bg">
+	<div id={id} class="flex flex-col gap-2.5 p-6 pb-3 rounded-xl bg-app-bg">
 		<div class="flex flex-row items-center gap-2.5 self-stretch">
 			<h2 class="text-xl font-bold leading-none text-app-text">
 				Index

@@ -7,6 +7,7 @@ import { Image } from "astro:assets";
 import ArticleHeader from '../components/ui/ArticleHeader.astro';
 import ArticleIndex from '../components/ArticleIndex.astro';
 import ArticleCard from '../components/ArticleCard.astro';
+import ArticleIndexBar from '../components/ui/ArticleIndexBar.astro';
 
 type Props = {
   entry: CollectionEntry<'blog'>;
@@ -19,7 +20,15 @@ const { title, pubDate, tags, heroImage } = entry.data;
 const { headings } = await render(entry);
 const { id } = entry;
 
+const filteredHeadings = headings.filter(heading => heading.depth < 3);
+
 ---
+
+{filteredHeadings.length > 0 && (
+	<div class="sticky top-[100px] z-40 w-full flex flex-col items-center transition-opacity duration-300 opacity-0 pointer-events-none" id="index-toggle-bar">
+		<ArticleIndexBar headings={headings} />
+	</div>
+)}
 
 <article class="flex flex-col gap-9">
   <ArticleHeader id={id} pubDate={pubDate} tags={tags} title={title} />
@@ -28,7 +37,7 @@ const { id } = entry;
       <Image width={1080} height={540} src={heroImage as any} alt={title} class="w-full h-auto" />
     </div>
   )}
-  <ArticleIndex headings={headings} />
+  <ArticleIndex headings={headings} id="article-index" />
   <slot />
 </article>
 {(prevArticle || nextArticle) && (
@@ -55,3 +64,92 @@ const { id } = entry;
     )}
   </div>
 )}
+
+<script is:inline>
+	const setupIndexToggle = () => {
+		const articleIndex = document.getElementById('article-index');
+		const toggleBar = document.getElementById('index-toggle-bar');
+		const toggleButton = document.getElementById('index-toggle-button');
+		const expandableContainer = document.getElementById('index-expandable-container');
+		const indexContent = document.getElementById('index-content');
+
+		if (!articleIndex || !toggleBar || !toggleButton || !expandableContainer || !indexContent) return;
+
+		toggleButton.addEventListener('click', (event) => {
+			event.stopPropagation();
+			const isOpened = expandableContainer.classList.contains('w-full');
+			
+			if (isOpened) {
+				indexContent.classList.remove('grid-rows-[1fr]');
+				indexContent.classList.add('grid-rows-[0fr]');
+				expandableContainer.classList.remove('w-full');
+				expandableContainer.classList.add('w-20');
+				toggleButton.setAttribute('aria-label', '目次を開く');
+			} else {
+				expandableContainer.classList.remove('w-20');
+				expandableContainer.classList.add('w-full');
+				indexContent.classList.remove('grid-rows-[0fr]');
+				indexContent.classList.add('grid-rows-[1fr]');
+				toggleButton.setAttribute('aria-label', '目次を閉じる');
+			}
+		});
+
+		const indexLinks = indexContent.querySelectorAll('a');
+		indexLinks.forEach(link => {
+			link.addEventListener('click', () => {
+				indexContent.classList.remove('grid-rows-[1fr]');
+				indexContent.classList.add('grid-rows-[0fr]');
+				expandableContainer.classList.remove('w-full');
+				expandableContainer.classList.add('w-20');
+				toggleButton.setAttribute('aria-label', '目次を開く');
+			});
+		});
+
+		const header = document.getElementById('site-header');
+		const headerHeight = header ? header.offsetHeight : 64;
+		const rootMargin = `-${headerHeight + 24}px 0px 0px 0px`;
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (!entry.isIntersecting) {
+						toggleBar.classList.remove('hidden');
+						toggleBar.classList.remove('pointer-events-none');
+						toggleBar.classList.remove('opacity-0');
+						toggleBar.classList.add('opacity-100');
+					} else {
+						toggleBar.classList.remove('opacity-100');
+						toggleBar.classList.add('opacity-0');
+						if (expandableContainer.classList.contains('w-full')) {
+							indexContent.classList.remove('grid-rows-[1fr]');
+							indexContent.classList.add('grid-rows-[0fr]');
+							expandableContainer.classList.remove('w-full');
+							expandableContainer.classList.add('w-20');
+							toggleButton.setAttribute('aria-label', '目次を開く');
+						}
+						toggleBar.classList.add('hidden');
+						toggleBar.classList.add('pointer-events-none');
+					}
+				});
+			},
+			{
+				rootMargin,
+				threshold: 0,
+			}
+		);
+
+		observer.observe(articleIndex);
+
+		window.__indexToggleObserver = observer;
+	};
+
+	setupIndexToggle();
+
+	document.addEventListener('astro:after-swap', () => {
+		if (window.__indexToggleObserver) {
+			window.__indexToggleObserver.disconnect();
+			window.__indexToggleObserver = null;
+		}
+		setupIndexToggle();
+	});
+</script>
