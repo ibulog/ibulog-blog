@@ -16,18 +16,18 @@ const { lang, title, code } = Astro.props;
 const decodedCode = decodeURIComponent(code);
 ---
 
-<figure class="flex flex-col gap-2.5 p-3 rounded-xl bg-app-bg-default-reverse">
+<figure class="flex flex-col gap-2.5 py-3 rounded-xl bg-app-bg-default-reverse">
   {title && (
-    <div class="flex flex-row gap-2.5 h-6">
-      <div class="flex flex-row items-center self-stretch gap-2.5 px-1.5 rounded-lg bg-app-bg-default-reverse border border-app-border-default-reverse">
+    <div class="flex flex-row gap-2.5 px-3">
+      <div class="flex flex-row items-center h-6 gap-2.5 px-1.5 rounded-lg bg-app-bg-default-reverse border border-app-border-default-reverse">
         <span class="text-xs font-medium leading-none text-app-border-default-reverse">
           {title}
         </span>
       </div>
     </div>
   )}
-  <div class="flex flex-row self-stretch p-3 code-block-wrapper relative overflow-x-auto">
-    <div class="dark:hidden min-w-0">
+  <div class="flex flex-row self-stretch code-block-wrapper relative">
+    <div class="dark:hidden min-w-0 w-full">
       <Code
         lang={lang as BuiltinLanguage | SpecialLanguage | undefined}
         code={decodedCode}
@@ -42,7 +42,7 @@ const decodedCode = decodeURIComponent(code);
         ]}
       />
     </div>
-    <div class="hidden dark:block min-w-0">
+    <div class="hidden dark:block min-w-0 w-full">
       <Code
         lang={lang as BuiltinLanguage | SpecialLanguage | undefined}
         code={decodedCode}
@@ -61,18 +61,36 @@ const decodedCode = decodeURIComponent(code);
 </figure>
 
 <style>
-  :global(.code-block-wrapper .add) {
-    @apply inline-block w-full relative;
+  :global(.code-block-wrapper pre.shiki),
+  :global(.code-block-wrapper pre.astro-code) {
+    display: grid;
+    overflow-x: auto;
+  }
+
+  :global(.code-block-wrapper code) {
+    display: contents;
+  }
+
+  :global(.code-block-wrapper .line) {
+    padding: 0 1.5rem;
+  }
+
+  :global(.code-block-wrapper .line.highlighted),
+  :global(.code-block-wrapper .line.diff.add),
+  :global(.code-block-wrapper .line.diff.remove) {
+    display: inline-block;
+    width: 100%;
+  }
+
+  :global(.code-block-wrapper .line.diff.add) {
     background-color: var(--color-code-add);
   }
 
-  :global(.code-block-wrapper .remove) {
-    @apply inline-block w-full relative;
+  :global(.code-block-wrapper .line.diff.remove) {
     background-color: var(--color-code-remove);
   }
 
   :global(.code-block-wrapper .line.highlighted) {
-    @apply inline-block w-full;
     background-color: var(--color-code-highlight);
   }
 </style>
