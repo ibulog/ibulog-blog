@@ -58,17 +58,41 @@
 }
 
 html {
-  overflow-y: scroll;
+  @apply overflow-y-scroll;
 }
-
 
 body {
   font-family: "Noto Sans JP", "Quicksand", sans-serif;
-  text-align: left;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  line-height: 1.8;
-  background-color: var(--color-primary);
-  color: var(--color-app-text);
+  @apply text-left break-words leading-[1.8] bg-primary text-app-text;
 }
 
+.code-block-wrapper pre.shiki,
+.code-block-wrapper pre.astro-code {
+  @apply grid overflow-x-auto;
+}
+
+.code-block-wrapper code {
+  @apply contents;
+}
+
+.code-block-wrapper .line {
+  @apply px-6 text-sm;
+}
+
+.code-block-wrapper .line.highlighted,
+.code-block-wrapper .line.diff.add,
+.code-block-wrapper .line.diff.remove {
+  @apply inline-block w-full;
+}
+
+.code-block-wrapper .line.diff.add {
+  @apply bg-code-add;
+}
+
+.code-block-wrapper .line.diff.remove {
+  @apply bg-code-remove;
+}
+
+.code-block-wrapper .line.highlighted {
+  @apply bg-code-highlight;
+}
