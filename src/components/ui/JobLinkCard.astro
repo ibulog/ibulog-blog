@@ -11,7 +11,7 @@ const { url, title, description } = Astro.props;
 ---
 
 <LinkCardBase url={url} title={title} showOgImage={true}>
-	<span slot="bottom-content" class="text-xs font-medium leading-none text-app-text">
+	<span slot="bottom-content" class="text-xs font-medium leading-none text-app-text-subtle">
 		{description}
 	</span>
 </LinkCardBase>
