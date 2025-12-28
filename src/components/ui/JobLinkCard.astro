@@ -1,0 +1,18 @@
+---
+import LinkCardBase from './LinkCardBase.astro';
+
+export interface Props {
+	url: string;
+	title: string;
+	description: string;
+}
+
+const { url, title, description } = Astro.props;
+---
+
+<LinkCardBase url={url} title={title} showOgImage={true}>
+	<span slot="bottom-content" class="text-xs font-medium leading-none text-app-text">
+		{description}
+	</span>
+</LinkCardBase>
+

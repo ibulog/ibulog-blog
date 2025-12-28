@@ -1,51 +1,40 @@
 ---
-import ogs from 'open-graph-scraper';
+import LinkCardBase from './LinkCardBase.astro';
 
 export interface Props {
 	url: string;
 	title?: string;
-	description?: string;
 }
 
-async function getOgData(url: string): Promise<{ title?: string; description?: string; image?: string }> {
+function getDomain(url: string): string {
 	try {
-		const { result } = await ogs({ url, fetchOptions: { headers: { 'user-agent': 'bot' } } });
-		return {
-			title: result.ogTitle || result.twitterTitle || undefined,
-			description: result.ogDescription || result.twitterDescription || undefined,
-			image: result.ogImage?.[0]?.url,
-		};
-	} catch (error) {
-		console.error(`Failed to fetch OGP data for ${url}:`, error);
-		return {};
+		const urlObj = new URL(url);
+		return urlObj.hostname.replace(/^www\./, '');
+	} catch {
+		return url;
 	}
 }
 
-const { url, title: providedTitle, description: providedDescription } = Astro.props;
+function getFaviconUrl(domain: string): string {
+	return `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+}
 
-const ogData = await getOgData(url);
-const title = providedTitle || ogData.title || url;
-const description = providedDescription || ogData.description || '';
-const ogImageUrl = ogData.image;
+const { url, title } = Astro.props;
+
+const domain = getDomain(url);
+const faviconUrl = getFaviconUrl(domain);
 ---
-    
-<div class="flex flex-row justify-stretch items-stretch w-full rounded-xl h-24 bg-app-bg">
-  <div class="flex flex-col self-stretch p-6 flex-1 justify-between">
-      <h2 class="text-lg font-bold leading-none text-app-text">
-        <a href={url} target="_blank" rel="noopener noreferrer">{title}</a>
-      </h2>
-      <span class="text-xs font-medium leading-none text-app-text">
-        {description}
-      </span>
-  </div>
-  {ogImageUrl && (
-    <div class="hidden md:flex flex-row justify-end items-center h-full">
-        <img
-          src={ogImageUrl}
-          alt={title}
-          class="h-full rounded-r-xl object-cover"
-          style="width: 168px; height: 96px;"
-        />
-    </div>
-  )}
-</div>
+
+<LinkCardBase url={url} title={title}>
+	<div slot="bottom-content" class="flex flex-row items-center gap-2">
+		<img
+			src={faviconUrl}
+			alt=""
+			class="w-4 h-4"
+			loading="lazy"
+		/>
+		<span class="text-xs font-medium leading-none text-app-text">
+			{domain}
+		</span>
+	</div>
+</LinkCardBase>
