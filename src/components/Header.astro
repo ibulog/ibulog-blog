@@ -1,32 +1,78 @@
 ---
-import Nav from './Nav.astro';
+import DesktopNavMenu from './DesktopNavMenu.astro';
+import MobileNavButton from './MobileNavButton.astro';
+import MobileNavDropdown from './MobileNavDropdown.astro';
 import ThemeIcon from './ThemeIcon.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../config';
+import { SITE_TITLE } from '../config';
+
+export interface Props {
+	pageKind: string;
+}
 
 const {pageKind} = Astro.props;
 ---
 
-<header>
-	<div class="title">
-		<h2>
+<header id="site-header" class="sticky top-6 z-50 w-full bg-app-bg text-app-text rounded-xl flex flex-col px-6 py-4 border-b border-transparent transition-colors duration-200">
+	<div class="flex justify-between items-center self-stretch h-8">
+		<div class="text-xl font-medium leading-none">
 			{SITE_TITLE}
-		</h2>
-		<ThemeIcon />
+		</div>
+		<div class="flex items-center gap-6">
+			<div class="hidden md:flex items-center">
+				<DesktopNavMenu pageKind={pageKind} />
+			</div>
+			<div class="md:hidden flex items-center">
+				<MobileNavButton />
+			</div>
+			<ThemeIcon />
+		</div>
 	</div>
-	<Nav pageKind={pageKind}/>
+	<MobileNavDropdown pageKind={pageKind} />
 </header>
-<style>
-	header {
-		position: sticky;
-		top: 0;
-		display: flex;
-		justify-content: space-between;
-		background-color: var(--background-color);
-		margin: 0em 0 1rem;
-		z-index: 1000;
-	}
-	.title {
-		display: flex;
-		align-items: center;
-	}
-</style>
+
+<script is:inline>
+	const setupMobileMenu = () => {
+		const toggle = document.getElementById('mobile-menu-toggle');
+		const dropdown = document.getElementById('mobile-nav-dropdown');
+  
+		if (toggle && dropdown) {
+			toggle.addEventListener('click', () => {
+				const isOpened = dropdown.classList.contains('grid-rows-[1fr]');
+				dropdown.classList.toggle('grid-rows-[0fr]', isOpened);
+				dropdown.classList.toggle('grid-rows-[1fr]', !isOpened);
+			});
+		}
+	};
+
+	const setupHeaderBorder = () => {
+		const header = document.getElementById('site-header');
+		if (!header) return;
+
+		if (window.__headerScrollHandler) {
+			window.removeEventListener('scroll', window.__headerScrollHandler, { passive: true });
+		}
+
+		const handleScroll = () => {
+			if (window.scrollY > 0) {
+				header.classList.remove('border-transparent');
+				header.classList.add('border-app-border-default-reverse');
+			} else {
+				header.classList.remove('border-app-border-default-reverse');
+				header.classList.add('border-transparent');
+			}
+		};
+
+		window.__headerScrollHandler = handleScroll;
+
+		handleScroll();
+		window.addEventListener('scroll', handleScroll, { passive: true });
+	};
+
+	setupMobileMenu();
+	setupHeaderBorder();
+
+	document.addEventListener('astro:after-swap', () => {
+		setupMobileMenu();
+		setupHeaderBorder();
+	});
+</script>

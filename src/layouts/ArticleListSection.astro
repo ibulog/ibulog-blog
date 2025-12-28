@@ -1,0 +1,41 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ArticleList from '../components/ArticleList.astro';
+import Pagination from '../components/Pagination.astro';
+import Button from '../components/ui/Button.astro';
+
+export interface Props {
+	entries: CollectionEntry<'blog'>[];
+	showViewMore?: boolean;
+	viewMoreHref?: string;
+	showPagination?: boolean;
+	pagination?: {
+		currentPage: number;
+		lastPage: number;
+		page: {
+			url: {
+				prev: string | undefined;
+				next: string | undefined;
+			};
+		};
+		baseUrl?: string;
+	};
+}
+
+const { entries, showViewMore = false, viewMoreHref, showPagination = false, pagination } = Astro.props;
+---
+
+<div class="flex-1 flex flex-col">
+	<div class="flex flex-col gap-14 items-stretch self-stretch flex-1">
+		<ArticleList entries={entries} />
+		{showPagination && pagination && (
+			<Pagination currentPage={pagination.currentPage} lastPage={pagination.lastPage} page={pagination.page} baseUrl={pagination.baseUrl} />
+		)}
+		{showViewMore && viewMoreHref && (
+			<div class="flex justify-center">
+				<Button href={viewMoreHref} text="View More" />
+			</div>
+		)}
+	</div>
+</div>
+

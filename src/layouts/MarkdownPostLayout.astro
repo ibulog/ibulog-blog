@@ -4,11 +4,11 @@ import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
 import { Image } from "astro:assets";
 
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import Tag from '../components/Tag.astro';
-import getFormatDay from '../utils/getFormatDay.ts';
+import ArticleHeader from '../components/ui/ArticleHeader.astro';
+import ArticleIndex from '../components/ArticleIndex.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import ArticleIndexBar from '../components/ArticleIndexBar.astro';
+import { HEADING_LEVEL } from '../config';
 
 type Props = {
   entry: CollectionEntry<'blog'>;
@@ -17,110 +17,141 @@ type Props = {
 };
 
 const { entry, prevArticle, nextArticle } = Astro.props;
-const { title, description, pubDate, heroImage, tags } = entry.data;
+const { title, pubDate, tags } = entry.data;
+const heroImage = entry.data.heroImage as ImageMetadata | undefined;
 const { headings } = await render(entry);
 const { id } = entry;
 
-const pageKind = 'Blog'
+const filteredHeadings = headings.filter(heading => heading.depth <= HEADING_LEVEL);
+
 ---
 
-  <html lang="ja">
-    <head>
-      <BaseHead title={title} description={description} url={`/blog/${id}`} image={heroImage} />
-      <style>
-        .title {
-          margin: 0.25rem 0 0;
-    }
-        .metaData {
-          font - family: 'Quicksand';
-        font-size: 1rem;
-        margin-top: 0.5rem;
-        display: flex;
-    }
-        #tag {
-          margin - left: 16px;
-    }
-        .metaData time {
-          flex: 0 0 130px;
-        vertical-align: middle;
-    }
-        .toc {
-          border - radius: 10px;
-        border: 2px solid var(--text-color);
-        padding: 0.5rem 1rem;
-        margin: 2rem 0;
-    }
-        .suggestArticle {
-          display: flex;
-        justify-content: space-between;
-        margin-top: 2rem;
-        flex-wrap: wrap;
-    }
-        .prevNextArticle {
-          width: 300px;
-        padding: 10px;
-        line-height: 2;
-        margin-bottom: 2rem;
-        display: inline;
-    }
-        .icon {
-          display: inline-block;
-        width: 1em;
-        height: 1em;
-        fill: var(--text-color);
-        vertical-align: middle;
-    }
-      </style>
-    </head>
+{filteredHeadings.length > 0 && (
+	<div class="sticky top-[100px] z-40 w-full px-3 flex flex-col items-center transition-opacity duration-300 opacity-0 pointer-events-none" id="index-toggle-bar">
+		<ArticleIndexBar headings={headings} />
+	</div>
+)}
 
-    <body>
-      <Header pageKind={pageKind} />
-      <main>
-        <article>
-          <h1 class="title">{title}</h1>
-          <div class="metaData">
-            <div>
-              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M96 32l0 32L48 64C21.5 64 0 85.5 0 112l0 48 448 0 0-48c0-26.5-21.5-48-48-48l-48 0 0-32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 32L160 64l0-32c0-17.7-14.3-32-32-32S96 14.3 96 32zM448 192L0 192 0 464c0 26.5 21.5 48 48 48l352 0c26.5 0 48-21.5 48-48l0-272z" /></svg>
-              <time datetime={pubDate.toString()}>
-                {getFormatDay(pubDate)}
-              </time>
-            </div>
-            <div id="tag">
-              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M0 80L0 229.5c0 17 6.7 33.3 18.7 45.3l176 176c25 25 65.5 25 90.5 0L418.7 317.3c25-25 25-65.5 0-90.5l-176-176c-12-12-28.3-18.7-45.3-18.7L48 32C21.5 32 0 53.5 0 80zm112 32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z" /></svg>
-              {tags.map((tag) => (
-                <Tag tag={tag} />
-              ))}
-            </div>
-          </div>
-          <div class="toc">
-            <h2>目次</h2>
-            <ul>
-              {headings.filter(heading => heading.depth < 3).map((heading) => (
-                <li>
-                  <a href={`#${heading.slug}`}>{heading.text}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          {heroImage && <Image width={1080} height={540} src={heroImage} alt="" />}
-          <slot />
-        </article>
-        <hr />
-        <div class="suggestArticle">
-          <div class="prevNextArticle">
-            {(prevArticle === undefined)
-              ? undefined
-              : <p>前の記事</p><a href={`/blog/${prevArticle.id}`}>{prevArticle.data.title}</a>
-            }
-          </div>
-          <div class="prevNextArticle">
-            {(nextArticle === undefined)
-              ? undefined
-              : <p>次の記事</p><a href={`/blog/${nextArticle.id}`}>{nextArticle.data.title}</a>
-            }
-          </div>
+<article class="flex flex-col gap-9">
+  <ArticleHeader id={id} pubDate={pubDate} tags={tags} title={title} />
+  {heroImage && (
+    <div class="w-full rounded-xl overflow-hidden" transition:name={`hero-image-${id}`}>
+      <Image width={1080} height={540} src={heroImage} alt={title} class="w-full h-auto" />
+    </div>
+  )}
+  <ArticleIndex headings={headings} id="article-index" />
+  <slot />
+</article>
+{(prevArticle || nextArticle) && (
+  <div class="flex flex-col gap-6 pt-12 mt-12 border-t border-app-border-default-reverse">
+    {nextArticle && (
+      <div class="flex flex-col gap-2.5">
+        <h3 class="text-base font-bold leading-none text-app-text">
+          Next
+        </h3>
+        <div class="px-3">
+          <ArticleCard entry={nextArticle} />
         </div>
-      </main>
-      <Footer />
-    </body>
-  </html>
+      </div>
+    )}
+    {prevArticle && (
+      <div class="flex flex-col gap-2.5">
+        <h3 class="text-base font-bold leading-none text-app-text">
+          Previous
+        </h3>
+        <div class="px-3">
+          <ArticleCard entry={prevArticle} />
+        </div>
+      </div>
+    )}
+  </div>
+)}
+
+<script is:inline>
+	const setupIndexToggle = () => {
+		const articleIndex = document.getElementById('article-index');
+		const toggleBar = document.getElementById('index-toggle-bar');
+		const toggleButton = document.getElementById('index-toggle-button');
+		const expandableContainer = document.getElementById('index-expandable-container');
+		const indexContent = document.getElementById('index-content');
+
+		if (!articleIndex || !toggleBar || !toggleButton || !expandableContainer || !indexContent) return;
+
+		toggleButton.addEventListener('click', (event) => {
+			event.stopPropagation();
+			const isOpened = expandableContainer.classList.contains('w-full');
+			
+			if (isOpened) {
+				indexContent.classList.remove('grid-rows-[1fr]');
+				indexContent.classList.add('grid-rows-[0fr]');
+				expandableContainer.classList.remove('w-full');
+				expandableContainer.classList.add('w-20');
+				toggleButton.setAttribute('aria-label', '目次を開く');
+			} else {
+				expandableContainer.classList.remove('w-20');
+				expandableContainer.classList.add('w-full');
+				indexContent.classList.remove('grid-rows-[0fr]');
+				indexContent.classList.add('grid-rows-[1fr]');
+				toggleButton.setAttribute('aria-label', '目次を閉じる');
+			}
+		});
+
+		const indexLinks = indexContent.querySelectorAll('a');
+		indexLinks.forEach(link => {
+			link.addEventListener('click', () => {
+				indexContent.classList.remove('grid-rows-[1fr]');
+				indexContent.classList.add('grid-rows-[0fr]');
+				expandableContainer.classList.remove('w-full');
+				expandableContainer.classList.add('w-20');
+				toggleButton.setAttribute('aria-label', '目次を開く');
+			});
+		});
+
+		const header = document.getElementById('site-header');
+		const headerHeight = header ? header.offsetHeight : 64;
+		const rootMargin = `-${headerHeight + 24}px 0px 0px 0px`;
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (!entry.isIntersecting) {
+						toggleBar.classList.remove('hidden');
+						toggleBar.classList.remove('pointer-events-none');
+						toggleBar.classList.remove('opacity-0');
+						toggleBar.classList.add('opacity-100');
+					} else {
+						toggleBar.classList.remove('opacity-100');
+						toggleBar.classList.add('opacity-0');
+						if (expandableContainer.classList.contains('w-full')) {
+							indexContent.classList.remove('grid-rows-[1fr]');
+							indexContent.classList.add('grid-rows-[0fr]');
+							expandableContainer.classList.remove('w-full');
+							expandableContainer.classList.add('w-20');
+							toggleButton.setAttribute('aria-label', '目次を開く');
+						}
+						toggleBar.classList.add('hidden');
+						toggleBar.classList.add('pointer-events-none');
+					}
+				});
+			},
+			{
+				rootMargin,
+				threshold: 0,
+			}
+		);
+
+		observer.observe(articleIndex);
+
+		window.__indexToggleObserver = observer;
+	};
+
+	setupIndexToggle();
+
+	document.addEventListener('astro:after-swap', () => {
+		if (window.__indexToggleObserver) {
+			window.__indexToggleObserver.disconnect();
+			window.__indexToggleObserver = null;
+		}
+		setupIndexToggle();
+	});
+</script>

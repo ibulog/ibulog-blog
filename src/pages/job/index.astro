@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import JobCard from '../../components/JobCard.astro';
+import SideVector from '../../components/ui/SideVector.astro';
+import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE, PAGE_KINDS } from '../../config';
+
+const pageKind = PAGE_KINDS.JOBS;
+
+const jobCollection = await getCollection('job');
+
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url="/job" image={ICON_IMAGE} pageKind={pageKind}>
+	<div class="relative flex flex-row min-h-full">
+		<div class="absolute left-2 top-0 bottom-0">
+			<SideVector />
+		</div>
+		<div class="flex flex-col flex-1 gap-9">
+			{jobCollection.map((job, index) => (
+				<JobCard 
+					companyName={job.data.companyName}
+					startDate={job.data.startDate}
+					endDate={job.data.endDate}
+					companyUrl={job.data.companyUrl}
+					team={job.data.team}
+					work={job.data.work}
+					isFirst={index === 0}
+				/>
+			))}
+		</div>
+	</div>
+</BaseLayout>

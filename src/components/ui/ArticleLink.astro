@@ -1,0 +1,16 @@
+---
+export interface Props {
+	href?: string;
+	class?: string;
+}
+
+const { href, class: className } = Astro.props;
+---
+
+<a
+	href={href}
+	class={`underline decoration-app-text decoration-solid underline-offset-[0.2em] hover:opacity-80 transition-opacity ${className || ''}`}
+>
+	<slot />
+</a>
+

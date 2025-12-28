@@ -3,14 +3,10 @@ import type { GetStaticPathsOptions, Page } from "astro";
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 
-import BaseHead from '../../components/BaseHead.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
-import Pagination from '../../components/Pagination.astro';
-import Tag from '../../components/Tag.astro';
-import getFormatDay from '../../utils/getFormatDay.ts';
-import sortArticleByDate from "../../utils/sortArticleByDate.ts";
-import { SITE_TITLE, SITE_DESCRIPTION } from '../../config';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleListSection from '../../layouts/ArticleListSection.astro';
+import sortArticleByDate from "../../utils/sortArticleByDate";
+import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE, PAGE_KINDS } from '../../config';
 
 type Props = {
   page: Page<CollectionEntry<'blog'>>;
@@ -23,88 +19,14 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 }
 
 const { page } = Astro.props
-const { start, end, total, data, currentPage, lastPage } = page
-const pageKind = 'Blog'
+const { currentPage, lastPage } = page
+const pageKind = PAGE_KINDS.BLOG;
 ---
 
-<html lang="ja">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} url="/" image="/icon.jpeg" />
-		<style>
-			ul {
-				list-style-type: none;
-				padding: unset;
-			}
-      ul li {
-        margin-bottom: 2.5rem;
-      }
-      h2 {
-        margin-bottom: 0.5rem;
-      }
-      .metaData {
-        font-family: 'Quicksand';
-        font-size: 1rem;
-        display: flex;
-      }
-      #tag {
-        margin-left: 16px;
-      }
-			ul li time {
-				flex: 0 0 130px;
-        vertical-align: middle;
-			}
-      .icon {
-        display: inline-block;
-        width: 1em;
-        height: 1em;
-        fill: var(--text-color);
-        vertical-align: middle;
-  		}
-
-		</style>
-	</head>
-	<body>
-		<Header pageKind={pageKind} />
-		<main>
-      <h1>
-        {pageKind}
-      </h1>
-			<section>
-				<ul>
-					{
-						page.data.map(({ data, id }) => (
-							<li>
-                <h2>
-								<div class="title">
-								  <a href={`/blog/${id}`}>{data.title}</a>
-                </div>
-                </h2>
-                <div class="metaData">
-                  <div id="datetime">
-                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M96 32l0 32L48 64C21.5 64 0 85.5 0 112l0 48 448 0 0-48c0-26.5-21.5-48-48-48l-48 0 0-32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 32L160 64l0-32c0-17.7-14.3-32-32-32S96 14.3 96 32zM448 192L0 192 0 464c0 26.5 21.5 48 48 48l352 0c26.5 0 48-21.5 48-48l0-272z"/></svg>
-                    <time datetime={(data.pubDate).toString()}>
-                      {getFormatDay(data.pubDate)}
-                    </time>
-                  </div>
-                  <div id="tag">
-                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M0 80L0 229.5c0 17 6.7 33.3 18.7 45.3l176 176c25 25 65.5 25 90.5 0L418.7 317.3c25-25 25-65.5 0-90.5l-176-176c-12-12-28.3-18.7-45.3-18.7L48 32C21.5 32 0 53.5 0 80zm112 32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>
-                    {data.tags.map((tag) => (
-                      <Tag tag={tag} />
-                    ))}
-                  </div>
-                </div>
-                <div class="description">
-                  <p>
-                    {data.description}
-                  </p>
-                </div>
-							</li>
-						))
-					}
-				</ul>
-			</section>
-      <Pagination currentPage={currentPage} lastPage={lastPage} page={page} />
-		</main>
-		<Footer />
-	</body>
-</html>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url="/blog" image={ICON_IMAGE} pageKind={pageKind}>
+	<ArticleListSection 
+		entries={page.data} 
+		showPagination={true} 
+		pagination={{ currentPage, lastPage, page }} 
+	/>
+</BaseLayout>

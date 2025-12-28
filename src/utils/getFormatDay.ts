@@ -1,7 +1,7 @@
-export default function getFormatDay(date) {
-  const year = date.getFullYear();
-  const month = ("0" + (date.getMonth() + 1)).slice(-2);
-  const day = ("0" + date.getDate()).slice(-2);
-
-  return `${year}-${month}-${day}`;
+export default function getFormatDay(date: Date) {
+  return date.toLocaleDateString('ja-JP', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).replace(/\//g, '-');
 }

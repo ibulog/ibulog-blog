@@ -1,0 +1,50 @@
+---
+import JobLinkCard from './ui/JobLinkCard.astro';
+import getFormatDay from '../utils/getFormatDay';
+import Text from './ui/Text.astro';
+
+export interface Props {
+	companyName: string;
+	startDate: string;
+	endDate?: string;
+	companyUrl: string;
+	team: string;
+	work: string;
+	isFirst?: boolean;
+}
+
+const { companyName, startDate, endDate, companyUrl, team, work, isFirst = false } = Astro.props;
+const formattedStartDate = getFormatDay(new Date(startDate));
+const formattedEndDate = endDate ? getFormatDay(new Date(endDate)) : null;
+const dateRange = endDate ? `${formattedStartDate} - ${formattedEndDate}` : `${formattedStartDate} - Present`;
+---
+
+<div class="flex flex-row items-center gap-2.5 w-full">
+	<div class="flex flex-col self-stretch gap-2.5 pt-8">
+		<div class="relative z-10 flex flex-col justify-center items-center w-8 h-8 rounded-full bg-primary">
+			<div class="flex flex-col justify-center items-center w-full h-full p-1 rounded-full border border-app-border-default-reverse">
+				<div class={`flex flex-col justify-center items-center w-full h-full p-2 rounded-full ${isFirst ? "bg-accent" : "bg-app-bg-obvious"}`}></div>
+			</div>
+		</div>
+	</div>
+	<div class="flex flex-col gap-2.5 flex-1">
+		<JobLinkCard title={companyName} description={dateRange} url={companyUrl} />
+		<div class="flex flex-row self-stretch px-6 py-4">
+			<h3 class="text-base font-bold leading-none text-app-text">
+				Team
+			</h3>
+		</div>
+		<div class="flex flex-row items-center self-stretch flex-wrap px-6">
+			<Text text={team} />
+		</div>
+		<div class="flex flex-row self-stretch px-6 py-4">
+			<h3 class="text-base font-bold leading-none text-app-text">
+				Work
+			</h3>
+		</div>
+		<div class="flex flex-row items-center self-stretch flex-wrap px-6">
+			<Text text={work} />
+		</div>
+	</div>
+</div>
+

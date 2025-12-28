@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+import ArticleHeader from './ui/ArticleHeader.astro';
+
+export interface Props {
+	entry: CollectionEntry<'blog'>;
+}
+
+const { entry } = Astro.props;
+const { title, pubDate, tags } = entry.data;
+const { id } = entry;
+const heroImage = entry.data.heroImage as ImageMetadata | undefined;
+---
+
+<article class="flex flex-row gap-9 w-full h-24">
+	<ArticleHeader id={id} pubDate={pubDate} tags={tags} title={title} />
+	{heroImage && (
+		<div class="flex-shrink-0 h-full">
+			<a href={`/blog/${id}`} class="block w-full h-full">
+				<div class="w-24 h-24 md:w-40 md:h-24 rounded-xl overflow-hidden" transition:name={`hero-image-${id}`}>
+					<Image
+						src={heroImage}
+						alt={title}
+						class="w-full h-full object-cover"
+					/>
+				</div>
+			</a>
+		</div>
+	)}
+</article>
+

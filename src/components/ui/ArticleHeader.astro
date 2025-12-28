@@ -1,0 +1,40 @@
+---
+import Tag from './Tag.astro';
+import getFormatDay from '../../utils/getFormatDay';
+
+export interface Props {
+	id: string;
+	pubDate: Date;
+	tags: string[];
+	title: string;
+}
+
+const { id, pubDate, tags, title } = Astro.props;
+const formattedPubDate = getFormatDay(pubDate);
+---
+
+<div 
+	class="flex flex-col gap-2.5 flex-1 bg-primary rounded-xl"
+	transition:name={`article-header-${id}`}
+>
+	<div class="flex flex-row items-center gap-2.5">
+		<div class="flex items-center">
+			<time datetime={formattedPubDate} class="text-xs font-medium leading-none text-app-text-subtle">
+				{formattedPubDate}
+			</time>
+		</div>
+		<div class="flex items-center gap-2.5">
+			{tags.map((tag) => (
+				<Tag tag={tag} />
+			))}
+		</div>
+	</div>
+	<div class="h-full">
+		<h2 class="text-lg font-medium leading-[1.5em] text-app-text line-clamp-2">
+			<a href={`/blog/${id}`} class="no-underline hover:underline">
+				{title}
+			</a>
+		</h2>
+	</div>
+</div>
+

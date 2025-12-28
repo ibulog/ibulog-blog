@@ -1,0 +1,33 @@
+---
+import ArticleIndex from './ArticleIndex.astro';
+
+export interface Props {
+	headings: Array<{
+		depth: number;
+		slug: string;
+		text: string;
+	}>;
+}
+
+const { headings } = Astro.props;
+---
+
+<div 
+	id="index-expandable-container" 
+	class="flex flex-col rounded-lg bg-app-bg overflow-hidden transition-all duration-300 ease-in-out w-20"
+>
+	<button
+		id="index-toggle-button"
+		class="flex flex-col justify-center items-center h-6 px-3 cursor-pointer"
+		aria-label="目次を開く"
+	>
+		<div class="w-14 h-1 rounded-full bg-app-text-subtle"></div>
+	</button>
+	
+	<div id="index-content" class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-in-out">
+		<div class="min-h-0 overflow-hidden">
+			<ArticleIndex headings={headings} />
+		</div>
+	</div>
+</div>
+

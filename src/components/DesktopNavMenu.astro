@@ -1,0 +1,23 @@
+---
+import { NAV_ITEMS } from '../config';
+
+export interface Props {
+	pageKind: string;
+}
+
+const {pageKind} = Astro.props;
+---
+
+<nav class="hidden md:flex items-center gap-6">
+	{NAV_ITEMS.map((item) => (
+		<a
+			href={item.href}
+			class={`text-sm font-medium leading-none ${
+				pageKind === item.label ? 'font-semibold text-accent' : 'text-app-text-subtle'
+			}`}
+		>
+			{item.label}
+		</a>
+	))}
+</nav>
+

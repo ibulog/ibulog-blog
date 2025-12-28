@@ -1,9 +1,23 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getCollection, render } from "astro:content";
+import type { ImageMetadata } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 import MarkdownPostLayout from "../../layouts/MarkdownPostLayout.astro";
-import sortArticleByDate from "../../utils/sortArticleByDate.ts";
+import sortArticleByDate from "../../utils/sortArticleByDate";
+import { PAGE_KINDS } from "../../config";
 import CodeBlock from "../../components/CodeBlock.astro";
+import H2 from "../../components/ui/H2.astro";
+import H3 from "../../components/ui/H3.astro";
+import H4 from "../../components/ui/H4.astro";
+import Text from "../../components/ui/Text.astro";
+import OrderedList from "../../components/ui/OrderedList.astro";
+import UnorderedList from "../../components/ui/UnorderedList.astro";
+import Quote from "../../components/ui/Quote.astro";
+import ArticleImage from "../../components/ui/ArticleImage.astro";
+import LinkCard from "../../components/ui/LinkCard.astro";
+import ArticleLink from "../../components/ui/ArticleLink.astro";
+import InlineCode from "../../components/ui/InlineCode.astro";
 
 type Props = {
   entry: CollectionEntry<"blog">;
@@ -27,12 +41,17 @@ export async function getStaticPaths() {
 
 const { entry, prevArticle, nextArticle } = Astro.props;
 const { Content } = await render(entry);
+
+const pageKind = PAGE_KINDS.BLOG;
+const heroImage = entry.data.heroImage as ImageMetadata | undefined;
 ---
 
-<MarkdownPostLayout
-  entry={entry}
-  prevArticle={prevArticle}
-  nextArticle={nextArticle}
->
-  <Content components={{ "code-block": CodeBlock }} />
-</MarkdownPostLayout>
+<BaseLayout title={entry.data.title} description={entry.data.description} url={`/blog/${entry.id}`} image={heroImage} pageKind={pageKind}>
+  <MarkdownPostLayout
+    entry={entry}
+    prevArticle={prevArticle}
+    nextArticle={nextArticle}
+  >
+    <Content components={{ "code-block": CodeBlock, "h2": H2, "h3": H3, "h4": H4, "p": Text, "ul": UnorderedList, "ol": OrderedList, "blockquote": Quote, "img": ArticleImage, "link-card": LinkCard, "a": ArticleLink, "code": InlineCode }} />
+  </MarkdownPostLayout>
+</BaseLayout>

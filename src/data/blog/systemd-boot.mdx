@@ -9,9 +9,9 @@ tags: ["Linux", "Infrastructure"]
 
 Linuxのsystemdに「systemd-boot」という軽量ブートローダーが組み込まれているということを知ったので、Ubuntu 20.04でちょっと試してみました。
 
-## systemd-boot
+### systemd-boot
 
-### Arch Wikiによると・・・
+#### Arch Wikiによると・・・
 
 前は「gummiboot」という名前だったらしい。
 
@@ -28,9 +28,9 @@ https://wiki.archlinux.jp/index.php/Systemd-boot
 
 起動が早いのは嬉しいので、早速入れてみることに。
 
-## 導入方法
+### 導入方法
 
-### ブートローダーインストール
+#### ブートローダーインストール
 
 以下、Ubuntu 20.04環境でやってます。とりえあず下記コマンドでブートローダーをESPにインストール。boot領域をいじるので、rootユーザーで作業したほうが楽です。
 
@@ -71,7 +71,7 @@ editor no
 
 ここまででブートローダーの設定は完了です。
 
-### カーネル関連をごにょごにょ
+#### カーネル関連をごにょごにょ
 
 Ubuntuはデフォルトだと、
 
@@ -127,14 +127,14 @@ systemctl enable kernel-update.path
 
 これでapt経由でカーネルを更新しても自動でイメージがESPにコピーされるようになり、systemd-bootによるブートの準備も整いました。
 
-## どんくらい速いの
+### どんくらい速いの
 
-### とりあえず起動するか確認
+#### とりあえず起動するか確認
 
 まずはefibootmgrしてみます。
 
 ```
-# efibootmgr
+## efibootmgr
 BootCurrent: 0000
 Timeout: 10 seconds
 BootOrder: 0001,0000,2001,2002,2003
@@ -154,7 +154,7 @@ MateBook X 2017でこんな感じでした。systemd-bootの方が速い。設�
 - GRUB2：16.8秒
 - systemd-boot：13.8秒
 
-## systemd-bootに乗り換え
+### systemd-bootに乗り換え
 
 特に問題なさそうだったので、GRUB2からsystemd-bootに乗り換えました。GRUBアンインストールってけっこう新鮮な体験でしたね。
 

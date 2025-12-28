@@ -1,0 +1,40 @@
+---
+import LinkCardBase from './LinkCardBase.astro';
+
+export interface Props {
+	url: string;
+	title?: string;
+}
+
+function getDomain(url: string): string {
+	try {
+		const urlObj = new URL(url);
+		return urlObj.hostname.replace(/^www\./, '');
+	} catch {
+		return url;
+	}
+}
+
+function getFaviconUrl(domain: string): string {
+	return `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+}
+
+const { url, title } = Astro.props;
+
+const domain = getDomain(url);
+const faviconUrl = getFaviconUrl(domain);
+---
+
+<LinkCardBase url={url} title={title}>
+	<div slot="bottom-content" class="flex flex-row items-center gap-2.5">
+		<img
+			src={faviconUrl}
+			alt=""
+			class="w-4 h-4"
+			loading="lazy"
+		/>
+      <span class="text-xs font-medium leading-none text-app-text-subtle">
+			{domain}
+      </span>
+  </div>
+</LinkCardBase>
