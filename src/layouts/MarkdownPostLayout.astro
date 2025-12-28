@@ -25,7 +25,7 @@ const filteredHeadings = headings.filter(heading => heading.depth < 3);
 ---
 
 {filteredHeadings.length > 0 && (
-	<div class="sticky top-[100px] z-40 w-full flex flex-col items-center transition-opacity duration-300 opacity-0 pointer-events-none" id="index-toggle-bar">
+	<div class="sticky top-[100px] z-40 w-full px-3 flex flex-col items-center transition-opacity duration-300 opacity-0 pointer-events-none" id="index-toggle-bar">
 		<ArticleIndexBar headings={headings} />
 	</div>
 )}
