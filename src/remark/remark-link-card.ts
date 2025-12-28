@@ -21,19 +21,25 @@ const remarkLinkCard: Plugin = () => {
         .join("")
         .trim()
 
-      // link-card 要素に変換
-      parent.children.splice(index, 1, {
-        type: "paragraph",
-        data: {
-          hName: "link-card",
-          hProperties: {
-            url: node.url,
-            // テキストがURLと異なる場合のみ title として使用
-            ...(linkText && linkText !== node.url ? { title: linkText } : {}),
+      // 親が paragraph で、リンクが唯一の子要素の場合のみ処理
+      // これにより、テキスト中に埋め込まれたリンクは変換されない
+      if (parent.type !== "paragraph" || parent.children.length !== 1) {
+        return
+      }
+
+      // リンクテキストとURLが一致する場合のみ link-card に変換
+      if (linkText === node.url) {
+        parent.children.splice(index, 1, {
+          type: "paragraph",
+          data: {
+            hName: "link-card",
+            hProperties: {
+              url: node.url,
+            },
           },
-        },
-        children: [],
-      } as Paragraph)
+          children: [],
+        } as Paragraph)
+      }
     }
     visit(tree, "link", visitor)
   }
