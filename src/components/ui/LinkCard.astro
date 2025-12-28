@@ -2,24 +2,31 @@
 import ogs from 'open-graph-scraper';
 
 export interface Props {
-	title: string;
-	description: string;
 	url: string;
+	title?: string;
+	description?: string;
 }
 
-
-async function getOgImage(url: string): Promise<string | undefined> {
+async function getOgData(url: string): Promise<{ title?: string; description?: string; image?: string }> {
 	try {
 		const { result } = await ogs({ url, fetchOptions: { headers: { 'user-agent': 'bot' } } });
-		return result.ogImage?.[0]?.url;
+		return {
+			title: result.ogTitle || result.twitterTitle || undefined,
+			description: result.ogDescription || result.twitterDescription || undefined,
+			image: result.ogImage?.[0]?.url,
+		};
 	} catch (error) {
-		console.error(`Failed to fetch OGP image for ${url}:`, error);
-		return undefined;
+		console.error(`Failed to fetch OGP data for ${url}:`, error);
+		return {};
 	}
 }
 
-const { title, description, url } = Astro.props;
-const ogImageUrl = await getOgImage(url);
+const { url, title: providedTitle, description: providedDescription } = Astro.props;
+
+const ogData = await getOgData(url);
+const title = providedTitle || ogData.title || url;
+const description = providedDescription || ogData.description || '';
+const ogImageUrl = ogData.image;
 ---
     
 <div class="flex flex-row justify-stretch items-stretch w-full rounded-xl h-24 bg-app-bg">
