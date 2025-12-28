@@ -38,7 +38,9 @@ const { id } = entry;
         <h3 class="text-base font-bold leading-none text-app-text">
           Next
         </h3>
-        <ArticleCard entry={nextArticle} />
+        <div class="px-3">
+          <ArticleCard entry={nextArticle} />
+        </div>
       </div>
     )}
     {prevArticle && (
@@ -46,7 +48,9 @@ const { id } = entry;
         <h3 class="text-base font-bold leading-none text-app-text">
           Previous
         </h3>
-        <ArticleCard entry={prevArticle} />
+        <div class="px-3">
+          <ArticleCard entry={prevArticle} />
+        </div>
       </div>
     )}
   </div>
