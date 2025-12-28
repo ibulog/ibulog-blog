@@ -3,6 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+  --color-gray-050: #F9FAFB;
   --color-gray-100: #F5F5F5;
   --color-gray-200: #E5E5E5;
   --color-gray-300: #D4D4D4;
@@ -17,6 +18,7 @@
   --color-accent: #7A8A53;
 
   --color-app-bg: var(--color-gray-100);
+  --color-app-bg-subtle: var(--color-gray-050);
   --color-app-bg-obvious: var(--color-gray-200);
   --color-app-bg-default-reverse: var(--color-gray-700);
   --color-app-bg-obvious-reverse: var(--color-gray-800);
@@ -26,12 +28,11 @@
   --color-app-text-subtle-reverse: var(--color-gray-300);
   --color-app-border-default: var(--color-gray-700);
   --color-app-border-default-reverse: var(--color-gray-400);
-  --color-app-tag-default: var(--color-gray-200);
+  --color-app-tag-default: var(--color-gray-050);
   
-  --color-code-add: #1e4a1e;
-  --color-code-remove: #4a2f35;
-  --color-code-highlight: #38444d;
-  
+  --color-code-add: #d4edda;
+  --color-code-remove: #f8d7da;
+  --color-code-highlight: #e5e7eb;
 }
 
 .dark {
@@ -39,6 +40,7 @@
   --color-accent: #7A8A53;
 
   --color-app-bg: var(--color-gray-700);
+  --color-app-bg-subtle: var(--color-gray-800);
   --color-app-bg-obvious: var(--color-gray-600);
   --color-app-bg-default-reverse: var(--color-gray-100);
   --color-app-bg-obvious-reverse: var(--color-gray-200);
@@ -50,10 +52,9 @@
   --color-app-border-default-reverse: var(--color-gray-500);
   --color-app-tag-default: var(--color-gray-800);
   
-  --color-code-add: #d4edda;
-  --color-code-remove: #f8d7da;
-  --color-code-highlight: #e5e7eb;
-  
+  --color-code-add: #1e4a1e;
+  --color-code-remove: #4a2f35;
+  --color-code-highlight: #38444d;
 }
 
 html {
