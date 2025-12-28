@@ -7,7 +7,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ArticleListSection from '../../../layouts/ArticleListSection.astro';
 import H2 from '../../../components/ui/H2.astro';
 import sortArticleByDate from "../../../utils/sortArticleByDate.ts";
-import { SITE_TITLE, SITE_DESCRIPTION } from '../../../config';
+import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE } from '../../../config';
 import { tags } from '../../../content.config';
 import tagLink from '../../../utils/tagLink';
 
@@ -52,7 +52,7 @@ if (!tag) {
 
 ---
 
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url={`/tags/${tagLinkParam}`} image="/icon.jpeg" pageKind={pageKind}>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url={`/tags/${tagLinkParam}`} image={ICON_IMAGE} pageKind={pageKind}>
 	<div class="flex flex-col gap-9">
 		<H2 text={`Tag: ${tag}`} />
 		<div class="px-3">

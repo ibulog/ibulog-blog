@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../../config';
+import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE } from '../../config';
 import { tags } from '../../content.config';
 import H2 from '../../components/ui/H2.astro';
 import Tag from '../../components/ui/Tag.astro';
@@ -11,7 +11,7 @@ const pageKind = 'Tags';
 const sortedTags = [...tags].sort();
 ---
 
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url="/tags" image="/icon.jpeg" pageKind={pageKind}>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url="/tags" image={ICON_IMAGE} pageKind={pageKind}>
 	<div class="flex flex-col gap-9">
 		<H2 text="Tags" />
 		<div class="flex flex-row justify-center flex-wrap gap-2.5 w-full">

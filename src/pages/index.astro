@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
+import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE } from '../config';
 import { getCollection } from 'astro:content';
 import sortArticleByDate from '../utils/sortArticleByDate';
+import { Image } from 'astro:assets';
 import H2 from '../components/ui/H2.astro';
 import Text from '../components/ui/Text.astro';
 import ArticleListSection from '../layouts/ArticleListSection.astro';
@@ -15,12 +16,12 @@ const allPosts = await getCollection('blog');
 const recentEntries = allPosts.sort(sortArticleByDate).slice(0, 3);
 ---
 
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url="/" image="/icon.jpeg" pageKind={pageKind}>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url="/" image={ICON_IMAGE} pageKind={pageKind}>
 	<div class="flex flex-col gap-16">
 		<div class="flex md:flex-row flex-col items-center flex-wrap gap-9">
 			<div class="flex flex-col justify-center items-center gap-6 p-2">
 				<div class="flex flex-col justify-center items-center gap-2.5 p-2 border-2 border-app-bg-obvious rounded-full">
-					<img src="/icon.jpeg" alt="ibulog" class="w-[188px] h-[188px] rounded-full object-cover" />
+					<Image src={ICON_IMAGE} alt="ibulog" width={188} height={188} class="w-[188px] h-[188px] rounded-full object-cover" />
 				</div>
 			</div>
 			<div class="flex flex-col gap-9 flex-1">
