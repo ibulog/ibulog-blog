@@ -25,11 +25,11 @@ const transformers = [
 ];
 ---
 
-<figure class="flex flex-col gap-2.5 py-3 rounded-xl bg-app-bg-default-reverse">
+<figure class="flex flex-col gap-2.5 py-3 rounded-xl bg-app-bg">
   {title && (
     <div class="flex flex-row gap-2.5 px-3">
-      <div class="flex flex-row items-center h-6 gap-2.5 px-1.5 rounded-lg bg-app-bg-default-reverse border border-app-border-default-reverse">
-        <span class="text-xs font-medium leading-none text-app-border-default-reverse">
+      <div class="flex flex-row items-center h-6 gap-2.5 px-1.5 rounded-lg bg-app-tag-default border border-app-border-default">
+        <span class="text-xs font-medium leading-none text-app-text-subtle">
           {title}
         </span>
       </div>
@@ -41,7 +41,7 @@ const transformers = [
         lang={lang as BuiltinLanguage | SpecialLanguage | undefined}
         code={decodedCode}
         wrap={false}
-        theme="dark-plus"
+        theme="light-plus"
         style="background-color: transparent;"
         transformers={transformers}
       />
@@ -51,7 +51,7 @@ const transformers = [
         lang={lang as BuiltinLanguage | SpecialLanguage | undefined}
         code={decodedCode}
         wrap={false}
-        theme="light-plus"
+        theme="dark-plus"
         style="background-color: transparent;"
         transformers={transformers}
       />
