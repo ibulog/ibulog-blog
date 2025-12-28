@@ -7,11 +7,13 @@ import {
   transformerNotationHighlight,
   transformerNotationFocus,
 } from "@shikijs/transformers";
-interface Props {
+
+export interface Props {
   lang?: string;
   title?: string;
   code: string;
 }
+
 const { lang, title, code } = Astro.props;
 const decodedCode = decodeURIComponent(code);
 
