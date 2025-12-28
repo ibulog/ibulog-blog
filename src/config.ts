@@ -23,3 +23,14 @@ export const PAGE_KINDS = {
 } as const;
 
 export const HEADING_LEVEL = 2;
+
+export const tags = [
+	"CI/CD",
+	"Frontend",
+	"History",
+	"Infrastructure",
+	"Linux",
+	"Other",
+	"Roadster",
+	"UX Writing",
+] as const;
