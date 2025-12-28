@@ -13,6 +13,7 @@ import Quote from "../../components/ui/Quote.astro";
 import ArticleImage from "../../components/ui/ArticleImage.astro";
 import LinkCard from "../../components/ui/LinkCard.astro";
 import ArticleLink from "../../components/ui/ArticleLink.astro";
+import InlineCode from "../../components/ui/InlineCode.astro";
 
 type Props = {
   entry: CollectionEntry<"blog">;
@@ -46,6 +47,6 @@ const pageKind = 'Blog'
     prevArticle={prevArticle}
     nextArticle={nextArticle}
   >
-    <Content components={{ "code-block": CodeBlock, "h2": H2, "h3": H3, "h4": H4, "p": Text, "blockquote": Quote, "img": ArticleImage, "link-card": LinkCard, "a": ArticleLink }} />
+    <Content components={{ "code-block": CodeBlock, "h2": H2, "h3": H3, "h4": H4, "p": Text, "blockquote": Quote, "img": ArticleImage, "link-card": LinkCard, "a": ArticleLink, "code": InlineCode }} />
   </MarkdownPostLayout>
 </BaseLayout>
