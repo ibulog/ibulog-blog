@@ -36,3 +36,8 @@ export const tags = [
 	"Roadster",
 	"UX Writing",
 ] as const;
+
+export const SOCIAL_LINKS = {
+	X: 'https://x.com/ibulog_',
+	GITHUB: 'https://github.com/ibulog',
+} as const;
