@@ -18,7 +18,7 @@ const filteredHeadings = headings.filter(heading => heading.depth <= HEADING_LEV
 {filteredHeadings.length > 0 && (
 	<div id={id} class="flex flex-col gap-2.5 px-6 py-6 rounded-xl bg-app-bg">
 		<div class="flex flex-row items-center gap-2.5 self-stretch">
-			<h2 class="text-lg font-bold leading-none text-app-text">
+			<h2 class="text-lg font-bold text-app-text">
 				Index
 			</h2>
 		</div>
@@ -27,7 +27,7 @@ const filteredHeadings = headings.filter(heading => heading.depth <= HEADING_LEV
 				<div class="flex flex-row items-center self-stretch py-2.5 last:pb-0">
 					<a
 						href={`#${heading.slug}`}
-						class="text-base font-medium leading-none text-app-text-subtle no-underline hover:underline"
+						class="text-base font-medium text-app-text-subtle no-underline hover:underline"
 					>
 						{heading.text}
 					</a>
