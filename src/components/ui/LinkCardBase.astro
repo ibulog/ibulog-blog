@@ -35,12 +35,11 @@ const ogImageUrl = showOgImage ? ogData.image : undefined;
       <slot name="bottom-content" />
   </div>
   {ogImageUrl && (
-    <div class="hidden md:flex flex-row justify-end items-center h-full">
+    <div class="flex flex-row justify-end items-center h-full flex-shrink-0">
         <img
           src={ogImageUrl}
           alt={title}
-          class="h-full rounded-r-xl object-cover"
-          style="width: 168px; height: 96px;"
+          class="w-24 h-24 md:w-[168px] md:h-24 rounded-r-xl object-cover"
         />
     </div>
   )}
