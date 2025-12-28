@@ -1,0 +1,67 @@
+---
+import type { GetStaticPathsOptions, Page } from "astro";
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ArticleListSection from '../../../layouts/ArticleListSection.astro';
+import H2 from '../../../components/ui/H2.astro';
+import sortArticleByDate from "../../../utils/sortArticleByDate.ts";
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../../config';
+import { tags } from '../../../content.config';
+import tagLink from '../../../utils/tagLink';
+
+type Props = {
+  tag: string;
+  page: Page<CollectionEntry<'blog'>>;
+};
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const allPosts = await getCollection('blog');
+  
+  const paths = [];
+  for (const tag of tags) {
+    const filteredPosts = allPosts.filter((post) => 
+      post.data.tags.includes(tag)
+    );
+    
+    if (filteredPosts.length > 0) {
+      const sortedPosts = filteredPosts.sort(sortArticleByDate);
+      const paginated = paginate(sortedPosts, { 
+        pageSize: 7,
+        params: { tag: tagLink(tag) }
+      });
+      
+      paths.push(...paginated);
+    }
+  }
+  
+  return paths;
+}
+
+const { tag: tagLinkParam } = Astro.params;
+const { page } = Astro.props;
+const { currentPage, lastPage } = page;
+const pageKind = 'Tags';
+
+// URLパラメータから元のタグ名を取得
+const tag = tags.find((t) => tagLink(t) === tagLinkParam);
+if (!tag) {
+  return Astro.redirect('/404');
+}
+
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url={`/tags/${tagLinkParam}`} image="/icon.jpeg" pageKind={pageKind}>
+	<div class="flex flex-col gap-10">
+		<H2 text={`Tag: ${tag}`} />
+		<div class="px-3">
+			<ArticleListSection 
+				entries={page.data} 
+				showPagination={page.data.length > 7}
+				pagination={{ currentPage, lastPage, page, baseUrl: `/tags/${tagLinkParam}` }}
+			/>
+		</div>
+	</div>
+</BaseLayout>
+

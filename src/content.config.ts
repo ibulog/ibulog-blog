@@ -39,7 +39,7 @@ const selfIntroductionCollection = defineCollection({
   }),
 });
 
-const tags = [
+export const tags = [
   "CI/CD",
   "Frontend",
   "History",

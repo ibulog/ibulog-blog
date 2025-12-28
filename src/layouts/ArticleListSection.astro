@@ -18,6 +18,7 @@ export interface Props {
 				next: string | undefined;
 			};
 		};
+		baseUrl?: string;
 	};
 }
 
@@ -28,7 +29,7 @@ const { entries, showViewMore = false, viewMoreHref, showPagination = false, pag
 	<div class="flex flex-col gap-14 items-stretch self-stretch flex-1">
 		<ArticleList entries={entries} />
 		{showPagination && pagination && (
-			<Pagination currentPage={pagination.currentPage} lastPage={pagination.lastPage} page={pagination.page} />
+			<Pagination currentPage={pagination.currentPage} lastPage={pagination.lastPage} page={pagination.page} baseUrl={pagination.baseUrl} />
 		)}
 		{showViewMore && viewMoreHref && (
 			<div class="flex justify-center">
