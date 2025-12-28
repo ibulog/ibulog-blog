@@ -16,7 +16,7 @@ const jobCollection = await getCollection('job');
 		<div class="absolute left-2 top-0 bottom-0">
 			<SideVector />
 		</div>
-		<div class="flex flex-col flex-1 gap-8">
+		<div class="flex flex-col flex-1 gap-9">
 			{jobCollection.map((job, index) => (
 				<JobCard 
 					companyName={job.data.companyName}
