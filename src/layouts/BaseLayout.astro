@@ -13,17 +13,17 @@ export interface Props {
 	title: string;
 	description: string;
 	url: string;
-	image?: string | ImageMetadata;
+	image?: ImageMetadata;
 	pageKind?: string;
 }
 
-const { title, description, url, image: hero_image, pageKind = 'About' } = Astro.props;
+const { title, description, url, image: heroImage, pageKind = 'About' } = Astro.props;
 
 const absoluteUrl = new URL(url, SITE_BASE_URL).toString();
 
-const ogImage = hero_image 
+const ogImage = heroImage 
 	? await getImage({
-		src: hero_image,
+		src: heroImage,
 		width: 1200,
 		height: 630,
 		format: "webp"
@@ -96,4 +96,3 @@ const ogImageUrl = ogImage ? new URL(ogImage.src, SITE_BASE_URL).toString() : nu
 		<Footer />
 	</body>
 </html>
-

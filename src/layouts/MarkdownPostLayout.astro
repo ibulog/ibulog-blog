@@ -16,7 +16,8 @@ type Props = {
 };
 
 const { entry, prevArticle, nextArticle } = Astro.props;
-const { title, pubDate, tags, heroImage } = entry.data;
+const { title, pubDate, tags } = entry.data;
+const heroImage = entry.data.heroImage as ImageMetadata | undefined;
 const { headings } = await render(entry);
 const { id } = entry;
 
@@ -34,7 +35,7 @@ const filteredHeadings = headings.filter(heading => heading.depth < 3);
   <ArticleHeader id={id} pubDate={pubDate} tags={tags} title={title} />
   {heroImage && (
     <div class="w-full rounded-xl overflow-hidden" transition:name={`hero-image-${id}`}>
-      <Image width={1080} height={540} src={heroImage as any} alt={title} class="w-full h-auto" />
+      <Image width={1080} height={540} src={heroImage} alt={title} class="w-full h-auto" />
     </div>
   )}
   <ArticleIndex headings={headings} id="article-index" />
