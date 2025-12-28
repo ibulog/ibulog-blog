@@ -3,9 +3,9 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import JobCard from '../../components/JobCard.astro';
 import SideVector from '../../components/ui/SideVector.astro';
-import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE } from '../../config';
+import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE, PAGE_KINDS } from '../../config';
 
-const pageKind = 'Jobs'
+const pageKind = PAGE_KINDS.JOBS;
 
 const jobCollection = await getCollection('job');
 

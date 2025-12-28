@@ -7,7 +7,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ArticleListSection from '../../../layouts/ArticleListSection.astro';
 import H2 from '../../../components/ui/H2.astro';
 import sortArticleByDate from "../../../utils/sortArticleByDate.ts";
-import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE } from '../../../config';
+import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE, PAGE_KINDS } from '../../../config';
 import { tags } from '../../../content.config';
 import tagLink from '../../../utils/tagLink';
 
@@ -42,7 +42,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 const { tag: tagLinkParam } = Astro.params;
 const { page } = Astro.props;
 const { currentPage, lastPage } = page;
-const pageKind = 'Tags';
+const pageKind = PAGE_KINDS.TAGS;
 
 // URLパラメータから元のタグ名を取得
 const tag = tags.find((t) => tagLink(t) === tagLinkParam);

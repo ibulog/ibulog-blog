@@ -5,6 +5,7 @@ import type { ImageMetadata } from "astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import MarkdownPostLayout from "../../layouts/MarkdownPostLayout.astro";
 import sortArticleByDate from "../../utils/sortArticleByDate";
+import { PAGE_KINDS } from "../../config";
 import CodeBlock from "../../components/CodeBlock.astro";
 import H2 from "../../components/ui/H2.astro";
 import H3 from "../../components/ui/H3.astro";
@@ -41,7 +42,7 @@ export async function getStaticPaths() {
 const { entry, prevArticle, nextArticle } = Astro.props;
 const { Content } = await render(entry);
 
-const pageKind = 'Blog'
+const pageKind = PAGE_KINDS.BLOG;
 const heroImage = entry.data.heroImage as ImageMetadata | undefined;
 ---
 

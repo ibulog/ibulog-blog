@@ -15,4 +15,11 @@ export const NAV_ITEMS = [
 	{ label: 'Tags', href: '/tags' },
 ] as const;
 
+export const PAGE_KINDS = {
+	ABOUT: 'About',
+	BLOG: 'Blog',
+	JOBS: 'Jobs',
+	TAGS: 'Tags',
+} as const;
+
 export const HEADING_LEVEL = 2;

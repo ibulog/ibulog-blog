@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE } from '../config';
+import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE, PAGE_KINDS } from '../config';
 import { getCollection } from 'astro:content';
 import sortArticleByDate from '../utils/sortArticleByDate';
 import { Image } from 'astro:assets';
@@ -8,7 +8,7 @@ import H2 from '../components/ui/H2.astro';
 import Text from '../components/ui/Text.astro';
 import ArticleListSection from '../layouts/ArticleListSection.astro';
 
-const pageKind = 'About';
+const pageKind = PAGE_KINDS.ABOUT;
 
 const selfIntroduction = await getCollection('selfIntroduction');
 

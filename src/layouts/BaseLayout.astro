@@ -1,7 +1,7 @@
 ---
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseLayout /> component.
-import { SITE_BASE_URL } from "../config";
+import { SITE_BASE_URL, PAGE_KINDS } from "../config";
 import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import { getImage } from "astro:assets";
@@ -17,7 +17,7 @@ export interface Props {
 	pageKind?: string;
 }
 
-const { title, description, url, image: heroImage, pageKind = 'About' } = Astro.props;
+const { title, description, url, image: heroImage, pageKind = PAGE_KINDS.ABOUT } = Astro.props;
 
 const absoluteUrl = new URL(url, SITE_BASE_URL).toString();
 

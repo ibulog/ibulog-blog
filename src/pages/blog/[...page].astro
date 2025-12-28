@@ -6,7 +6,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleListSection from '../../layouts/ArticleListSection.astro';
 import sortArticleByDate from "../../utils/sortArticleByDate.ts";
-import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE } from '../../config';
+import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE, PAGE_KINDS } from '../../config';
 
 type Props = {
   page: Page<CollectionEntry<'blog'>>;
@@ -20,7 +20,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 
 const { page } = Astro.props
 const { currentPage, lastPage } = page
-const pageKind = 'Blog'
+const pageKind = PAGE_KINDS.BLOG;
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url="/blog" image={ICON_IMAGE} pageKind={pageKind}>
