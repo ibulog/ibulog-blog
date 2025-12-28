@@ -2,7 +2,6 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../config';
 import { tags } from '../../content.config';
-import tagLink from '../../utils/tagLink';
 import H2 from '../../components/ui/H2.astro';
 import Tag from '../../components/ui/Tag.astro';
 
@@ -17,7 +16,7 @@ const sortedTags = [...tags].sort();
 		<H2 text="Tags" />
 		<div class="flex flex-row justify-center flex-wrap gap-3 w-full">
 			{sortedTags.map((tag) => (
-				<Tag tag={`#${tag}`} href={`/tags/${tagLink(tag)}`} />
+				<Tag tag={tag} />
 			))}
 		</div>
 	</div>
