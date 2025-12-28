@@ -25,7 +25,7 @@ const transformers = [
 ];
 ---
 
-<figure class="flex flex-col gap-2.5 py-3 rounded-xl bg-app-bg">
+<figure class="flex flex-col gap-2.5 py-3 rounded-xl bg-app-bg-subtle">
   {title && (
     <div class="flex flex-row gap-2.5 px-3">
       <div class="flex flex-row items-center h-6 gap-2.5 px-1.5 rounded-lg bg-app-bg-subtle border border-app-border-default">
@@ -41,7 +41,7 @@ const transformers = [
         lang={lang as BuiltinLanguage | SpecialLanguage | undefined}
         code={decodedCode}
         wrap={false}
-        theme="light-plus"
+        theme="github-light"
         style="background-color: transparent;"
         transformers={transformers}
       />
@@ -51,7 +51,7 @@ const transformers = [
         lang={lang as BuiltinLanguage | SpecialLanguage | undefined}
         code={decodedCode}
         wrap={false}
-        theme="dark-plus"
+        theme="github-dark"
         style="background-color: transparent;"
         transformers={transformers}
       />
