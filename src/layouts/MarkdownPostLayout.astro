@@ -76,27 +76,41 @@ const hasHeadings = filteredHeadings.length > 0;
 )}
 
 <script is:inline>
+	// 初期化済みフラグとObserverの参照を保持
+	let isInitialized = false;
+	let tocObserver = null;
+
 	// TocButtonをHeaderのコンテナに移動
 	const moveTocButton = () => {
 		const source = document.getElementById('toc-button-source');
 		const slot = document.getElementById('toc-button-slot');
 		
-		if (source && slot) {
+		// 既に移動済みの場合は何もしない
+		if (!source || !slot || slot.children.length > 0) {
+			return;
+		}
+
+		if (source.firstElementChild) {
 			slot.innerHTML = '';
 			slot.appendChild(source.firstElementChild);
 			source.remove();
 		}
 	};
 
-		const setupTocToggle = () => {
+	const setupTocToggle = () => {
 		const toc = document.getElementById('toc');
 		if (!toc) return;
 
 		const store = Alpine.store('tocButton');
 		if (!store) return;
 
+		if (tocObserver) {
+			tocObserver.disconnect();
+			tocObserver = null;
+		}
+
 		// 目次が表示されているかどうかを監視
-		const observer = new IntersectionObserver(
+		tocObserver = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
 					if (!entry.isIntersecting) {
@@ -111,24 +125,44 @@ const hasHeadings = filteredHeadings.length > 0;
 			}
 		);
 
-		observer.observe(toc);
+		tocObserver.observe(toc);
 	};
 
-	// Alpine.js Store初期化とセットアップ
 	const initTocButton = () => {
-		Alpine.store("tocButton", {
-			show: false,
-			toggleShow() {
-				this.show = !this.show;
-			},
-			expanded: false,
-			toggleExpanded() {
-				this.expanded = !this.expanded;
-			}
-		});
+		if (isInitialized) {
+			return;
+		}
+
+		if (typeof Alpine === 'undefined') {
+			return;
+		}
+
+		if (!Alpine.store('tocButton')) {
+			Alpine.store("tocButton", {
+				show: false,
+				toggleShow() {
+					this.show = !this.show;
+				},
+				expanded: false,
+				toggleExpanded() {
+					this.expanded = !this.expanded;
+				}
+			});
+		}
 
 		moveTocButton();
 		setupTocToggle();
+		isInitialized = true;
+	};
+
+	// 初期化関数（ページ遷移時にリセット）
+	const resetAndInit = () => {
+		isInitialized = false;
+		if (tocObserver) {
+			tocObserver.disconnect();
+			tocObserver = null;
+		}
+		initTocButton();
 	};
 
 	// Alpine.jsの初期化を待つ
@@ -137,6 +171,7 @@ const hasHeadings = filteredHeadings.length > 0;
 	});
 
 	document.addEventListener('astro:page-load', () => {
-		initTocButton();
+		resetAndInit();
 	});
+
 </script>
