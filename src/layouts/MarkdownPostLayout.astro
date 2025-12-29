@@ -5,9 +5,9 @@ import { render } from "astro:content";
 import { Image } from "astro:assets";
 
 import ArticleHeader from '../components/ui/ArticleHeader.astro';
-import ArticleIndex from '../components/ArticleIndex.astro';
+import Toc from '../components/Toc.astro';
 import ArticleCard from '../components/ArticleCard.astro';
-import ArticleIndexBar from '../components/ArticleIndexBar.astro';
+import TocButton from '../components/TocButton.astro';
 import { HEADING_LEVEL } from '../config';
 
 type Props = {
@@ -27,15 +27,15 @@ const hasHeadings = filteredHeadings.length > 0;
 ---
 
 {hasHeadings && (
-	<!-- ArticleIndexBarを非表示でレンダリング（後でHeaderに移動される） -->
-	<div id="article-index-bar-source" class="hidden">
+	<!-- TocButtonを非表示でレンダリング（後でHeaderに移動される） -->
+	<div id="toc-button-source" class="hidden">
 		<div 
 			x-data 
-			x-show="$store.articleIndexBar.show" 
+			x-show="$store.tocButton.show" 
 			x-transition.duration.300ms 
 			x-cloak 
 		>
-			<ArticleIndexBar headings={filteredHeadings} />
+			<TocButton headings={filteredHeadings} />
 		</div>
 	</div>
 )}
@@ -50,7 +50,7 @@ const hasHeadings = filteredHeadings.length > 0;
     </div>
   )}
 	{hasHeadings && (
-  	<ArticleIndex headings={filteredHeadings} id="article-index" />
+  	<Toc headings={filteredHeadings} id="toc" />
 	)}
   <slot />
 </article>
@@ -76,10 +76,10 @@ const hasHeadings = filteredHeadings.length > 0;
 )}
 
 <script is:inline>
-	// ArticleIndexBarをHeaderのコンテナに移動
-	const moveArticleIndexBar = () => {
-		const source = document.getElementById('article-index-bar-source');
-		const slot = document.getElementById('article-index-bar-slot');
+	// TocButtonをHeaderのコンテナに移動
+	const moveTocButton = () => {
+		const source = document.getElementById('toc-button-source');
+		const slot = document.getElementById('toc-button-slot');
 		
 		if (source && slot) {
 			slot.innerHTML = '';
@@ -88,11 +88,11 @@ const hasHeadings = filteredHeadings.length > 0;
 		}
 	};
 
-		const setupIndexToggle = () => {
-		const articleIndex = document.getElementById('article-index');
-		if (!articleIndex) return;
+		const setupTocToggle = () => {
+		const toc = document.getElementById('toc');
+		if (!toc) return;
 
-		const store = Alpine.store('articleIndexBar');
+		const store = Alpine.store('tocButton');
 		if (!store) return;
 
 		// 目次が表示されているかどうかを監視
@@ -111,12 +111,12 @@ const hasHeadings = filteredHeadings.length > 0;
 			}
 		);
 
-		observer.observe(articleIndex);
+		observer.observe(toc);
 	};
 
 	// Alpine.js Store初期化とセットアップ
-	const initArticleIndexBar = () => {
-		Alpine.store("articleIndexBar", {
+	const initTocButton = () => {
+		Alpine.store("tocButton", {
 			show: false,
 			toggleShow() {
 				this.show = !this.show;
@@ -127,16 +127,16 @@ const hasHeadings = filteredHeadings.length > 0;
 			}
 		});
 
-		moveArticleIndexBar();
-		setupIndexToggle();
+		moveTocButton();
+		setupTocToggle();
 	};
 
 	// Alpine.jsの初期化を待つ
 	document.addEventListener('alpine:init', () => {
-		initArticleIndexBar();
+		initTocButton();
 	});
 
 	document.addEventListener('astro:page-load', () => {
-		initArticleIndexBar();
+		initTocButton();
 	});
 </script>

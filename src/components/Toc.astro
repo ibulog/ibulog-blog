@@ -1,0 +1,25 @@
+---
+import Headings from './ui/Headings.astro';
+import TocBar from './ui/TocBar.astro';
+
+export interface Props {
+	headings: Array<{
+		depth: number;
+		slug: string;
+		text: string;
+	}>;
+	id?: string;
+}
+
+const { headings, id } = Astro.props;
+
+---
+
+{headings.length > 0 && (
+	<div id={id} class="flex flex-col gap-2.5 px-6 pt-4 pb-6 rounded-xl bg-app-bg w-full">
+		<div class="flex flex-row justify-center">
+			<TocBar />
+		</div>
+		<Headings headings={headings} />
+	</div>
+)}

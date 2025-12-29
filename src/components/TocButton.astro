@@ -1,6 +1,6 @@
 ---
-import ArticleIndex from './ArticleIndex.astro';
-
+import TocBar from './ui/TocBar.astro';
+import Headings from './ui/Headings.astro';
 export interface Props {
 	headings: Array<{
 		depth: number;
@@ -18,12 +18,12 @@ const { headings } = Astro.props;
 	<button
 		class="flex flex-col justify-center items-center h-6 px-3 cursor-pointer"
 		aria-label="目次を開く"
-		@click="$store.articleIndexBar.toggleExpanded()"
-		@click.outside="$store.articleIndexBar.expanded = false"
+		@click="$store.tocButton.toggleExpanded()"
+		@click.outside="$store.tocButton.expanded = false"
 	>
-		<div class="w-14 h-1 rounded-full bg-app-text-subtle"></div>
+		<TocBar />
 	</button>
-	<div x-show="$store.articleIndexBar.expanded" x-collapse x-cloak class="min-h-0 w-full">
-		<ArticleIndex headings={headings} />
+	<div x-show="$store.tocButton.expanded" x-collapse x-cloak class="min-h-0 px-6 pb-6 w-full">
+		<Headings headings={headings} />
 	</div>
 </div>
