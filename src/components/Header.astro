@@ -2,7 +2,8 @@
 import HamburgerIcon from './ui/HamburgerIcon.astro';
 import MoonIcon from './ui/MoonIcon.astro';
 import SunIcon from './ui/SunIcon.astro';
-import { SITE_TITLE, NAV_ITEMS } from '../config';
+import { SITE_TITLE, NAV_ITEMS, ICON_IMAGE } from '../config';
+import { Image } from 'astro:assets';
 
 export interface Props {
 	pageKind: string;
@@ -31,9 +32,16 @@ const darkModeXDataScript = `{
 	class="sticky top-6 z-50 w-full bg-app-bg/80 backdrop-blur-md border border-app-border-default/20 text-app-text shadow-sm rounded-xl flex flex-col px-6 py-4 relative"
 >
 	<div class="flex justify-between items-center self-stretch h-8">
-		<div class="text-xl font-medium">
-			{SITE_TITLE}
-		</div>
+		<a href="/">
+			<div class="flex flex-row items-center gap-2">
+				<div class="flex justify-center items-center rounded-full w-8 h-8">
+					<Image src={ICON_IMAGE} alt="ibulog" width={32} height={32} class="w-full h-full rounded-full object-cover" />
+				</div>
+				<div class="text-xl font-medium">
+						{SITE_TITLE}
+				</div>
+			</div>
+		</a>
 		<div class="flex items-center gap-6">
 			<div class="hidden md:flex items-center">
 				<nav class="hidden md:flex items-center gap-6">
