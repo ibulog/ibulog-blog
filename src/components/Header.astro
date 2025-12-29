@@ -9,6 +9,20 @@ export interface Props {
 }
 
 const {pageKind} = Astro.props;
+
+const darkModeXDataScript = `{ 
+  isDark: document.documentElement.classList.contains('dark'),
+  toggleTheme() {
+    this.isDark = !this.isDark;
+    if (this.isDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }
+}`
 ---
 
 <header 
@@ -48,19 +62,7 @@ const {pageKind} = Astro.props;
 			<button
 				class="cursor-pointer border-0 bg-transparent p-0 flex items-center justify-center w-4 h-4"
 				aria-label="Toggle theme"
-				x-data="{ 
-					isDark: document.documentElement.classList.contains('dark'),
-					toggleTheme() {
-						this.isDark = !this.isDark;
-						if (this.isDark) {
-							document.documentElement.classList.add('dark');
-							localStorage.setItem('theme', 'dark');
-						} else {
-							document.documentElement.classList.remove('dark');
-							localStorage.setItem('theme', 'light');
-						}
-					}
-				}"
+				x-data={darkModeXDataScript}
 				@click="toggleTheme"
 			>
 				<MoonIcon class="dark:hidden" />
