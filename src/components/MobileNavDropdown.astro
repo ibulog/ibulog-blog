@@ -13,7 +13,7 @@ const {pageKind} = Astro.props;
 		{NAV_ITEMS.map((item) => (
 			<a
 				href={item.href}
-				class={`flex justify-center items-center p-2.5 first:mt-3 text-base font-medium leading-none ${
+				class={`flex justify-center items-center p-2.5 first:mt-3 text-base font-medium ${
 					pageKind === item.label ? 'font-semibold text-accent' : 'text-app-text-subtle'
 				}`}
 			>

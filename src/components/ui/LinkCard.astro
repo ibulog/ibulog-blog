@@ -1,5 +1,5 @@
 ---
-import LinkCardBase from './LinkCardBase.astro';
+import { getOgData } from '../../utils/getOgData';
 
 export interface Props {
 	url: string;
@@ -19,22 +19,39 @@ function getFaviconUrl(domain: string): string {
 	return `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
 }
 
-const { url, title } = Astro.props;
+const { url, title: providedTitle } = Astro.props;
 
+const ogData = await getOgData(url);
+const title = providedTitle || ogData.title || url;
+const ogImageUrl = ogData.image;
 const domain = getDomain(url);
 const faviconUrl = getFaviconUrl(domain);
 ---
 
-<LinkCardBase url={url} title={title}>
-	<div slot="bottom-content" class="flex flex-row items-center gap-2.5">
+<div class="flex flex-row justify-stretch items-stretch w-full rounded-xl h-30 bg-app-bg">
+  <div class="flex flex-col self-stretch px-6 py-4 flex-1 justify-between min-w-0">
+      <h2 class="text-base font-bold text-app-text line-clamp-2">
+        <a href={url} target="_blank" rel="noopener noreferrer">{title}</a>
+      </h2>
+      <div class="flex flex-row items-center gap-2.5">
 		<img
 			src={faviconUrl}
 			alt=""
 			class="w-4 h-4"
 			loading="lazy"
 		/>
-      <span class="text-xs font-medium leading-none text-app-text-subtle">
+      <span class="text-xs font-medium text-app-text-subtle">
 			{domain}
       </span>
   </div>
-</LinkCardBase>
+  </div>
+  {ogImageUrl && (
+    <div class="flex flex-row justify-end items-center h-full flex-shrink-0">
+        <img
+          src={ogImageUrl}
+          alt={title}
+          class="w-30 h-30 md:w-51 md:h-30 rounded-r-xl object-cover"
+        />
+    </div>
+  )}
+</div>
