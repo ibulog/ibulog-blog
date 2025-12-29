@@ -139,8 +139,6 @@ const hasHeadings = filteredHeadings.length > 0;
 	});
 
 	document.addEventListener('astro:page-load', () => {
-		document.addEventListener('alpine:init', () => {
-			initArticleIndexBar();
-		}, { once: true });
+		initArticleIndexBar();
 	});
 </script>
