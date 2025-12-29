@@ -9,7 +9,6 @@ import ArticleIndex from '../components/ArticleIndex.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import ArticleIndexBar from '../components/ArticleIndexBar.astro';
 import { HEADING_LEVEL } from '../config';
-import { file } from "astro/loaders";
 
 type Props = {
   entry: CollectionEntry<'blog'>;
@@ -25,12 +24,19 @@ const { id } = entry;
 
 const filteredHeadings = headings.filter(heading => heading.depth <= HEADING_LEVEL);
 const hasHeadings = filteredHeadings.length > 0;
-
 ---
 
 {hasHeadings && (
-	<div x-data x-show="$store.articleIndexBar.show" x-transition.duration.300ms x-cloak class="sticky top-[100px] z-40 w-full px-3 flex flex-col items-center">
-		<ArticleIndexBar headings={filteredHeadings} />
+	<!-- ArticleIndexBarを非表示でレンダリング（後でHeaderに移動される） -->
+	<div id="article-index-bar-source" class="hidden">
+		<div 
+			x-data 
+			x-show="$store.articleIndexBar.show" 
+			x-transition.duration.300ms 
+			x-cloak 
+		>
+			<ArticleIndexBar headings={filteredHeadings} />
+		</div>
 	</div>
 )}
 
@@ -72,23 +78,19 @@ const hasHeadings = filteredHeadings.length > 0;
 )}
 
 <script is:inline>
-	// Alpine.js Store初期化とセットアップ
-	const initArticleIndexBar = () => {
-		Alpine.store("articleIndexBar", {
-			show: false,
-			toggleShow() {
-				this.show = !this.show;
-			},
-			expanded: false,
-			toggleExpanded() {
-				this.expanded = !this.expanded;
-			}
-		});
-
-		setupIndexToggle();
+	// ArticleIndexBarをHeaderのコンテナに移動
+	const moveArticleIndexBar = () => {
+		const source = document.getElementById('article-index-bar-source');
+		const slot = document.getElementById('article-index-bar-slot');
+		
+		if (source && slot) {
+			slot.innerHTML = '';
+			slot.appendChild(source.firstElementChild);
+			source.remove();
+		}
 	};
 
-	const setupIndexToggle = () => {
+		const setupIndexToggle = () => {
 		const articleIndex = document.getElementById('article-index');
 		if (!articleIndex) return;
 
@@ -112,6 +114,23 @@ const hasHeadings = filteredHeadings.length > 0;
 		);
 
 		observer.observe(articleIndex);
+	};
+
+	// Alpine.js Store初期化とセットアップ
+	const initArticleIndexBar = () => {
+		Alpine.store("articleIndexBar", {
+			show: false,
+			toggleShow() {
+				this.show = !this.show;
+			},
+			expanded: false,
+			toggleExpanded() {
+				this.expanded = !this.expanded;
+			}
+		});
+
+		moveArticleIndexBar();
+		setupIndexToggle();
 	};
 
 	// Alpine.jsの初期化を待つ
