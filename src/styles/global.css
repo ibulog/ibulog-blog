@@ -58,7 +58,7 @@
 }
 
 html {
-  @apply overflow-y-scroll;
+  @apply overflow-y-scroll scroll-smooth;
 }
 
 body {
@@ -95,4 +95,8 @@ body {
 
 .code-block-wrapper .line.highlighted {
   @apply bg-code-highlight;
+}
+
+[x-cloak] {
+  display: none !important;
 }

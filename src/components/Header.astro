@@ -1,78 +1,118 @@
 ---
-import DesktopNavMenu from './DesktopNavMenu.astro';
-import MobileNavButton from './MobileNavButton.astro';
-import MobileNavDropdown from './MobileNavDropdown.astro';
-import ThemeIcon from './ThemeIcon.astro';
-import { SITE_TITLE } from '../config';
+import HamburgerIcon from './ui/HamburgerIcon.astro';
+import MoonIcon from './ui/MoonIcon.astro';
+import SunIcon from './ui/SunIcon.astro';
+import { SITE_TITLE, NAV_ITEMS } from '../config';
 
 export interface Props {
 	pageKind: string;
 }
 
 const {pageKind} = Astro.props;
+
+const darkModeXDataScript = `{ 
+  isDark: document.documentElement.classList.contains('dark'),
+  toggleTheme() {
+    this.isDark = !this.isDark;
+    if (this.isDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }
+}`
 ---
 
-<header id="site-header" class="sticky top-6 z-50 w-full bg-app-bg text-app-text rounded-xl flex flex-col px-6 py-4 border-b border-transparent transition-colors duration-200">
+<header 
+	x-data="{ isMobileMenuOpen: false }" 
+	id="site-header" 
+	class="sticky top-6 z-50 w-full bg-app-bg text-app-text rounded-xl flex flex-col px-6 py-4 border-b border-transparent transition-colors duration-200 relative"
+>
 	<div class="flex justify-between items-center self-stretch h-8">
 		<div class="text-xl font-medium">
 			{SITE_TITLE}
 		</div>
 		<div class="flex items-center gap-6">
 			<div class="hidden md:flex items-center">
-				<DesktopNavMenu pageKind={pageKind} />
+				<nav class="hidden md:flex items-center gap-6">
+					{NAV_ITEMS.map((item) => (
+						<a
+							href={item.href}
+							class={`text-sm font-medium ${
+								pageKind === item.label ? 'font-semibold text-accent' : 'text-app-text-subtle'
+							}`}
+						>
+							{item.label}
+						</a>
+					))}
+				</nav>
 			</div>
 			<div class="md:hidden flex items-center">
-				<MobileNavButton />
+				<button
+					type="button"
+					class="cursor-pointer border-0 bg-transparent p-0"
+					aria-label="Toggle mobile menu"
+					@click="isMobileMenuOpen = !isMobileMenuOpen"
+				>
+					<HamburgerIcon />
+				</button>
 			</div>
-			<ThemeIcon />
+			<button
+				class="cursor-pointer border-0 bg-transparent p-0 flex items-center justify-center w-4 h-4"
+				aria-label="Toggle theme"
+				x-data={darkModeXDataScript}
+				@click="toggleTheme"
+			>
+				<MoonIcon class="dark:hidden" />
+				<SunIcon class="hidden dark:block" />
+			</button>
 		</div>
 	</div>
-	<MobileNavDropdown pageKind={pageKind} />
+	<div x-show="isMobileMenuOpen" x-collapse x-cloak class="min-h-0 flex flex-col gap-2.5">
+		{NAV_ITEMS.map((item) => (
+			<a
+				href={item.href}
+				class={`flex justify-center items-center p-2.5 first:mt-3 text-base font-medium ${
+					pageKind === item.label ? 'font-semibold text-accent' : 'text-app-text-subtle'
+				}`}
+			>
+				{item.label}
+			</a>
+		))}
+	</div>
+	<!-- MarkdownPostLayoutからArticleIndexBarが移動される -->
+	<div id="article-index-bar-slot" class="absolute top-full left-0 w-full flex flex-col items-center z-40 pt-3">
+	</div>
 </header>
 
 <script is:inline>
-	const setupMobileMenu = () => {
-		const toggle = document.getElementById('mobile-menu-toggle');
-		const dropdown = document.getElementById('mobile-nav-dropdown');
-  
-		if (toggle && dropdown) {
-			toggle.addEventListener('click', () => {
-				const isOpened = dropdown.classList.contains('grid-rows-[1fr]');
-				dropdown.classList.toggle('grid-rows-[0fr]', isOpened);
-				dropdown.classList.toggle('grid-rows-[1fr]', !isOpened);
-			});
-		}
-	};
-
-	const setupHeaderBorder = () => {
-		const header = document.getElementById('site-header');
-		if (!header) return;
-
-		if (window.__headerScrollHandler) {
-			window.removeEventListener('scroll', window.__headerScrollHandler, { passive: true });
-		}
-
-		const handleScroll = () => {
-			if (window.scrollY > 0) {
-				header.classList.remove('border-transparent');
-				header.classList.add('border-app-border-default-reverse');
-			} else {
-				header.classList.remove('border-app-border-default-reverse');
-				header.classList.add('border-transparent');
+	const setTheme = (element) => {
+		const theme = (() => {
+			if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+				return localStorage.getItem('theme');
 			}
-		};
+			if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				return 'dark';
+			}
+			return 'light';
+		})();
 
-		window.__headerScrollHandler = handleScroll;
+		if (theme === 'light') {
+			element.classList.remove('dark');
+		} else {
+			element.classList.add('dark');
+		}
 
-		handleScroll();
-		window.addEventListener('scroll', handleScroll, { passive: true });
-	};
+		if (typeof localStorage !== 'undefined') {
+			localStorage.setItem('theme', element.classList.contains('dark') ? 'dark' : 'light');
+		}
+	}
 
-	setupMobileMenu();
-	setupHeaderBorder();
-
-	document.addEventListener('astro:after-swap', () => {
-		setupMobileMenu();
-		setupHeaderBorder();
+	setTheme(document.documentElement);
+	// TODO: イベントリスナーを重複登録しないようにする
+	document.addEventListener('astro:before-swap', (event) => {
+		setTheme(event.newDocument.documentElement);
 	});
 </script>

@@ -8,18 +8,16 @@ import remarkBreaks from 'remark-breaks';
 import remarkCodeBlock from "./src/remark/remark-code-block";
 import remarkLinkCard from "./src/remark/remark-link-card";
 
+import alpinejs from "@astrojs/alpinejs";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://ibulog.me",
-  integrations: [
-    mdx(),
-    sitemap(),
-    partytown({
-      config: {
-        forward: ["dataLayer.push"],
-      },
-    }),
-  ],
+  integrations: [mdx(), sitemap(), partytown({
+    config: {
+      forward: ["dataLayer.push"],
+    },
+  }), alpinejs({ entrypoint: '/src/entrypoint.ts' })],
   markdown: {
     syntaxHighlight: false,
     remarkPlugins: [remarkBreaks, remarkCodeBlock, remarkLinkCard],
