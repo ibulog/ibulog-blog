@@ -1,6 +1,5 @@
 ---
 import Tag from './Tag.astro';
-import CalendarIcon from './CalendarIcon.astro';
 import { getFormatDay } from '../../utils/getFormatDay';
 
 export interface Props {
@@ -19,8 +18,7 @@ const formattedPubDate = getFormatDay(pubDate);
 	transition:name={`article-header-${id}`}
 >
 	<div class="flex flex-row items-center gap-2.5">
-		<div class="flex items-center gap-1.5">
-			<CalendarIcon />
+		<div class="flex items-center">
 			<time datetime={formattedPubDate} class="text-xs font-medium text-app-text-subtle">
 				{formattedPubDate}
 			</time>
