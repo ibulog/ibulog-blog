@@ -12,10 +12,12 @@ export interface Props {
 const { src, alt = "", width, height } = Astro.props;
 ---
 
-<Image
-  src={src as any}
-  alt={alt}
-  width={width}
-  height={height}
-  class="w-full h-auto rounded-xl"
-/>
+<div class="w-full h-auto">
+  <Image
+    src={src as any}
+    alt={alt}
+    width={width}
+    height={height}
+    class="w-full h-auto rounded-xl"
+  />
+</div>

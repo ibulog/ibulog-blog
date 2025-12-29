@@ -6,7 +6,7 @@ export interface Props {
 const { class: className } = Astro.props;
 ---
 
-<ol class={`px-3 text-base font-normal text-app-text list-decimal list-inside space-y-2.5 ${className || ''}`}>
+<ol class={`px-6 text-base font-normal text-app-text list-decimal list-inside space-y-2.5 ${className || ''}`}>
 	<slot />
 </ol>
 

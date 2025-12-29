@@ -9,7 +9,7 @@ const { text, id } = Astro.props;
 
 <h2
 	id={id}
-	class="flex flex-row items-center gap-2.5 px-6 py-4 rounded-xl bg-app-bg text-lg font-bold text-app-text mt-8 first:mt-0"
+	class="flex flex-row items-center gap-2.5 px-6 py-4 rounded-xl bg-app-bg text-lg font-bold text-app-text mt-6 first:mt-0"
 >
 	{text ? text : <slot />}
 </h2>

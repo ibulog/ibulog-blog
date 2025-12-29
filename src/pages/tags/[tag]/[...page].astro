@@ -54,13 +54,11 @@ if (!tag) {
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url={`/tags/${tagLinkParam}`} image={ICON_IMAGE} pageKind={pageKind}>
 	<div class="flex flex-col gap-9">
 		<H2 text={`Tag: ${tag}`} />
-		<div class="px-3">
-			<ArticleListSection 
-				entries={page.data} 
-				showPagination={page.data.length > 7}
-				pagination={{ currentPage, lastPage, page, baseUrl: `/tags/${tagLinkParam}` }}
-			/>
-		</div>
+    <ArticleListSection 
+      entries={page.data} 
+      showPagination={page.data.length > 7}
+      pagination={{ currentPage, lastPage, page, baseUrl: `/tags/${tagLinkParam}` }}
+    />
 	</div>
 </BaseLayout>
 
