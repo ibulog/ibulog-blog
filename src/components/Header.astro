@@ -1,9 +1,6 @@
 ---
-import DesktopNavMenu from './DesktopNavMenu.astro';
-import MobileNavButton from './MobileNavButton.astro';
-import MobileNavDropdown from './MobileNavDropdown.astro';
 import ThemeIcon from './ThemeIcon.astro';
-import { SITE_TITLE } from '../config';
+import { SITE_TITLE, NAV_ITEMS } from '../config';
 
 export interface Props {
 	pageKind: string;
@@ -12,67 +9,66 @@ export interface Props {
 const {pageKind} = Astro.props;
 ---
 
-<header id="site-header" class="sticky top-6 z-50 w-full bg-app-bg text-app-text rounded-xl flex flex-col px-6 py-4 border-b border-transparent transition-colors duration-200">
+<header 
+	x-data="{ isMobileMenuOpen: false }" 
+	id="site-header" 
+	class="sticky top-6 z-50 w-full bg-app-bg text-app-text rounded-xl flex flex-col px-6 py-4 border-b border-transparent transition-colors duration-200"
+>
 	<div class="flex justify-between items-center self-stretch h-8">
 		<div class="text-xl font-medium">
 			{SITE_TITLE}
 		</div>
 		<div class="flex items-center gap-6">
 			<div class="hidden md:flex items-center">
-				<DesktopNavMenu pageKind={pageKind} />
+				<nav class="hidden md:flex items-center gap-6">
+					{NAV_ITEMS.map((item) => (
+						<a
+							href={item.href}
+							class={`text-sm font-medium ${
+								pageKind === item.label ? 'font-semibold text-accent' : 'text-app-text-subtle'
+							}`}
+						>
+							{item.label}
+						</a>
+					))}
+				</nav>
 			</div>
 			<div class="md:hidden flex items-center">
-				<MobileNavButton />
+				<button
+					type="button"
+					class="cursor-pointer border-0 bg-transparent p-0"
+					aria-label="Toggle mobile menu"
+					@click="isMobileMenuOpen = !isMobileMenuOpen"
+
+				>
+					<svg
+						width="16"
+						height="12"
+						viewBox="0 0 16 12"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+						class="w-4 h-3"
+					>
+						<path
+							d="M16 6C16 6.17681 15.9298 6.34638 15.8047 6.47141C15.6797 6.59643 15.5101 6.66667 15.3333 6.66667H0.666667C0.489856 6.66667 0.320287 6.59643 0.195262 6.47141C0.070238 6.34638 0 6.17681 0 6C0 5.82319 0.070238 5.65362 0.195262 5.5286C0.320287 5.40357 0.489856 5.33333 0.666667 5.33333H15.3333C15.5101 5.33333 15.6797 5.40357 15.8047 5.5286C15.9298 5.65362 16 5.82319 16 6ZM0.666667 1.33333H15.3333C15.5101 1.33333 15.6797 1.2631 15.8047 1.13807C15.9298 1.01305 16 0.843478 16 0.666667C16 0.489856 15.9298 0.320287 15.8047 0.195262C15.6797 0.070238 15.5101 0 15.3333 0H0.666667C0.489856 0 0.320287 0.070238 0.195262 0.195262C0.070238 0.320287 0 0.489856 0 0.666667C0 0.843478 0.070238 1.01305 0.195262 1.13807C0.320287 1.2631 0.489856 1.33333 0.666667 1.33333ZM15.3333 10.6667H0.666667C0.489856 10.6667 0.320287 10.7369 0.195262 10.8619C0.070238 10.987 0 11.1565 0 11.3333C0 11.5101 0.070238 11.6797 0.195262 11.8047C0.320287 11.9298 0.489856 12 0.666667 12H15.3333C15.5101 12 15.6797 11.9298 15.8047 11.8047C15.9298 11.6797 16 11.5101 16 11.3333C16 11.1565 15.9298 10.987 15.8047 10.8619C15.6797 10.7369 15.5101 10.6667 15.3333 10.6667Z"
+							fill="var(--color-accent)"
+						/>
+					</svg>
+				</button>
 			</div>
 			<ThemeIcon />
 		</div>
 	</div>
-	<MobileNavDropdown pageKind={pageKind} />
+	<div x-show="isMobileMenuOpen" @click.outside="isMobileMenuOpen = false" x-collapse class="min-h-0 flex flex-col gap-2.5">
+		{NAV_ITEMS.map((item) => (
+			<a
+				href={item.href}
+				class={`flex justify-center items-center p-2.5 first:mt-3 text-base font-medium ${
+					pageKind === item.label ? 'font-semibold text-accent' : 'text-app-text-subtle'
+				}`}
+			>
+				{item.label}
+			</a>
+		))}
+	</div>
 </header>
-
-<script is:inline>
-	const setupMobileMenu = () => {
-		const toggle = document.getElementById('mobile-menu-toggle');
-		const dropdown = document.getElementById('mobile-nav-dropdown');
-  
-		if (toggle && dropdown) {
-			toggle.addEventListener('click', () => {
-				const isOpened = dropdown.classList.contains('grid-rows-[1fr]');
-				dropdown.classList.toggle('grid-rows-[0fr]', isOpened);
-				dropdown.classList.toggle('grid-rows-[1fr]', !isOpened);
-			});
-		}
-	};
-
-	const setupHeaderBorder = () => {
-		const header = document.getElementById('site-header');
-		if (!header) return;
-
-		if (window.__headerScrollHandler) {
-			window.removeEventListener('scroll', window.__headerScrollHandler, { passive: true });
-		}
-
-		const handleScroll = () => {
-			if (window.scrollY > 0) {
-				header.classList.remove('border-transparent');
-				header.classList.add('border-app-border-default-reverse');
-			} else {
-				header.classList.remove('border-app-border-default-reverse');
-				header.classList.add('border-transparent');
-			}
-		};
-
-		window.__headerScrollHandler = handleScroll;
-
-		handleScroll();
-		window.addEventListener('scroll', handleScroll, { passive: true });
-	};
-
-	setupMobileMenu();
-	setupHeaderBorder();
-
-	document.addEventListener('astro:after-swap', () => {
-		setupMobileMenu();
-		setupHeaderBorder();
-	});
-</script>
