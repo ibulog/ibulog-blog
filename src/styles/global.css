@@ -96,3 +96,7 @@ body {
 .code-block-wrapper .line.highlighted {
   @apply bg-code-highlight;
 }
+
+[x-cloak] {
+  display: none !important;
+}
