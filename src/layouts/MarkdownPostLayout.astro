@@ -9,6 +9,7 @@ import ArticleIndex from '../components/ArticleIndex.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import ArticleIndexBar from '../components/ArticleIndexBar.astro';
 import { HEADING_LEVEL } from '../config';
+import { file } from "astro/loaders";
 
 type Props = {
   entry: CollectionEntry<'blog'>;
@@ -23,12 +24,13 @@ const { headings } = await render(entry);
 const { id } = entry;
 
 const filteredHeadings = headings.filter(heading => heading.depth <= HEADING_LEVEL);
+const hasHeadings = filteredHeadings.length > 0;
 
 ---
 
-{filteredHeadings.length > 0 && (
+{hasHeadings && (
 	<div x-data x-show="$store.articleIndexBar.show" x-transition.duration.300ms x-cloak class="sticky top-[100px] z-40 w-full px-3 flex flex-col items-center">
-		<ArticleIndexBar headings={headings} />
+		<ArticleIndexBar headings={filteredHeadings} />
 	</div>
 )}
 
@@ -39,7 +41,9 @@ const filteredHeadings = headings.filter(heading => heading.depth <= HEADING_LEV
       <Image width={1080} height={540} src={heroImage} alt={title} class="w-full h-auto" />
     </div>
   )}
-  <ArticleIndex headings={headings} id="article-index" />
+	{hasHeadings && (
+  	<ArticleIndex headings={filteredHeadings} id="article-index" />
+	)}
   <slot />
 </article>
 {(prevArticle || nextArticle) && (
