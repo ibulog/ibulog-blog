@@ -7,6 +7,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleListSection from '../../layouts/ArticleListSection.astro';
 import sortArticleByDate from "../../utils/sortArticleByDate";
 import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE, PAGE_KINDS } from '../../config';
+import { PAGINATION_PAGE_SIZE } from '../../config';
 
 type Props = {
   page: Page<CollectionEntry<'blog'>>;
@@ -15,7 +16,7 @@ type Props = {
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const allPosts = await getCollection('blog');
   const allPostsSorted = allPosts.sort(sortArticleByDate)
-  return paginate(allPostsSorted, { pageSize: 7 });
+  return paginate(allPostsSorted, { pageSize: PAGINATION_PAGE_SIZE });
 }
 
 const { page } = Astro.props

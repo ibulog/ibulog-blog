@@ -41,3 +41,6 @@ export const SOCIAL_LINKS = {
 	X: 'https://x.com/ibulog_',
 	GITHUB: 'https://github.com/ibulog',
 } as const;
+
+export const RECENT_ARTICLES_COUNT = 5;
+export const PAGINATION_PAGE_SIZE = 10;
