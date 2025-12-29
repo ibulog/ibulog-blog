@@ -27,7 +27,7 @@ const filteredHeadings = headings.filter(heading => heading.depth <= HEADING_LEV
 ---
 
 {filteredHeadings.length > 0 && (
-	<div class="sticky top-[100px] z-40 w-full px-3 flex flex-col items-center transition-opacity duration-300 opacity-0 pointer-events-none" id="index-toggle-bar">
+	<div x-show="$store.articleIndexBar.show" x-collapse class="sticky top-[100px] z-40 w-full px-3 flex flex-col items-center pointer-events-none">
 		<ArticleIndexBar headings={headings} />
 	</div>
 )}
@@ -68,89 +68,71 @@ const filteredHeadings = headings.filter(heading => heading.depth <= HEADING_LEV
 )}
 
 <script is:inline>
+	// Alpine.js Store初期化
+	document.addEventListener('alpine:init', () => {
+		if (typeof Alpine !== 'undefined') {
+			Alpine.store("articleIndexBar", {
+				show: false,
+				toggleShow() {
+					this.show = !this.show;
+				},
+				expanded: false,
+				toggleExpanded() {
+					this.expanded = !this.expanded;
+				}
+			});
+		}
+	});
+
 	const setupIndexToggle = () => {
 		const articleIndex = document.getElementById('article-index');
-		const toggleBar = document.getElementById('index-toggle-bar');
-		const toggleButton = document.getElementById('index-toggle-button');
-		const expandableContainer = document.getElementById('index-expandable-container');
 		const indexContent = document.getElementById('index-content');
 
-		if (!articleIndex || !toggleBar || !toggleButton || !expandableContainer || !indexContent) return;
+		if (!articleIndex || !indexContent) return;
 
-		toggleButton.addEventListener('click', (event) => {
-			event.stopPropagation();
-			const isOpened = expandableContainer.classList.contains('w-full');
-			
-			if (isOpened) {
-				indexContent.classList.remove('grid-rows-[1fr]');
-				indexContent.classList.add('grid-rows-[0fr]');
-				expandableContainer.classList.remove('w-full');
-				expandableContainer.classList.add('w-20');
-				toggleButton.setAttribute('aria-label', '目次を開く');
-			} else {
-				expandableContainer.classList.remove('w-20');
-				expandableContainer.classList.add('w-full');
-				indexContent.classList.remove('grid-rows-[0fr]');
-				indexContent.classList.add('grid-rows-[1fr]');
-				toggleButton.setAttribute('aria-label', '目次を閉じる');
-			}
-		});
+		const store = Alpine.store('articleIndexBar');
+		if (!store) return;
 
+		// 目次リンククリック時に目次を閉じる
 		const indexLinks = indexContent.querySelectorAll('a');
 		indexLinks.forEach(link => {
 			link.addEventListener('click', () => {
-				indexContent.classList.remove('grid-rows-[1fr]');
-				indexContent.classList.add('grid-rows-[0fr]');
-				expandableContainer.classList.remove('w-full');
-				expandableContainer.classList.add('w-20');
-				toggleButton.setAttribute('aria-label', '目次を開く');
+				Alpine.store('articleIndexBar').expanded = false;
 			});
 		});
 
-		const header = document.getElementById('site-header');
-		const headerHeight = header ? header.offsetHeight : 64;
-		const rootMargin = `-${headerHeight + 24}px 0px 0px 0px`;
+		// 既存のリスナーをクリーンアップ
+		if (window.__indexToggleScrollHandler) {
+			window.removeEventListener('scroll', window.__indexToggleScrollHandler, { passive: true });
+		}
 
-		const observer = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (!entry.isIntersecting) {
-						toggleBar.classList.remove('hidden');
-						toggleBar.classList.remove('pointer-events-none');
-						toggleBar.classList.remove('opacity-0');
-						toggleBar.classList.add('opacity-100');
-					} else {
-						toggleBar.classList.remove('opacity-100');
-						toggleBar.classList.add('opacity-0');
-						if (expandableContainer.classList.contains('w-full')) {
-							indexContent.classList.remove('grid-rows-[1fr]');
-							indexContent.classList.add('grid-rows-[0fr]');
-							expandableContainer.classList.remove('w-full');
-							expandableContainer.classList.add('w-20');
-							toggleButton.setAttribute('aria-label', '目次を開く');
-						}
-						toggleBar.classList.add('hidden');
-						toggleBar.classList.add('pointer-events-none');
-					}
-				});
-			},
-			{
-				rootMargin,
-				threshold: 0,
+		const handleScroll = () => {
+			const store = Alpine.store('articleIndexBar');
+			if (!store) return;
+
+			const scrollY = window.scrollY;
+			// ページ全体の縦幅の10%を超えたら表示
+			const scrollHeight = document.documentElement.scrollHeight;
+			const threshold = scrollHeight * 0.1;
+			if (scrollY > threshold) {
+				Alpine.store('articleIndexBar').show = true;
+			} else {
+				Alpine.store('articleIndexBar').show = false;
 			}
-		);
+		};
+		// スクロールイベントリスナーを追加
+		window.addEventListener('scroll', handleScroll, { passive: true });
+		window.__indexToggleScrollHandler = handleScroll;
 
-		observer.observe(articleIndex);
-
-		window.__indexToggleObserver = observer;
+		// 初回チェック
+		handleScroll();
 	};
 
 	setupIndexToggle();
-
-	document.addEventListener('astro:after-swap', () => {
-		if (window.__indexToggleObserver) {
-			window.__indexToggleObserver.disconnect();
-			window.__indexToggleObserver = null;
+	document.addEventListener('astro:before-swap', () => {
+		if (window.__indexToggleScrollHandler) {
+			window.removeEventListener('scroll', window.__indexToggleScrollHandler, { passive: true });
+			window.__indexToggleScrollHandler = null;
 		}
 		setupIndexToggle();
 	});
