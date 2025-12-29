@@ -7,10 +7,11 @@
 ### フレームワーク・ビルドツール
 - **Astro** - 静的サイトジェネレーター
 - **TypeScript** - 型安全性の確保
+- **Alpine.js** - 状態管理
 - **Vite** - ビルドツール
 
 ### スタイリング
-- **Tailwind CSS** - ユーティリティファーストのCSSフレームワーク
+- **Tailwind CSS**
 
 ### コンテンツ管理
 - **Astro Content Layer API** - ブログ記事の管理
@@ -25,6 +26,7 @@
 - **@astrojs/rss** - RSSフィード生成
 - **@astrojs/sitemap** - サイトマップ生成
 - **@astrojs/partytown** - サードパーティスクリプトの最適化（Google Analytics）
+- **@astrojs/alpinejs** - Alpine.js統合
 - **open-graph-scraper** - OGPデータの取得（リンクカード用）
 - **remark-breaks** - Markdownの改行処理
 - **カスタムremarkプラグイン** - コードブロック、リンクカードの拡張
@@ -46,7 +48,8 @@ ibulog-blog/
 │   ├── styles/        # グローバルスタイル
 │   ├── utils/         # ユーティリティ関数
 │   ├── config.ts      # グローバル設定
-│   └── content.config.ts  # コンテンツコレクション設定
+│   ├── content.config.ts  # コンテンツコレクション設定
+│   └── entrypoint.ts  # Alpine.jsエントリーポイント
 ├── astro.config.mjs
 ├── tailwind.config.mjs
 └── package.json
@@ -113,3 +116,7 @@ MICROCMS_API_KEY=your-api-key
 - OGP対応
 - サイトマップ自動生成
 - Google Analytics統合（Partytown経由）
+- インタラクティブなUI（Alpine.js）
+  - モバイルメニューの展開/折りたたみ
+  - 記事目次バーの表示/非表示
+  - スムーズなスクロールアニメーション
