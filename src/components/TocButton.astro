@@ -26,14 +26,15 @@ const { headings } = Astro.props;
 	</button>
 
 	<div 
-		class="grid transition-all duration-300 ease-in-out overflow-hidden"
-		:class="$store.tocButton.expanded ? 'grid-rows-[1fr] grid-cols-[1fr]' : 'grid-rows-[0fr] grid-cols-[0fr]'"
-		x-cloak
+	    class="grid overflow-hidden"
+		    :class="$store.tocButton.expanded 
+			? 'grid-cols-[1fr] grid-rows-[1fr] opacity-100' 
+			: 'grid-cols-[0fr] grid-rows-[0fr] opacity-0'"
+		style="transition: grid-template-columns 0.15s ease-out, grid-template-rows 0.4s ease-in-out, opacity 0.3s ease;"
 	>
-		<div class="min-h-0 min-w-max overflow-hidden">
-			<div class="w-max px-6 pb-6">
-				<Headings headings={headings} />
-			</div>
+	<div class="min-h-0 overflow-hidden">
+		<div class="px-6 pb-6 w-full min-w-[300px]">
+			<Headings headings={headings} />
 		</div>
 	</div>
 </div>
