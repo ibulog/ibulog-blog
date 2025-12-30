@@ -30,8 +30,8 @@ const { headings } = Astro.props;
 		:class="$store.tocButton.expanded ? 'grid-rows-[1fr] grid-cols-[1fr]' : 'grid-rows-[0fr] grid-cols-[0fr]'"
 		x-cloak
 	>
-		<div class="min-h-0 overflow-hidden">
-			<div class="w-full min-w-[200px] px-6 pb-6">
+		<div class="min-h-0 min-w-max overflow-hidden">
+			<div class="w-max px-6 pb-6">
 				<Headings headings={headings} />
 			</div>
 		</div>
