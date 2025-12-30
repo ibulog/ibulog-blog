@@ -30,7 +30,9 @@ const { headings } = Astro.props;
 		    :class="$store.tocButton.expanded 
 			? 'grid-cols-[1fr] grid-rows-[1fr] opacity-100' 
 			: 'grid-cols-[0fr] grid-rows-[0fr] opacity-0'"
-		style="transition: grid-template-columns 0.15s ease-out, grid-template-rows 0.4s ease-in-out, opacity 0.3s ease;"
+			:style="$store.tocButton.expanded 
+			? 'transition: grid-template-columns 200ms ease-out, grid-template-rows 300ms ease-out 400ms, opacity 300ms 400ms;' 
+			: 'transition: grid-template-rows 300ms ease-in, grid-template-columns 200ms ease-in 400ms, opacity 400ms;'"
 	>
 	<div class="min-h-0 overflow-hidden">
 		<div class="px-6 pb-6 w-full min-w-[300px]">
