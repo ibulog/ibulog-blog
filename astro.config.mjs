@@ -30,6 +30,6 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   prefetch: {
-    defaultStrategy: "viewpoint"
+    defaultStrategy: "viewport"
   }
 });
