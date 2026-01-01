@@ -55,6 +55,10 @@
   --color-code-highlight: #38444d;
 }
 
+::view-transition-old(root) {
+  opacity: 0;
+}
+
 html {
   @apply overflow-y-scroll scroll-smooth;
 }
