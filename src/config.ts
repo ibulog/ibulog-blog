@@ -6,7 +6,6 @@ import notFoundImage from './assets/404.jpg';
 
 export const SITE_TITLE = 'いぶろぐ雑記';
 export const SITE_DESCRIPTION = 'ITとか、UXライティングとか、車とか';
-export const SITE_BASE_URL = 'https://ibulog.me';
 export const ICON_IMAGE = iconImage;
 export const NOT_FOUND_IMAGE = notFoundImage;
 

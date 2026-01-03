@@ -1,4 +1,4 @@
-import { defineConfig } from "astro/config";
+import { defineConfig, envField } from "astro/config";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import partytown from "@astrojs/partytown";
@@ -13,6 +13,12 @@ import alpinejs from "@astrojs/alpinejs";
 // https://astro.build/config
 export default defineConfig({
   site: "https://ibulog.me",
+  env: {
+    schema: {
+      MICROCMS_SERVICE_DOMAIN: envField.string({ context: "server", access: "secret" }),
+      MICROCMS_API_KEY: envField.string({ context: "server", access: "secret" }),
+    }
+  },
   integrations: [mdx(), sitemap(), partytown({
     config: {
       forward: ["dataLayer.push"],
