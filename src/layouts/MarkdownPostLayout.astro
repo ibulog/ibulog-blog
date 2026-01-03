@@ -30,7 +30,7 @@ const hasHeadings = filteredHeadings.length > 0;
 	<!-- TocButtonを非表示でレンダリング（後でHeaderに移動される） -->
 	<div id="toc-button-source" class="hidden">
 		<div 
-			x-data 
+			x-data
 			x-show="$store.tocButton.show" 
 			x-transition.duration.300ms 
 			x-cloak 
@@ -77,9 +77,6 @@ const hasHeadings = filteredHeadings.length > 0;
 )}
 
 <script is:inline>
-	// 初期化済みフラグとObserverの参照を保持
-	let isInitialized = false;
-
 	// TocButtonをHeaderのコンテナに移動
 	const moveTocButton = () => {
 		const source = document.getElementById('toc-button-source');
@@ -97,51 +94,11 @@ const hasHeadings = filteredHeadings.length > 0;
 		}
 	};
 
-	const setupTocToggle = () => {
-		const store = Alpine.store('tocButton');
-		if (!store) return;
-	};
-
-	const initTocButton = () => {
-		if (isInitialized) {
-			return;
-		}
-
-		if (typeof Alpine === 'undefined') {
-			return;
-		}
-
-		if (!Alpine.store('tocButton')) {
-			Alpine.store("tocButton", {
-				show: false,
-				toggleShow() {
-					this.show = !this.show;
-				},
-				expanded: false,
-				toggleExpanded() {
-					this.expanded = !this.expanded;
-				}
-			});
-		}
-
-		moveTocButton();
-		setupTocToggle();
-		isInitialized = true;
-	};
-
-	// 初期化関数（ページ遷移時にリセット）
-	const resetAndInit = () => {
-		isInitialized = false;
-		initTocButton();
-	};
-
-	// Alpine.jsの初期化を待つ
 	document.addEventListener('alpine:init', () => {
-		initTocButton();
+		moveTocButton();
 	});
 
 	document.addEventListener('astro:page-load', () => {
-		resetAndInit();
+		moveTocButton();
 	});
-
 </script>
