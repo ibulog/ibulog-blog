@@ -25,7 +25,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
     );
     
     if (filteredPosts.length > 0) {
-      const sortedPosts = filteredPosts.sort(sortArticleByDate);
+      const sortedPosts = filteredPosts.toSorted(sortArticleByDate);
       const paginated = paginate(sortedPosts, { 
         pageSize: 7,
         params: { tag: tagLink(tag) }

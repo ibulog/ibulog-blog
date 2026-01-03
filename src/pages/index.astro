@@ -14,7 +14,7 @@ const pageKind = PAGE_KINDS.ABOUT;
 const selfIntroduction = await getCollection('selfIntroduction');
 
 const allPosts = await getCollection('blog');
-const recentEntries = allPosts.sort(sortArticleByDate).slice(0, RECENT_ARTICLES_COUNT);
+const recentEntries = allPosts.toSorted(sortArticleByDate).slice(0, RECENT_ARTICLES_COUNT);
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url="/" image={ICON_IMAGE} pageKind={pageKind}>
