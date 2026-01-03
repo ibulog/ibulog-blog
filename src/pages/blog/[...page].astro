@@ -15,7 +15,7 @@ type Props = {
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const allPosts = await getCollection('blog');
-  const allPostsSorted = allPosts.sort(sortArticleByDate)
+  const allPostsSorted = allPosts.toSorted(sortArticleByDate)
   return paginate(allPostsSorted, { pageSize: PAGINATION_PAGE_SIZE });
 }
 
