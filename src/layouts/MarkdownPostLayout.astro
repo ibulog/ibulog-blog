@@ -50,7 +50,8 @@ const hasHeadings = filteredHeadings.length > 0;
     </div>
   )}
 	{hasHeadings && (
-  	<Toc headings={filteredHeadings} id="toc" />
+		// Tocコンポーネント側でIntersection Observerを設置している
+  	<Toc headings={filteredHeadings} />
 	)}
   <slot />
 </article>
@@ -78,7 +79,6 @@ const hasHeadings = filteredHeadings.length > 0;
 <script is:inline>
 	// 初期化済みフラグとObserverの参照を保持
 	let isInitialized = false;
-	let tocObserver = null;
 
 	// TocButtonをHeaderのコンテナに移動
 	const moveTocButton = () => {
@@ -98,35 +98,8 @@ const hasHeadings = filteredHeadings.length > 0;
 	};
 
 	const setupTocToggle = () => {
-		const toc = document.getElementById('toc');
-		if (!toc) return;
-
 		const store = Alpine.store('tocButton');
 		if (!store) return;
-
-		if (tocObserver) {
-			tocObserver.disconnect();
-			tocObserver = null;
-		}
-
-		// 目次が表示されているかどうかを監視
-		tocObserver = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (!entry.isIntersecting) {
-						store.show = true;
-					} else {
-						store.show = false;
-						store.expanded = false;
-					}
-				});
-			},
-			{
-				threshold: 0,
-			}
-		);
-
-		tocObserver.observe(toc);
 	};
 
 	const initTocButton = () => {
@@ -159,10 +132,6 @@ const hasHeadings = filteredHeadings.length > 0;
 	// 初期化関数（ページ遷移時にリセット）
 	const resetAndInit = () => {
 		isInitialized = false;
-		if (tocObserver) {
-			tocObserver.disconnect();
-			tocObserver = null;
-		}
 		initTocButton();
 	};
 
