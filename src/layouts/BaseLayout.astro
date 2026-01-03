@@ -15,9 +15,10 @@ export interface Props {
 	url: string;
 	image?: ImageMetadata;
 	pageKind?: string;
+	scrollSmooth?: boolean;
 }
 
-const { title, description, url, image: heroImage, pageKind = PAGE_KINDS.ABOUT } = Astro.props;
+const { title, description, url, image: heroImage, pageKind = PAGE_KINDS.ABOUT, scrollSmooth = false } = Astro.props;
 
 const absoluteUrl = new URL(url, Astro.site).toString();
 
@@ -33,7 +34,7 @@ const ogImage = heroImage
 const ogImageUrl = ogImage ? new URL(ogImage.src, Astro.site).toString() : null;
 ---
 
-<html lang="ja">
+<html lang="ja" class={scrollSmooth ? 'scroll-smooth' : ''}>
 	<head>
 		<!-- Global Metadata -->
 		<meta charset="utf-8" />
