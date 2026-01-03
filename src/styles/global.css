@@ -55,10 +55,6 @@
   --color-code-highlight: #38444d;
 }
 
-html {
-  @apply overflow-y-scroll scroll-smooth;
-}
-
 body {
   font-family: "Noto Sans JP", "Quicksand", sans-serif;
   @apply text-left break-words leading-[1.8] bg-primary text-app-text;
