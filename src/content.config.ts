@@ -1,13 +1,14 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 import { tags } from "./config";
+import { MICROCMS_SERVICE_DOMAIN, MICROCMS_API_KEY } from "astro:env/server";
 
 const microcmsLoader = (endpoint: string) => {
   return async () => {
   try {
-    const response = await fetch(`https://${import.meta.env.MICROCMS_SERVICE_DOMAIN}.microcms.io/api/v1/${endpoint}`, {
+    const response = await fetch(`https://${MICROCMS_SERVICE_DOMAIN}.microcms.io/api/v1/${endpoint}`, {
       headers: {
-        "X-MICROCMS-API-KEY": import.meta.env.MICROCMS_API_KEY,
+        "X-MICROCMS-API-KEY": MICROCMS_API_KEY,
       },
     });
     if (!response.ok) throw new Error(`Failed to fetch ${endpoint}: ${response.statusText}`);
