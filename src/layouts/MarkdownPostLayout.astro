@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 
-import { render } from "astro:content";
+import { render, getEntry } from "astro:content";
 import { Image } from "astro:assets";
 
 import ArticleHeader from '../components/ui/ArticleHeader.astro';
@@ -18,6 +18,8 @@ type Props = {
 
 const { entry, prevArticle, nextArticle } = Astro.props;
 const { title, pubDate, tags } = entry.data;
+
+const tagEntries = await Promise.all(tags.map((tag) => getEntry("tag", tag.id)));
 const heroImage = entry.data.heroImage as ImageMetadata | undefined;
 const { headings } = await render(entry);
 const { id } = entry;
@@ -42,7 +44,7 @@ const hasHeadings = filteredHeadings.length > 0;
 
 <article class="flex flex-col gap-9">
 	<div class="px-6">
-  	<ArticleHeader id={id} pubDate={pubDate} tags={tags} title={title} />
+  	<ArticleHeader id={id} pubDate={pubDate} tags={tagEntries} title={title} />
 	</div>
   {heroImage && (
     <div class="w-full rounded-xl overflow-hidden" transition:name={`hero-image-${id}`}>

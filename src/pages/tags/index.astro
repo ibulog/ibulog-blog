@@ -1,13 +1,14 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE, PAGE_KINDS, tags } from '../../config';
+import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE, PAGE_KINDS } from '../../config';
 import H2 from '../../components/ui/H2.astro';
 import Tag from '../../components/ui/Tag.astro';
+import { getCollection } from 'astro:content';
 
 const pageKind = PAGE_KINDS.TAGS;
 
-// config.tsで定義されたタグを使用
-const sortedTags = [...tags].sort();
+const tags = await getCollection('tag');
+const sortedTags = tags.toSorted((a, b) => a.data.name.localeCompare(b.data.name));
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url="/tags" image={ICON_IMAGE} pageKind={pageKind}>
