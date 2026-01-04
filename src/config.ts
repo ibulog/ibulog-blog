@@ -25,17 +25,6 @@ export const PAGE_KINDS = {
 
 export const HEADING_LEVEL = 2;
 
-export const tags = [
-	"CI/CD",
-	"Frontend",
-	"History",
-	"Infrastructure",
-	"Linux",
-	"Other",
-	"Roadster",
-	"UX Writing",
-] as const;
-
 export const SOCIAL_LINKS = {
 	X: 'https://x.com/ibulog_',
 	GITHUB: 'https://github.com/ibulog',

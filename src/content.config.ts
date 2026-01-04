@@ -1,6 +1,5 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection, reference, z } from "astro:content";
 import { glob } from "astro/loaders";
-import { tags } from "./config";
 import { MICROCMS_SERVICE_DOMAIN, MICROCMS_API_KEY } from "astro:env/server";
 
 const microcmsLoader = (endpoint: string) => {
@@ -41,13 +40,21 @@ const selfIntroductionCollection = defineCollection({
   }),
 });
 
+const tagCollection = defineCollection({
+  loader: microcmsLoader("tags"),
+  schema: z.object({
+    id: z.string(),
+    name: z.string(),
+  }),
+});
+
 const blogCollection = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/data/blog" }),
   schema: ({ image }) => z.object({
     title: z.string(),
     description: z.string(),
     pubDate: z.date(),
-    tags: z.array(z.enum(tags)).min(1),
+    tags: z.array(reference("tag")),
     heroImage: image().optional(),
   }),
 });
@@ -55,5 +62,6 @@ const blogCollection = defineCollection({
 export const collections = <const>{
   blog: blogCollection,
   job: jobCollection,
+  tag: tagCollection,
   selfIntroduction: selfIntroductionCollection,
 };

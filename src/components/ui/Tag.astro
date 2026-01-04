@@ -1,17 +1,10 @@
 ---
-import tagLink from '../../utils/tagLink';
-
+import type { CollectionEntry } from "astro:content";
 export interface Props {
-	tag: string;
-	href?: string;
+	tag: CollectionEntry<'tag'>;
 }
 
-const { tag, href } = Astro.props;
-
-// hrefが未指定の場合、自動的にタグのリンクを生成
-const defaultHref = href || `/tags/${tagLink(tag)}`;
-
-const displayTag = `#${tag}`;
+const { tag } = Astro.props;
 
 const baseClasses = "inline-flex items-center h-6 px-1.5 rounded-lg bg-app-tag-default border border-accent text-xs font-medium text-app-text-subtle";
 const hoverClasses = "hover:bg-app-bg-obvious-reverse hover:text-app-text-subtle-reverse"
@@ -19,14 +12,8 @@ const hoverClasses = "hover:bg-app-bg-obvious-reverse hover:text-app-text-subtle
 const spanClasses = `${baseClasses} ${hoverClasses}`;
 ---
 
-{defaultHref ? (
-	<a href={defaultHref} class="no-underline">
-		<span class={spanClasses}>
-			{displayTag}
-		</span>
-	</a>
-) : (
+<a href={`/tags/${tag.id}`} class="no-underline">
 	<span class={spanClasses}>
-		{displayTag}
+		{tag.data.name}
 	</span>
-)}
+</a>

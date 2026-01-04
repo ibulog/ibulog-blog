@@ -7,30 +7,32 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ArticleListSection from '../../../layouts/ArticleListSection.astro';
 import H2 from '../../../components/ui/H2.astro';
 import sortArticleByDate from "../../../utils/sortArticleByDate";
-import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE, PAGE_KINDS, tags } from '../../../config';
-import tagLink from '../../../utils/tagLink';
+import { SITE_TITLE, SITE_DESCRIPTION, ICON_IMAGE, PAGE_KINDS } from '../../../config';
 
 type Props = {
-  tag: string;
+  tagEntry: CollectionEntry<'tag'>;
   page: Page<CollectionEntry<'blog'>>;
 };
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
-  const allPosts = await getCollection('blog');
-  
+  const allPosts = await getCollection('blog')
+  const tags = await getCollection('tag');
+
   const paths = [];
   for (const tag of tags) {
     const filteredPosts = allPosts.filter((post) => 
-      post.data.tags.includes(tag)
+      post.data.tags.map((t) => t.id).includes(tag.id)
     );
     
     if (filteredPosts.length > 0) {
       const sortedPosts = filteredPosts.toSorted(sortArticleByDate);
       const paginated = paginate(sortedPosts, { 
         pageSize: 7,
-        params: { tag: tagLink(tag) }
+        params: { tag: tag.id },
+        props: {
+          tagEntry: tag,
+        }
       });
-      
       paths.push(...paginated);
     }
   }
@@ -38,26 +40,20 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   return paths;
 }
 
-const { tag: tagLinkParam } = Astro.params;
-const { page } = Astro.props;
+const { tag } = Astro.params;
+const { page, tagEntry } = Astro.props;
 const { currentPage, lastPage } = page;
 const pageKind = PAGE_KINDS.TAGS;
 
-// URLパラメータから元のタグ名を取得
-const tag = tags.find((t) => tagLink(t) === tagLinkParam);
-if (!tag) {
-  return Astro.redirect('/404');
-}
-
 ---
 
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url={`/tags/${tagLinkParam}`} image={ICON_IMAGE} pageKind={pageKind}>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} url={`/tags/${tag}`} image={ICON_IMAGE} pageKind={pageKind}>
 	<div class="flex flex-col gap-9">
-		<H2 text={`Tag: ${tag}`} />
+		<H2 text={`Tag: ${tagEntry.data.name}`} />
     <ArticleListSection 
       entries={page.data} 
       showPagination={page.data.length > 7}
-      pagination={{ currentPage, lastPage, page, baseUrl: `/tags/${tagLinkParam}` }}
+      pagination={{ currentPage, lastPage, page, baseUrl: `/tags/${tag}` }}
     />
 	</div>
 </BaseLayout>

@@ -1,11 +1,11 @@
 ---
 import Tag from './Tag.astro';
 import { getFormatDay } from '../../utils/getFormatDay';
-
+import type { CollectionEntry } from "astro:content";
 export interface Props {
 	id: string;
 	pubDate: Date;
-	tags: string[];
+	tags: CollectionEntry<'tag'>[];
 	title: string;
 }
 
