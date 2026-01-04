@@ -97,4 +97,14 @@ const ogImageUrl = ogImage ? new URL(ogImage.src, Astro.site).toString() : null;
 		</main>
 		<Footer />
 	</body>
+	<script is:inline>
+		const resetTocButtonStore = () => {
+			if (Alpine.store('tocButton')) {
+				Alpine.store('tocButton').show = false;
+				Alpine.store('tocButton').expanded = false;
+			}
+		};
+
+		document.addEventListener('astro:page-load', resetTocButtonStore);
+	</script>
 </html>
