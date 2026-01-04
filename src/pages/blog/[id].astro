@@ -34,8 +34,8 @@ export async function getStaticPaths() {
     params: { id: entry.id },
     props: {
       entry,
-      prevArticle: i === 0 ? undefined : sortedEntries[i - 1],
-      nextArticle: i + 1 === articleNumber ? undefined : sortedEntries[i + 1],
+      prevArticle: i === articleNumber - 1 ? undefined : sortedEntries[i + 1],
+      nextArticle: i === 0 ? undefined : sortedEntries[i - 1],
     },
   }));
 }
