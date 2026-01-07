@@ -20,7 +20,7 @@ const { headings, id } = Astro.props;
 		x-data
 		x-intersect:enter="$store.tocButton.show = false; $store.tocButton.expanded = false"
 		x-intersect:leave="$store.tocButton.show = true"
-		class="flex flex-col gap-2.5 px-6 pt-4 pb-6 rounded-xl bg-app-bg w-full">
+		class="flex flex-col gap-2.5 px-4 md:px-6 pt-4 pb-6 rounded-xl bg-app-bg w-full">
 		<div class="flex flex-row justify-center">
 			<TocBar />
 		</div>

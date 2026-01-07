@@ -6,7 +6,7 @@ export interface Props {
 const { text } = Astro.props;
 ---
 
-<p class="flex-inline flex-row items-center flex-wrap px-6 text-base text-app-text whitespace-pre-line">
+<p class="flex-inline flex-row items-center flex-wrap px-4 md:px-6 text-base text-app-text whitespace-pre-line">
 	{text ? text : <slot />}
 </p>
 

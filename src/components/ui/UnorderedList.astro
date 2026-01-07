@@ -6,7 +6,7 @@ export interface Props {
 const { class: className } = Astro.props;
 ---
 
-<ul class={`px-6 text-base font-normal text-app-text list-disc list-inside space-y-2.5 ${className || ''}`}>
+<ul class={`px-4 md:px-6 text-base font-normal text-app-text list-disc list-inside space-y-2.5 ${className || ''}`}>
 	<slot />
 </ul>
 
