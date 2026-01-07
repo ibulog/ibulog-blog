@@ -70,7 +70,7 @@ body {
 }
 
 .code-block-wrapper .line {
-  @apply px-6 text-sm;
+  @apply px-4 text-sm;
 }
 
 .code-block-wrapper .line.highlighted,

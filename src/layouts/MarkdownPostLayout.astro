@@ -43,7 +43,7 @@ const hasHeadings = filteredHeadings.length > 0;
 )}
 
 <article class="flex flex-col gap-9">
-	<div class="px-6">
+	<div class="px-4 md:px-6">
   	<ArticleHeader id={id} pubDate={pubDate} tags={tagEntries} title={title} />
 	</div>
   {heroImage && (
@@ -58,7 +58,7 @@ const hasHeadings = filteredHeadings.length > 0;
   <slot />
 </article>
 {(prevArticle || nextArticle) && (
-  <div class="flex flex-col gap-6 px-6 pt-12 mt-12 border-t border-app-border-default">
+  <div class="flex flex-col gap-6 px-4 md:px-6 pt-12 mt-12 border-t border-app-border-default">
     {nextArticle && (
       <div class="flex flex-col gap-2.5">
         <h3 class="text-base font-bold text-app-text">

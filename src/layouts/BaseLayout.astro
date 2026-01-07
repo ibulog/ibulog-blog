@@ -89,7 +89,7 @@ const ogImageUrl = ogImage ? new URL(ogImage.src, Astro.site).toString() : null;
 
 		<ClientRouter />
 	</head>
-	<body class="min-h-screen flex flex-col w-full max-w-4xl mx-auto px-6 py-6">
+	<body class="min-h-screen flex flex-col w-full max-w-4xl mx-auto px-4 md:px-6 py-4 md:py-6">
 		<Header pageKind={pageKind} />
 		<!-- py-12, md:py-16にヘッダーの高さ64pxを考慮した余白 -->
 		<main class="flex-1 pb-12 pt-28 md:pb-16 md:pt-32">
