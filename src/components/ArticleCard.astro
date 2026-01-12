@@ -2,7 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
-import { getEntry } from "astro:content";
+import { getEntries } from "astro:content";
 import ArticleHeader from './ui/ArticleHeader.astro';
 export interface Props {
 	entry: CollectionEntry<'blog'>;
@@ -12,7 +12,7 @@ const { entry } = Astro.props;
 const { title, pubDate, tags } = entry.data;
 const { id } = entry;
 
-const tagEntries = await Promise.all(tags.map((tag) => getEntry("tag", tag.id)));
+const tagEntries = await getEntries(tags);
 const heroImage = entry.data.heroImage as ImageMetadata | undefined;
 ---
 
