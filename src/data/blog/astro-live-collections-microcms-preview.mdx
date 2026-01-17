@@ -1,0 +1,265 @@
+---
+title: "AstroのLive CollectionsでmicroCMSのプレビュー実装"
+description: "Astro 6でStableとなるLive Collectionsを使って、microCMSのプレビューページを実装します。"
+pubDate: 2026-01-17
+tags: ["frontend"]
+heroImage: "../../assets/astro-live-collections-microcms-preview/hero.jpg"
+---
+
+こんにちは。サムネイルはユニバのハリポタでビール飲んだみたいになったNAです。
+雪に慣れていないのでラジエーター塞がれないか心配でした。
+
+先日、Astro 6のベータ版がアナウンスされましたね！
+
+https://astro.build/blog/astro-6-beta/
+
+目玉機能のひとつが **Live Collections** で、これまでSSGでしか使えなかったContent CollectionsがSSRでもいい感じに使えるようになります。
+
+microCMSのプレビュー実装がちょっとシンプルになる気がしたので、正式リリース前ですがお試ししてみます。
+
+## Live Collectionsとは
+
+AstroにはContent Collectionsというコンテンツ管理をサポートしてくれる機能がありますが、これまではSSGでのみ利用可能でした。
+正確には、SSRでも利用自体はできたんですが、ビルド時に取得・保存したデータを呼び出すことになるため、外部のCMSでコンテンツが更新されても反映されない、という状態でした。
+
+Live Collectionsでは、リクエスト時にデータを都度取得するため、SSR環境でもCMSのコンテンツ更新などをリアルタイムで反映できるようになります。
+
+Astro 5の段階でExperimental Featureとして実装され、Astro 6より正式リリースに至りました。
+
+## microCMSのプレビュー実装とLive Collections
+
+Astroを使う場合は基本的にSSGすることが多いと思いますが、microCMSと組み合わせるとなると、プレビューページもほしくなります。
+
+その際、SSGだと下書きに保存したデータを反映できないので、プレビューページは以下のいずれかの方針で用意することになるかなと思います。
+
+1. SSGをやめ、SSRやISRでプロジェクト全体をレンダリングする
+2. 公開ページはSSG、プレビューページはCSR
+3. 公開ページはSSG、プレビューページはSSR
+
+今回のLive Collectionsは、3番目の方針を採用した際に、実装の共通化や型の恩恵を受けやすくなるというメリットが得られる機能になっています。
+
+## プレビューページの実装
+
+百聞は一見に如かず、ということで、Live Collectionsによる実装を試してみます。
+
+今回は3番目の方針で実装していくので、通常のContent CollectionsとLive Collectionsをどっちも使います。
+
+最初にAstroを6にアプデ。ベータ版なので対応が追いついていないプラグインもあるっぽく、お試しするなら5のままflagを有効化する方がいいかもです。
+
+```shell
+npx @astrojs/upgrade beta
+```
+
+### スキーマ・ローダー定義
+
+共通して利用するCollectionのスキーマを定義します。
+Astro 6から、Zodのオブジェクトは`astro:content`ではなく`astro/zod`からインポートするように変更されたみたい。
+
+```typescript src/loader/microcmsSchema.ts
+import { z } from "astro/zod";
+
+export const testCollectionSchema = z.object({
+  title: z.string(),
+  content: z.string(),
+});
+```
+
+続いてローダーを定義します。ここがキモと言えばキモで、通常のContent Collections用のローダーとLive Collections用のローダーを定義しています。
+
+```typescript src/loader/microcmsLoader.ts
+const fetchMicrocmsCollection = async (endpoint: string) => {
+  // 割愛: microCMSからコンテンツ一覧を取得する処理
+  return await response.json();
+};
+
+const fetchMicrocmsEntry = async (endpoint: string, id: string, draftKey?: string) => {
+  // 割愛: microCMSからコンテンツ詳細を取得する処理
+  return await response.json();
+};
+
+// 通常のContent Collection用のLoader
+export const microcmsLoader = (endpoint: string) => {
+  return async () => {
+    try {
+      const data = await fetchMicrocmsCollection(endpoint);
+      return data.contents;
+    } catch (error) {
+      console.error(`Failed to fetch ${endpoint}:`, error);
+      throw error;
+    }
+  }
+}
+
+// Live Content Collection用のLoader
+export const microcmsLiveLoader = (endpoint: string) => {
+  return {
+    name: `microcms-live-loader-${endpoint}`,
+    loadCollection: async () => {
+      try {
+        const data = await fetchMicrocmsCollection(endpoint);
+        return {
+          entries: data.contents.map((content) => ({
+            id: content.id,
+            data: content,
+          })),
+        };
+      } catch (error) {
+        console.error(`Failed to fetch ${endpoint}:`, error);
+        throw error;
+      }
+    },
+    loadEntry: async ({ filter }) => {
+      try {
+        const data = await fetchMicrocmsEntry(endpoint, filter.id, filter.draftKey);
+        if (!data) return null;
+
+        return {
+          id: data.id,
+          data: data,
+        };
+      } catch (error) {
+        console.error(`Failed to fetch ${endpoint}/${filter.id}:`, error);
+        throw error;
+      }
+    }
+  }
+}
+```
+
+見てわかるとおり、Content CollectionsとLive Collectionsではローダーが返す内容がけっこう違います。
+
+通常のContent Collectionsでは、ローダーの戻り値がユニークなIDフィールドを持つエントリーの配列であることを満たせば、戻り値はただの関数として定義することが可能でした。
+
+https://v6.docs.astro.build/en/reference/content-loader-reference/#defining-a-loader-as-a-function
+
+が、Live Collectionsのローダーではそういうわけにはいかず、以下の2つを定義する必要があります。
+
+* `loadCollection()`: コンテンツ一覧を取得するメソッド
+* `loadEntry()`: コンテンツ詳細を取得するメソッド
+
+Content Collectionsの定義時にLive Collections用のローダーで定義した`loadCollection()`を呼び出す、みたいなことをすれば共通化できそうな雰囲気は感じましたが、現時点ではローダー自体は共通化せず、microCMSからのfetch処理のみ切り出して共通化する方がよいかなという所感でした。
+
+なお、Live Collectionsでは`cacheHint`を使ってキャッシュを設定できますが、今回はプレビューページなので指定していません。
+
+### Collectionsの定義
+
+定義したスキーマとローダーをCollectionsの定義で使います。通常のContent Collectionsの定義は`content.config.ts`に、Live Collectionsの定義は`live.config.ts`に書く必要があります。
+
+```typescript src/content.config.ts
+import { defineCollection } from "astro:content";
+import { z } from "astro/zod";
+import { microcmsLoader } from "./loader/microcmsLoader";
+import { testCollectionSchema } from "./loader/microcmsSchema";
+
+const testCollection = defineCollection({
+  loader: microcmsLoader("test"),
+  schema: testCollectionSchema,
+});
+
+export const collections = {
+  test: testCollection,
+};
+```
+
+```typescript src/live.config.ts
+import { defineLiveCollection } from "astro:content";
+import { microcmsLiveLoader } from "./loader/microcmsLoader";
+import { testCollectionSchema } from "./loader/microcmsSchema";
+
+const testLiveCollection = defineLiveCollection({
+  loader: microcmsLiveLoader("test"),
+  schema: testCollectionSchema,
+});
+
+export const collections = {
+  testLive: testLiveCollection,
+};
+```
+
+### 各ページの実装
+
+さて、ここからは定義したCollectionsを使って各ページでコンテンツを取得する部分を作っていきます。
+
+まずは通常のページ。SSGするので`getStaticPaths()`内で全コンテンツを取得して、それぞれのidを展開してルーティングします。
+
+ページの構成はLayoutにまとめ、プレビューページと共有します。
+
+```astro src/pages/test/[...id].astro
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import type { CollectionEntry } from "astro:content";
+
+export type Props = {
+  entry: CollectionEntry<'test'>;
+}
+
+export const getStaticPaths = (async () => {
+  const testEntries = await getCollection("test");
+
+  return testEntries.map((entry) => ({
+    params: { id: entry.id },
+    props: {
+      ...entry,
+    },
+  }));
+})
+
+const { entry } = Astro.props;
+const { data } = entry;
+---
+
+<Layout data={data} baseUrl="/test">
+	<div set:html={data.content} />
+</Layout>
+```
+
+`Astro.props`から受け取れる`entry`の型は[CollectionEntry](https://v6.docs.astro.build/en/reference/modules/astro-content/#collectionentry)になり、CollectionEntryが持つ`data`の型はInferEntrySchemaになります。
+
+上記で`entry`をそのまま渡していない理由は、次のプレビュー画面の実装を見つつご説明。
+
+```astro src/pages/test/preview/[id].astro
+---
+export const prerender = false;
+
+import { getLiveEntry } from "astro:content";
+import Layout from "../../../layouts/Layout.astro";
+
+const { id } = Astro.params;
+
+const draftKey = Astro.url.searchParams.get("draftKey");
+const result = await getLiveEntry("testLive", { id, draftKey });
+
+if (!result.entry) {
+  return Astro.redirect("/404");
+}
+
+const { entry } = result;
+const { data } = entry;
+---
+
+<Layout data={data}">
+	<div set:html={data.content} />
+</Layout>
+```
+
+`getLiveEntry()`は、第2引数にローダーで使える`filter`を渡せるので、ここで記事IDとdraftKeyを渡しています。
+
+上記の`getLiveEntry()`で受け取れる`entry`は、CollectionEntryではなく[LiveDataEntry](https://v6.docs.astro.build/en/reference/content-loader-reference/#livedataentry)になり、LiveDataEntryが持つ`data`の型はInferEntrySchemaになります。
+
+通常の画面で呼び出した`getCollection()`が配列として返す値と、`getLiveEntry()`が返す値の型が異なるため、`entry`をそのまま渡さず型が同じ`data`を渡しています。
+
+エラーハンドリングなど端折っている部分はありつつ、通常ページはSSG、プレビューページはSSRでCMS側の更新を反映可能な形で実装できました。
+
+## まとめ
+
+これまでSSGとSSRの組み合わせでプレビューを実装する場合、SSR側のコンテンツは別途fetchする必要があったので、Colllectionsのローダーとしてまとめることができるようになりました。
+
+切り出せたのは取得処理だけなので、実装の共通化という観点では以前と大きく変わらないかもですが、Collectionsとして並列で定義できることと、スキーマ定義によるLive Collectionsそのものの恩恵は受けやすくなりました。
+
+あとは、思ったよりも通常のContent CollectionsとLive Collectionsで周辺APIの仕様差があったなという印象でした。
+
+個人的には、レンダリングまわりのコントロールが複数レイヤー（ページ、Content Collections）に分散してしまっている印象を少し持ちました。
+が、Astroの主軸があくまでSSGであることを考えると、SSGでの使い勝手を損なわないという観点で、レンダリングとその周辺APIも明確に切り分けるのはいいことか、とも思い直しました。
+
+おわり。
