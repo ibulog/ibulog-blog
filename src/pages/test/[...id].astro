@@ -1,0 +1,27 @@
+---
+import { getCollection } from "astro:content";
+import TestLayout from "../../layouts/TestLayout.astro";
+import type { CollectionEntry } from "astro:content";
+
+export type Props = {
+  entry: CollectionEntry<'test'>;
+}
+
+export const  getStaticPaths = (async () => {
+  const testEntries = await getCollection("test");
+
+  return testEntries.map((entry, i) => ({
+    params: { id: entry.id },
+    props: {
+      ...entry,
+    },
+  }));
+})
+
+const { entry } = Astro.props;
+const { data } = entry;
+---
+
+<TestLayout data={data} baseUrl="/test">
+	<div set:html={data.content} />
+</TestLayout>

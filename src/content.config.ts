@@ -1,25 +1,8 @@
-import { defineCollection, reference, z } from "astro:content";
+import { defineCollection, reference } from "astro:content";
+import { z } from "astro/zod";
 import { glob } from "astro/loaders";
-import { MICROCMS_SERVICE_DOMAIN, MICROCMS_API_KEY } from "astro:env/server";
-
-const microcmsLoader = (endpoint: string) => {
-  return async () => {
-  try {
-    const response = await fetch(`https://${MICROCMS_SERVICE_DOMAIN}.microcms.io/api/v1/${endpoint}`, {
-      headers: {
-        "X-MICROCMS-API-KEY": MICROCMS_API_KEY,
-      },
-    });
-    if (!response.ok) throw new Error(`Failed to fetch ${endpoint}: ${response.statusText}`);
-
-    const data = await response.json();
-    return data.contents;
-    } catch (error) {
-      console.error(`Failed to fetch ${endpoint}:`, error);
-      throw error;
-    }
-  }
-};
+import { microcmsLoader } from "./loader/microcmsLoader";
+import { testCollectionSchema } from "./loader/microcmsSchema";
 
 const jobCollection = defineCollection({
   loader: microcmsLoader("jobs"),
@@ -31,6 +14,11 @@ const jobCollection = defineCollection({
     work: z.string(),
     companyUrl: z.string(),
   }),
+});
+
+const testCollection = defineCollection({
+  loader: microcmsLoader("test"),
+  schema: testCollectionSchema,
 });
 
 const selfIntroductionCollection = defineCollection({
@@ -59,9 +47,10 @@ const blogCollection = defineCollection({
   }),
 });
 
-export const collections = <const>{
+export const collections: Record<string, any> = {
   blog: blogCollection,
   job: jobCollection,
   tag: tagCollection,
   selfIntroduction: selfIntroductionCollection,
+  test: testCollection,
 };

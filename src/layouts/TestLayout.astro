@@ -1,0 +1,32 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { PAGE_KINDS, ICON_IMAGE } from '../config';
+import type { InferEntrySchema } from 'astro:content';
+
+export interface Props {
+	data: InferEntrySchema<'test'>;
+	baseUrl?: string;
+}
+
+const { data, baseUrl = "/test" } = Astro.props;
+const pageKind = PAGE_KINDS.ABOUT;
+---
+
+<BaseLayout title={data.title} description={data.description} url={`${baseUrl}/${data.id}`} image={ICON_IMAGE} pageKind={pageKind} scrollSmooth={true}>
+	<article class="flex flex-col gap-9">
+		<div class="px-4 md:px-6">
+			<h1 class="text-3xl font-bold text-app-text mb-4">
+				{data.title}
+			</h1>
+			<p class="text-base text-app-text-secondary">
+				{data.description}
+			</p>
+		</div>
+		<div class="px-4 md:px-6">
+			<div class="prose prose-invert max-w-none">
+				<slot />
+			</div>
+		</div>
+	</article>
+</BaseLayout>
+

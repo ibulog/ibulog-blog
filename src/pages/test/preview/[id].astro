@@ -1,0 +1,17 @@
+---
+export const prerender = false;
+
+import { getLiveEntry } from "astro:content";
+import TestLayout from "../../../layouts/TestLayout.astro";
+
+const { id } = Astro.params;
+const draftKey = Astro.url.searchParams.get("draftKey");
+
+const { entry } = await getLiveEntry("testLive", { id, draftKey });
+const { data } = entry;
+---
+
+<TestLayout data={data} baseUrl="/preview/test">
+	<div set:html={data.content} />
+</TestLayout>
+
