@@ -71,6 +71,7 @@ body {
 
 .code-block-wrapper .line {
   @apply px-4 text-sm;
+  min-height: 1em;
 }
 
 .code-block-wrapper .line.highlighted,
