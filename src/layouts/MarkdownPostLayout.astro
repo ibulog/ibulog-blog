@@ -47,7 +47,24 @@ const hasHeadings = filteredHeadings.length > 0;
   	<ArticleHeader id={id} pubDate={pubDate} tags={tagEntries} title={title} />
 	</div>
   {heroImage && (
-    <div class="w-full rounded-xl overflow-hidden" transition:name={`hero-image-${id}`}>
+    <div 
+			class="w-full rounded-xl overflow-hidden"
+			transition:name={`hero-image-${id}`}
+			x-data="{
+				attribute: 'data-astro-transition-scope',
+				setTransitionName() {
+					const currentScope = $el.getAttribute(this.attribute);
+					if (!currentScope) {
+						$el.setAttribute(this.attribute, this.scope);
+					}
+				},
+				removeTransitionName() {
+					$el.removeAttribute(this.attribute);
+				}
+			}"
+			x-intersect:enter="setTransitionName()"
+			x-intersect:leave="removeTransitionName()"
+		>
       <Image width={1080} height={540} src={heroImage} alt={title} class="w-full h-auto" />
     </div>
   )}
