@@ -44,7 +44,7 @@ const hasHeadings = filteredHeadings.length > 0;
 
 <article class="flex flex-col gap-9">
 	<div class="px-4 md:px-6">
-  	<ArticleHeader id={id} pubDate={pubDate} tags={tagEntries} title={title} />
+  	<ArticleHeader id={id} pubDate={pubDate} tags={tagEntries} title={title} showDefault={true} />
 	</div>
   {heroImage && (
     <div 
@@ -66,7 +66,6 @@ const hasHeadings = filteredHeadings.length > 0;
 					$el.removeAttribute(this.attribute);
 				}
 			}"
-			x-init="init()"
 			x-intersect:enter="setTransitionName()"
 			x-intersect:leave="removeTransitionName()"
 		>
@@ -86,7 +85,7 @@ const hasHeadings = filteredHeadings.length > 0;
         <h3 class="text-base font-bold text-app-text">
           Next
         </h3>
-        <ArticleCard entry={nextArticle} enableTransition={false} />
+        <ArticleCard entry={nextArticle} showDefault={false} />
       </div>
     )}
     {prevArticle && (
@@ -94,7 +93,7 @@ const hasHeadings = filteredHeadings.length > 0;
         <h3 class="text-base font-bold text-app-text">
           Prev
         </h3>
-        <ArticleCard entry={prevArticle} enableTransition={false} />
+        <ArticleCard entry={prevArticle} showDefault={false} />
       </div>
     )}
   </div>
