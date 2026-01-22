@@ -52,6 +52,10 @@ const hasHeadings = filteredHeadings.length > 0;
 			transition:name={`hero-image-${id}`}
 			x-data="{
 				attribute: 'data-astro-transition-scope',
+				init() {
+					this.scope = $el.getAttribute(this.attribute);
+				},
+				scope: null,
 				setTransitionName() {
 					const currentScope = $el.getAttribute(this.attribute);
 					if (!currentScope) {
@@ -62,6 +66,7 @@ const hasHeadings = filteredHeadings.length > 0;
 					$el.removeAttribute(this.attribute);
 				}
 			}"
+			x-init="init()"
 			x-intersect:enter="setTransitionName()"
 			x-intersect:leave="removeTransitionName()"
 		>
