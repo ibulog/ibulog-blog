@@ -6,10 +6,10 @@ import { getEntries } from "astro:content";
 import ArticleHeader from './ui/ArticleHeader.astro';
 export interface Props {
 	entry: CollectionEntry<'blog'>;
-	enableTransition?: boolean;
+	showDefault?: boolean;
 }
 
-const { entry, enableTransition = true } = Astro.props;
+const { entry, showDefault } = Astro.props;
 const { title, pubDate, tags } = entry.data;
 const { id } = entry;
 
@@ -18,12 +18,32 @@ const heroImage = entry.data.heroImage as ImageMetadata | undefined;
 ---
 
 <article class="flex flex-row gap-9 w-full h-24">
-	<ArticleHeader id={id} pubDate={pubDate} tags={tagEntries} title={title} enableTransition={enableTransition} />
+	<ArticleHeader id={id} pubDate={pubDate} tags={tagEntries} title={title} showDefault={showDefault} />
 	{heroImage && (
 		<div class="flex-shrink-0 h-full">
 			<a href={`/blog/${id}`} class="block w-full h-full">
-				{enableTransition ? (
-					<div class="w-24 h-24 md:w-40 md:h-24 rounded-xl overflow-hidden" transition:name={`hero-image-${id}`}>
+				{showDefault ? (
+					<div class="w-24 h-24 md:w-40 md:h-24 rounded-xl overflow-hidden"
+						transition:name={`hero-image-${id}`}
+						x-data="{
+							attribute: 'data-astro-transition-scope',
+							init() {
+								this.scope = $el.getAttribute(this.attribute);
+							},
+							scope: null,
+							setTransitionName() {
+								const currentScope = $el.getAttribute(this.attribute);
+								if (!currentScope) {
+									$el.setAttribute(this.attribute, this.scope);
+								}
+							},
+							removeTransitionName() {
+								$el.removeAttribute(this.attribute);
+							}
+						}"
+						x-intersect:enter="setTransitionName()"
+						x-intersect:leave="removeTransitionName()"
+					>
 						<Image
 							src={heroImage}
 							alt={title}
@@ -31,7 +51,28 @@ const heroImage = entry.data.heroImage as ImageMetadata | undefined;
 						/>
 					</div>
 				) : (
-					<div class="w-24 h-24 md:w-40 md:h-24 rounded-xl overflow-hidden">
+					<div class="w-24 h-24 md:w-40 md:h-24 rounded-xl overflow-hidden"
+						transition:name={`hero-image-${id}`}
+						x-data="{
+							attribute: 'data-astro-transition-scope',
+							init() {
+								this.scope = $el.getAttribute(this.attribute);
+								this.removeTransitionName();
+							},
+							scope: null,
+							setTransitionName() {
+								const currentScope = $el.getAttribute(this.attribute);
+								if (!currentScope) {
+									$el.setAttribute(this.attribute, this.scope);
+								}
+							},
+							removeTransitionName() {
+								$el.removeAttribute(this.attribute);
+							}
+						}"
+						x-intersect:enter="setTransitionName()"
+						x-intersect:leave="removeTransitionName()"
+					>
 						<Image
 							src={heroImage}
 							alt={title}
