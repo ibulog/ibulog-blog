@@ -64,7 +64,7 @@ const hasHeadings = filteredHeadings.length > 0;
         <h3 class="text-base font-bold text-app-text">
           Next
         </h3>
-        <ArticleCard entry={nextArticle} />
+        <ArticleCard entry={nextArticle} enableTransition={false} />
       </div>
     )}
     {prevArticle && (
@@ -72,7 +72,7 @@ const hasHeadings = filteredHeadings.length > 0;
         <h3 class="text-base font-bold text-app-text">
           Prev
         </h3>
-        <ArticleCard entry={prevArticle} />
+        <ArticleCard entry={prevArticle} enableTransition={false} />
       </div>
     )}
   </div>
