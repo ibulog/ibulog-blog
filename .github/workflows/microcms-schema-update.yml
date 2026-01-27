@@ -1,0 +1,52 @@
+name: microCMS API Schema Update
+
+on:
+  repository_dispatch:
+    types: [microcms-api-schema-update]
+
+jobs:
+  sync-schema:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update API schema and commit
+        id: update-schema
+        uses: actions/github-script@v7
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_MANAGEMENT_API_KEY: ${{ secrets.MICROCMS_MANAGEMENT_API_KEY }}
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            import { updateSchemaFile } from '../scripts/update-schema-file.js';
+
+            try {
+              const result = await updateSchemaFile(${{ toJson(github.event.client_payload) }});
+              core.setOutput('api_name', result.apiName);
+              core.setOutput('branch_name', result.branchName);
+            } catch (error) {
+              core.setFailed(error);
+            }
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ steps.update-schema.outputs.branch_name }}
+          title: "chore: ${{ steps.update-schema.outputs.api_name }}のAPIスキーマ更新"
+          body: |
+            microCMSのAPIスキーマが更新されました。
+            
+            - API: `${{ steps.update-schema.outputs.api_name }}`
+            - Service: `${{ steps.update-schema.outputs.service_name }}`
+            
+            このPRは自動生成されました。
+          delete-branch: true
