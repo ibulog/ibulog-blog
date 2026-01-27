@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Update API schema and commit
+      - name: Update API schema file
         id: update-schema
         uses: actions/github-script@v7
         env:
