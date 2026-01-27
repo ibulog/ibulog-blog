@@ -1,0 +1,305 @@
+---
+title: "microCMSのAPIスキーマ差分をGitHub Actionsで自動管理する"
+description: "microCMSのAPIスキーマ変更で生じたJSONの差分をGitHub Actionsで自動管理します。"
+pubDate: 2026-01-28
+tags: ["ci-cd", "frontend"]
+heroImage: "../../assets/microcms-api-schema-github-actions/hero.jpg"
+---
+
+こんにちは。サムネイルはいいかんじの細道です。
+
+microCMSでは、現在のところはAPIスキーマのバージョン管理ができません。
+バージョン管理をするには、APIスキーマのJSONを管理画面からダウンロードして、手動でGitなどで管理する必要がありました。
+
+が、最近マネジメントAPIの拡充により、API経由でもAPIスキーマ情報の取得が可能になりました。
+
+https://document.microcms.io/management-api/get-api-info
+
+本記事では上記のAPIを使って、スキーマのJSONファイルをGitHubで管理し、差分が生じたら自動でPull Requestを作成してみます。
+
+## 連携の流れ
+
+流れとしては↓のイメージです。
+
+1. microCMSの管理画面でAPIスキーマを変更
+2. microCMSのWebhookが発火
+3. GitHub ActionsでWebhook受信
+4. Webhookの内容を元にAPIスキーマ取得
+5. 差分PR作成
+
+それではつくっていきましょう。
+
+## GitHub Actions側の設定
+
+いったんワークフローファイルのYAMLの全体像をお見せします。
+メンテナビリティを考え、シェルではなく`actions/github-script`を使っているので、スキーマ取得処理などは別ファイルに切り出されています。
+切り出した部分はのちほど説明します。
+
+```yaml
+name: microCMS API Schema Update
+
+on:
+  repository_dispatch:
+    types: [microcms-api-schema-update]
+
+jobs:
+  extract-api-name:
+    runs-on: ubuntu-latest
+    outputs:
+      api_name: ${{ steps.extract-api-name.outputs.api_name }}
+    steps:
+      - name: Extract API name
+        id: extract-api-name
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const payload = context.payload.client_payload;
+            const apiName = payload?.api;
+
+            if (!apiName || apiName === 'null') {
+              core.setFailed('API名がWebhookのペイロードに含まれていません。');
+              return;
+            }
+
+            core.setOutput('api_name', apiName);
+
+  update-microcms-schema:
+    runs-on: ubuntu-latest
+    needs: extract-api-name
+    permissions:
+      contents: write
+      pull-requests: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ needs.extract-api-name.outputs.api_name }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update API schema file
+        id: update-schema
+        uses: actions/github-script@v7
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_MANAGEMENT_API_KEY: ${{ secrets.MICROCMS_MANAGEMENT_API_KEY }}
+        with:
+          script: |
+            const { updateSchemaFile } = await import(`${process.env.GITHUB_WORKSPACE}/.github/scripts/update-schema-file.js`);
+            await updateSchemaFile('${{ needs.extract-api-name.outputs.api_name }}', core);
+
+      - name: Generate branch name
+        id: generate-branch-name
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branchName = `update-schema-${{ needs.extract-api-name.outputs.api_name }}-${Date.now()}`;
+            core.setOutput('branch_name', branchName);
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: ${{ steps.generate-branch-name.outputs.branch_name }}
+          title: "chore: ${{ needs.extract-api-name.outputs.api_name }}のAPIスキーマ更新"
+          body: |
+            microCMSのAPIスキーマが更新されました。
+
+            - API: `${{ needs.extract-api-name.outputs.api_name }}`
+
+            このPRは自動生成されました。
+          delete-branch: true
+```
+
+### ワークフローの起動条件
+
+今回はmicroCMSのWebhookをトリガーにするので、`repository_dispatch`を使います。
+`types`は任意の文字列で構いませんが、あとでmicroCMS側にも設定するので、わかりやすい名前がいいと思います。
+
+```yaml
+on:
+  repository_dispatch:
+    types: [microcms-api-schema-update]
+```
+
+### API名の取得
+
+`extract-api-name`では、WebhookのペイロードからAPI名を取得しています。
+
+```yaml
+extract-api-name:
+  runs-on: ubuntu-latest
+  outputs:
+    api_name: ${{ steps.extract-api-name.outputs.api_name }}
+  steps:
+    - name: Extract API name
+      id: extract-api-name
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const payload = context.payload.client_payload;
+          const apiName = payload?.api;
+
+          if (!apiName || apiName === 'null') {
+            core.setFailed('API名がWebhookのペイロードに含まれていません。');
+            return;
+          }
+
+          core.setOutput('api_name', apiName);
+```
+
+なぜjobをわけているかというと、APIスキーマ単位でconcurrencyを設定したいため。
+
+今回はすべてのAPIスキーマで共通のワークフローを使います。
+そのため、受け取ったWebhookの内容をもとにconcurrencyのgroupを指定する必要があります。
+が、concurrencyはjob単位までしか設定できないので、jobをわけてAPI名を事前に取得し、それを後続jobのconcurrencyに利用することになります。
+
+また、ペイロードからAPI名を取得する処理は、後述するAPIスキーマを取得する処理とは異なり、JS部分を別ファイルに切り出していません。
+これは処理が単純というのもありますが、別ファイルに切り出すとリポジトリのCheckoutが必要になり、規模が大きいリポジトリではボトルネックになるためです。
+
+microCMSから受け取るWebhookのペイロード形式は以下のようなフォーマットです。ペイロードには`context.payload.client_payload`でアクセスできます。
+
+```json
+{
+  "service": "サービス名",
+  "api": "API名",
+  "type": "edit",
+  "contents": null
+}
+```
+
+細かい説明になりましたが、肝心のAPIスキーマ取得部分に移ります。
+
+### APIスキーマの取得・保存
+
+`update-microcms-schema`は、API名を受け取って`updateSchemaFile`を実行する部分。
+`updateSchemaFile`の中身は以下のとおりです。
+
+```javascript
+import fs from 'fs';
+import path from 'path';
+
+export const updateSchemaFile = async (apiName, core) => {
+  // スキーマファイルのディレクトリがなければ作成
+  const schemaDir = 'schemas';
+  if (!fs.existsSync(schemaDir)) {
+    fs.mkdirSync(schemaDir, { recursive: true });
+  }
+
+  const schemaFile = path.join(schemaDir, `${apiName}.json`);
+  
+  if (!process.env.MICROCMS_SERVICE_DOMAIN) {
+    core.setFailed('MICROCMS_SERVICE_DOMAIN環境変数が設定されていません。');
+    return;
+  }
+  if (!process.env.MICROCMS_MANAGEMENT_API_KEY) {
+    core.setFailed('MICROCMS_MANAGEMENT_API_KEY環境変数が設定されていません。');
+    return;
+  }
+
+  const serviceDomain = process.env.MICROCMS_SERVICE_DOMAIN;
+  const managementApiKey = process.env.MICROCMS_MANAGEMENT_API_KEY;
+  
+  const apiUrl = `https://${serviceDomain}.microcms-management.io/api/v1/apis/${apiName}`;
+
+  // APIスキーマを取得し、ファイルに保存
+  try {
+    const response = await fetch(apiUrl, {
+      headers: {
+        'X-MICROCMS-API-KEY': managementApiKey,
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      core.setFailed(`APIスキーマの取得に失敗しました: ${response.statusText}`);
+      return;
+    }
+    
+    const schema = await response.json();
+    fs.writeFileSync(schemaFile, JSON.stringify(schema, null, 2));
+    core.info(`APIスキーマを${schemaFile}に保存しました。`);
+  } catch (err) {
+    core.setFailed(`エラーが発生しました：${err}`);
+    return;
+  }
+};
+```
+
+やっていることはシンプル。
+
+1. API名をもとに、マネジメントAPIでAPIスキーマ情報を取得
+2. 取得したAPIスキーマ情報をJSONとして保存
+
+`core`をわざわざ呼び出し元から渡しているのは、JS側でimportすると`package.json`での宣言が必要になるためです。
+宣言してもいいっちゃいいんですが、`github-script`のサンプルコードに従っています。
+
+なお、microCMSのAPIスキーマは差分が生じないと保存できないので、差分検知の処理は入れていません。
+厳密にはPRマージのタイミングなどが絡むと差分が生じないケースもあるのですが、のちのPR作成処理が吸収してくれるので、ここで考慮する必要はなさそうでした。
+
+### PR作成
+
+あとはブランチ名が重複しないようにタイムスタンプを含めた名称を生成し、差分のコミット・PR作成をしていきます。
+コミットやPR作成は`peter-evans/create-pull-request`が全部やってくれます。便利。
+
+```yaml
+- name: Generate branch name
+  id: generate-branch-name
+  uses: actions/github-script@v7
+  with:
+    script: |
+      const branchName = `update-schema-${{ needs.extract-api-name.outputs.api_name }}-${Date.now()}`;
+      core.setOutput('branch_name', branchName);
+
+- name: Create Pull Request
+  uses: peter-evans/create-pull-request@v6
+  with:
+    branch: ${{ steps.generate-branch-name.outputs.branch_name }}
+    title: "chore: ${{ needs.extract-api-name.outputs.api_name }}のAPIスキーマ更新"
+    body: |
+      microCMSのAPIスキーマが更新されました。
+
+      - API: `${{ needs.extract-api-name.outputs.api_name }}`
+
+      このPRは自動生成されました。
+    delete-branch: true
+```
+
+最終的には、2ファイルを以下のように配置して、mainブランチにマージします。
+
+```
+.github
+├── scripts
+│   └── update-schema-file.js
+└── workflows
+    └── microcms-schema-update.yml
+```
+
+ワークフローで利用する環境変数をリポジトリに設定したら、GitHub側の設定は完了。
+
+* `MICROCMS_SERVICE_DOMAIN`: microCMSのサービスドメイン（xxx.microcms.ioのxxx）
+* `MICROCMS_MANAGEMENT_API_KEY`：マネジメントAPIの「API情報の取得 (一覧・詳細)」権限を持つAPIキー
+
+## microCMS側の設定
+
+microCMS側では、Webhookを設定します。
+API設定 > Webhook > 追加と進んで、サービスは「GitHub Actions」を選択します。
+
+設定項目は以下のとおり。
+
+* 基本設定
+  * Webhookの名前：任意の名前を入力します。
+  * GitHubトークン：GitHubから払い出したトークンを入力します。トークンの払い出しは[公式ヘルプ](https://help.microcms.io/ja/knowledge/webhook-github-actions-settings)に従えばOK。
+  * リポジトリのユーザー名：リポジトリオーナーのGitHubユーザー名を入力します。
+  * トリガーイベント名：GitHub Actionsのワークフローファイルで`repository_dispatch`の`type`に指定した文字列を入力します。
+* 通知タイミングの設定
+  * 「APIの設定変更時」のみチェックを入れます。
+
+以上で設定は完了。APIスキーマを変更すると、GitHub側でワークフローが起動しPRが作成されると思います。
+
+## まとめ
+
+マネジメントAPIの拡充によって、スキーマ変更の差分管理がかなり自動化できました。
+APIの数だけmicroCMS側のWebhook設定が必要なので、ちょっと大変ではありますが...！
+
+今回はAPIの削除には対応していないのが宿題ですね。やろうと思えばできる部分です。
+
+おわり。
