@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+import { execSync } from 'child_process';
 
-export const updateSchemaFile = async (webhookPayload, serviceDomain, managementApiKey) => {
+export const updateSchemaFile = async (webhookPayload) => {
   const apiName = webhookPayload.api;
 
   // API名が空の場合はエラー
@@ -19,12 +20,15 @@ export const updateSchemaFile = async (webhookPayload, serviceDomain, management
 
   const schemaFile = path.join(schemaDir, `${apiName}.json`);
   
-  if (!serviceDomain) {
+  if (!process.env.MICROCMS_SERVICE_DOMAIN) {
     throw new Error('MICROCMS_SERVICE_DOMAIN環境変数が設定されていません。');
   }
-  if (!managementApiKey) {
+  if (!process.env.MICROCMS_MANAGEMENT_API_KEY) {
     throw new Error('MICROCMS_MANAGEMENT_API_KEY環境変数が設定されていません。');
   }
+
+  const serviceDomain = process.env.MICROCMS_SERVICE_DOMAIN;
+  const managementApiKey = process.env.MICROCMS_MANAGEMENT_API_KEY;
   
   const apiUrl = `https://${serviceDomain}.microcms-management.io/api/v1/apis/${apiName}`;
 

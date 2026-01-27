@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Update API schema file
+      - name: Update API schema and commit
         id: update-schema
         uses: actions/github-script@v7
         env:
@@ -26,11 +26,7 @@ jobs:
             const { updateSchemaFile } = await import('${{ github.workspace }}/.github/scripts/update-schema-file.js');
 
             try {
-              const result = await updateSchemaFile(
-                ${{ toJson(github.event.client_payload) }},
-                process.env.MICROCMS_SERVICE_DOMAIN,
-                process.env.MICROCMS_MANAGEMENT_API_KEY
-              );
+              const result = await updateSchemaFile(${{ toJson(github.event.client_payload) }});
               core.setOutput('api_name', result.apiName);
               core.setOutput('branch_name', result.branchName);
             } catch (error) {
