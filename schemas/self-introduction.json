@@ -1,0 +1,11 @@
+{
+  "apiFields": [
+    {
+      "fieldId": "text",
+      "name": "本文",
+      "kind": "textArea",
+      "required": true
+    }
+  ],
+  "customFields": []
+}
