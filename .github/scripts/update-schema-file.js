@@ -42,19 +42,6 @@ export const updateSchemaFile = async (webhookPayload) => {
 
   const branchName = `update-schema-${apiName}-${Date.now()}`;
 
-  // 差分をコミットしてプッシュ
-  try {
-    execSync('git config --local user.email "github-actions[bot]@users.noreply.github.com"');
-    execSync('git config --local user.name "github-actions[bot]"');
-
-    execSync(`git switch -c ${branchName}`);
-    execSync(`git add "${schemaFile}"`);
-    execSync(`git commit -m "chore: update API schema for ${apiName}"`);
-    execSync(`git push origin ${branchName}`);
-  } catch (err) {
-    throw new Error(`Git操作に失敗しました：${err}`);
-  }
-
   return {
     apiName,
     branchName,

@@ -14,8 +14,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update API schema and commit
         id: update-schema
@@ -24,9 +22,8 @@ jobs:
           MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
           MICROCMS_MANAGEMENT_API_KEY: ${{ secrets.MICROCMS_MANAGEMENT_API_KEY }}
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            import { updateSchemaFile } from '../scripts/update-schema-file.js';
+            const { updateSchemaFile } = await import('${{ github.workspace }}/.github/scripts/update-schema-file.js');
 
             try {
               const result = await updateSchemaFile(${{ toJson(github.event.client_payload) }});
@@ -39,7 +36,6 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ steps.update-schema.outputs.branch_name }}
           title: "chore: ${{ steps.update-schema.outputs.api_name }}のAPIスキーマ更新"
           body: |
