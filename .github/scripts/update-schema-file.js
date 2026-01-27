@@ -19,13 +19,25 @@ export const updateSchemaFile = async (webhookPayload) => {
   }
 
   const schemaFile = path.join(schemaDir, `${apiName}.json`);
-  const apiUrl = `https://${process.env.MICROCMS_SERVICE_DOMAIN}.microcms-management.io/api/v1/apis/${apiName}`;
+  
+  if (!process.env.MICROCMS_SERVICE_DOMAIN) {
+    throw new Error('MICROCMS_SERVICE_DOMAIN環境変数が設定されていません。');
+  }
+  if (!process.env.MICROCMS_MANAGEMENT_API_KEY) {
+    throw new Error('MICROCMS_MANAGEMENT_API_KEY環境変数が設定されていません。');
+  }
+
+  const serviceDomain = process.env.MICROCMS_SERVICE_DOMAIN;
+  const managementApiKey = process.env.MICROCMS_MANAGEMENT_API_KEY;
+  
+  const apiUrl = `https://${serviceDomain}.microcms-management.io/api/v1/apis/${apiName}`;
 
   // APIスキーマを取得し、ファイルに保存
   try {
     const response = await fetch(apiUrl, {
       headers: {
-        'X-MICROCMS-API-KEY': process.env.MICROCMS_MANAGEMENT_API_KEY,
+        'X-MICROCMS-API-KEY': managementApiKey,
+        'Content-Type': 'application/json',
       },
     });
     
