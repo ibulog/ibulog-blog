@@ -5,6 +5,12 @@
       "name": "本文",
       "kind": "textArea",
       "required": true
+    },
+    {
+      "fieldId": "test",
+      "name": "test",
+      "kind": "text",
+      "required": false
     }
   ],
   "customFields": []
