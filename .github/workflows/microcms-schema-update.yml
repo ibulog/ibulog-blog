@@ -42,7 +42,6 @@ jobs:
             microCMSのAPIスキーマが更新されました。
             
             - API: `${{ steps.update-schema.outputs.api_name }}`
-            - Service: `${{ steps.update-schema.outputs.service_name }}`
             
             このPRは自動生成されました。
           delete-branch: true
