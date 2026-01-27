@@ -5,7 +5,7 @@ on:
     types: [microcms-api-schema-update]
 
 jobs:
-  sync-schema:
+  update-microcms-schema:
     runs-on: ubuntu-latest
     permissions:
       contents: write
