@@ -1,0 +1,44 @@
+{
+  "apiFields": [
+    {
+      "fieldId": "companyName",
+      "name": "会社名",
+      "kind": "text",
+      "required": true,
+      "isUnique": false
+    },
+    {
+      "fieldId": "startDate",
+      "name": "開始日",
+      "kind": "date",
+      "required": true,
+      "dateFormat": true
+    },
+    {
+      "fieldId": "endDate",
+      "name": "終了日",
+      "kind": "date",
+      "required": false,
+      "dateFormat": true
+    },
+    {
+      "fieldId": "team",
+      "name": "部署",
+      "kind": "text",
+      "required": true
+    },
+    {
+      "fieldId": "work",
+      "name": "職務内容",
+      "kind": "textArea",
+      "required": true
+    },
+    {
+      "fieldId": "companyUrl",
+      "name": "URL",
+      "kind": "text",
+      "required": true
+    }
+  ],
+  "customFields": []
+}
