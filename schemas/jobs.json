@@ -38,6 +38,12 @@
       "name": "URL",
       "kind": "text",
       "required": true
+    },
+    {
+      "fieldId": "test",
+      "name": "test",
+      "kind": "text",
+      "required": false
     }
   ],
   "customFields": []
