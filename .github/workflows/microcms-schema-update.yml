@@ -47,7 +47,7 @@ jobs:
         with:
           script: |
             const { updateSchemaFile } = await import(`${process.env.GITHUB_WORKSPACE}/.github/scripts/update-schema-file.js`);
-            await updateSchemaFile(${{ needs.extract-api-name.outputs.api_name }}, core);
+            await updateSchemaFile('${{ needs.extract-api-name.outputs.api_name }}', core);
 
       - name: Generate branch name
         id: generate-branch-name
