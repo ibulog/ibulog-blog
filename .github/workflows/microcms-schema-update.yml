@@ -5,12 +5,35 @@ on:
     types: [microcms-api-schema-update]
 
 jobs:
+  extract-api-name:
+    runs-on: ubuntu-latest
+    outputs:
+      api_name: ${{ steps.extract-api-name.outputs.api_name }}
+    steps:
+      - name: Extract API name
+        id: extract-api-name
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const payload = context.payload.client_payload;
+            const apiName = payload?.api;
+
+            if (!apiName || apiName === 'null') {
+              core.setFailed('API名がWebhookのペイロードに含まれていません。');
+              return;
+            }
+
+            core.setOutput('api_name', apiName);
+
   update-microcms-schema:
     runs-on: ubuntu-latest
+    needs: extract-api-name
     permissions:
       contents: write
       pull-requests: write
-    
+    concurrency:
+      group: ${{ github.workflow }}-${{ needs.extract-api-name.outputs.api_name }}
+      cancel-in-progress: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,25 +46,26 @@ jobs:
           MICROCMS_MANAGEMENT_API_KEY: ${{ secrets.MICROCMS_MANAGEMENT_API_KEY }}
         with:
           script: |
-            const { updateSchemaFile } = await import('${{ github.workspace }}/.github/scripts/update-schema-file.js');
+            const { updateSchemaFile } = await import(`${process.env.GITHUB_WORKSPACE}/.github/scripts/update-schema-file.js`);
+            await updateSchemaFile(${{ needs.extract-api-name.outputs.api_name }}, core);
 
-            try {
-              const result = await updateSchemaFile(${{ toJson(github.event.client_payload) }});
-              core.setOutput('api_name', result.apiName);
-              core.setOutput('branch_name', result.branchName);
-            } catch (error) {
-              core.setFailed(error);
-            }
+      - name: Generate branch name
+        id: generate-branch-name
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branchName = `update-schema-${{ needs.extract-api-name.outputs.api_name }}-${Date.now()}`;
+            core.setOutput('branch_name', branchName);
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
-          branch: ${{ steps.update-schema.outputs.branch_name }}
-          title: "chore: ${{ steps.update-schema.outputs.api_name }}のAPIスキーマ更新"
+          branch: ${{ steps.generate-branch-name.outputs.branch_name }}
+          title: "chore: ${{ needs.extract-api-name.outputs.api_name }}のAPIスキーマ更新"
           body: |
             microCMSのAPIスキーマが更新されました。
-            
-            - API: `${{ steps.update-schema.outputs.api_name }}`
-            
+
+            - API: `${{ needs.extract-api-name.outputs.api_name }}`
+
             このPRは自動生成されました。
           delete-branch: true

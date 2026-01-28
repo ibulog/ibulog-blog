@@ -1,17 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { execSync } from 'child_process';
 
-export const updateSchemaFile = async (webhookPayload) => {
-  const apiName = webhookPayload.api;
-
-  // API名が空の場合はエラー
-  if (!apiName || apiName === 'null') {
-    throw new Error('API名がWebhookのペイロードに含まれていません。');
-  }
-
-  console.log(`API: ${apiName}`);
-
+export const updateSchemaFile = async (apiName, core) => {
   // スキーマファイルのディレクトリがなければ作成
   const schemaDir = 'schemas';
   if (!fs.existsSync(schemaDir)) {
@@ -21,10 +11,12 @@ export const updateSchemaFile = async (webhookPayload) => {
   const schemaFile = path.join(schemaDir, `${apiName}.json`);
   
   if (!process.env.MICROCMS_SERVICE_DOMAIN) {
-    throw new Error('MICROCMS_SERVICE_DOMAIN環境変数が設定されていません。');
+    core.setFailed('MICROCMS_SERVICE_DOMAIN環境変数が設定されていません。');
+    return;
   }
   if (!process.env.MICROCMS_MANAGEMENT_API_KEY) {
-    throw new Error('MICROCMS_MANAGEMENT_API_KEY環境変数が設定されていません。');
+    core.setFailed('MICROCMS_MANAGEMENT_API_KEY環境変数が設定されていません。');
+    return;
   }
 
   const serviceDomain = process.env.MICROCMS_SERVICE_DOMAIN;
@@ -42,20 +34,15 @@ export const updateSchemaFile = async (webhookPayload) => {
     });
     
     if (!response.ok) {
-      throw new Error(`APIスキーマの取得に失敗しました: ${response.statusText}`);
+      core.setFailed(`APIスキーマの取得に失敗しました: ${response.statusText}`);
+      return;
     }
     
     const schema = await response.json();
     fs.writeFileSync(schemaFile, JSON.stringify(schema, null, 2));
-    console.log(`APIスキーマを${schemaFile}に保存しました。`);
+    core.info(`APIスキーマを${schemaFile}に保存しました。`);
   } catch (err) {
-    throw new Error(`エラーが発生しました：${err}`);
+    core.setFailed(`エラーが発生しました：${err}`);
+    return;
   }
-
-  const branchName = `update-schema-${apiName}-${Date.now()}`;
-
-  return {
-    apiName,
-    branchName,
-  };
 };
